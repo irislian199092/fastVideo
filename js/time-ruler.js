@@ -207,6 +207,8 @@ PLAYER.playerFunction=function(){
                     $("#js_play").attr("title", "播放");       
                 }
                 var time=PLAYER.operateJson.getFirstFrame();
+                console.log('time',time)
+
                 PLAYER.TR.fixArrowCurrentTime(time);
                 PLAYER.PTR.fixArrowCurrentTime(time);
                 PLAYER.OCX.seek(parseInt(time)); 
@@ -878,7 +880,12 @@ PLAYER.operateJson={
                     $(n).attr('data-trimin',tn_out-sn_out+s0_out);
                     $(n).css('left',s0_out/config.framePerPixel);
                     $(n).width((sn_out-s0_out)/config.framePerPixel);
+                    
 
+                    console.log('--------------',$(n).find('.effect_box_r'))
+                    if($(n).find('.effect_box_r')){
+                        $(n).find('.effect_box_r').remove();
+                    }
                     subClipAttr={
                         sequenceTrimIn:s0_out,
                         sequenceTrimOut:sn_out,
@@ -892,7 +899,7 @@ PLAYER.operateJson={
                     PLAYER.operateJson.deleteClipAttr(time);
                     $(n).remove();
                 }
-                //PLAYER.operateJson.sortClipAttr();
+                PLAYER.operateJson.sortClipAttr();
             }
             else if(s0_in>=sn_in&&sn_out>s0_in){
                 $(n).attr('data-sequencetrimin',sn_in); 
@@ -906,7 +913,11 @@ PLAYER.operateJson={
                 var v_interleaved=$(n).attr('data-interleaved');
                 var v_type=$(n).attr('data-type');
                 var v_index=parseInt($(n).parent('.time_ruler_bar').attr('data-index'));
-                
+
+
+                if($(n).find('.effect_box_r')){
+                    $(n).find('.effect_box_r').remove();
+                }
                 //原兄弟节点切片属性
                 subClipAttr={
                     trimIn: tn_in,
@@ -929,12 +940,12 @@ PLAYER.operateJson={
                     vcut_left=s0_out/config.framePerPixel;
 
                     add_subclip=$(n).clone();
+
                     if(add_subclip.find('.effect_box_l')){
                         add_subclip.find('.effect_box_l').remove();
                     }
-                    if(add_subclip.find('.effect_box_r')){
-                        v_target.find('.effect_box_r').remove();
-                    }
+
+                    
                     add_subclip.removeClass('onselected');
                     add_subclip.attr('data-trimin',vcut_trimIn);
                     add_subclip.attr('data-trimout',vcut_trimOut);
@@ -1026,7 +1037,6 @@ PLAYER.operateJson={
         var s_point=parseInt(dragging.attr('data-sequencetrimin'));
         
         var arr=dragging.siblings();
-        console.log('time',time);
         if(time){
             $.each(arr,function(i,n){
                 if($(n).attr('data-time')===time){
@@ -1163,7 +1173,7 @@ PLAYER.operateJson={
     },
     mouseDownState:function(dragging){
         console.log('PLAYER.keyNum',PLAYER.keyNum)
-        if(PLAYER.keyNum!==17 || PLAYER.keyNum!==71 || PLAYER.keyNum!==7100){
+        if(PLAYER.keyNum!==17){
             $('#js_time_ruler_bar_box .draggable').removeClass('onselected');
         }
 
@@ -1348,7 +1358,7 @@ PLAYER.operateJson={
             $.each(track.subclip,function(index,elem){
                 if(elem && elem.createTime===time && elem.effect){
                     elem.effect.forEach(function(n,i){
-                        if(n.type==='fadeinout'||n.type==='flashwhite'||n.type==='flashwhite'){
+                        if(n.type==='fadeinout' || n.type==='flashblack' || n.type==='flashwhite'){
                             elem.effect.splice(i,1);
                         }
                     });
@@ -1403,7 +1413,9 @@ PLAYER.operateJson={
                 }
             });   
         }
-        if(arr.length!==0){
+        if(arr.length===0){
+            return 0;
+        }else{
             var s=Math.min.apply(null,arr);
             return s; 
         }
@@ -1997,12 +2009,13 @@ PLAYER.timeRuler = function() {
             this.trimInCurrTime = time;
             trimInCurrPos = this.trimInCurrTime /config.framePerPixel;
             trimOutCurrPos = this.trimOutCurrTime/config.framePerPixel;
+
             
-            if(PLAYER.keyNum===73&&this.trimInCurrTime===0){
+            /*if(PLAYER.keyNum===73&&this.trimInCurrTime===0){
                 trimOutCurrPos = config.maxTime/config.framePerPixel;
                 this.trimOutCurrTime=config.maxTime;
                 trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel; 
-            }
+            }*/
             if(trimInCurrPos>trimOutCurrPos){
                 trimOutCurrPos = config.maxTime/config.framePerPixel;
                 this.trimOutCurrTime=config.maxTime;
@@ -2035,6 +2048,7 @@ PLAYER.timeRuler = function() {
             this.trimOutCurrTime = time;
             trimInCurrPos = this.trimInCurrTime/config.framePerPixel;
             trimOutCurrPos = this.trimOutCurrTime /config.framePerPixel;
+
             if(trimOutCurrPos<trimInCurrPos){
                trimInCurrPos=0;
                this.trimInCurrTime=0; 
@@ -2306,6 +2320,7 @@ PLAYER.timeRuler = function() {
                             v0_attr=getDragInfo(v0_dragging,event);
                             v0_dir=getInitDir(v0_dragging,v0_attr);
                             PLAYER.operateJson.addDraggingInfo(v0_dragging,v0_attr);
+                            
 
                             dragdrop.fire({
                                 type:'clipDragstart',
@@ -2322,7 +2337,6 @@ PLAYER.timeRuler = function() {
                                     vd_attr=getDragInfo(dragging,event);
                                     dragging.attr('data-clipdir',v0_dir);
                                     PLAYER.operateJson.addDraggingInfo(dragging,vd_attr);
-
                                     dragdrop.fire({
                                         type:'clipDragstart',
                                         target:dragging,
@@ -2401,18 +2415,21 @@ PLAYER.timeRuler = function() {
                                     }
                                     
                                     PLAYER.operateJson.sendJson();
+                                    PLAYER.help_index=null;
+                                    PLAYER.keyNum=86;
                                 }
+
                                 
                             }
                             //click结束
                             if(!PLAYER.clickOrMove&&v0_dragging&&v0_dragging.hasClass('draggable')){
-                                //var id="interleaved_id"+PLAYER.genNonDuplicateID(12);
+                                var id="interleaved_id"+PLAYER.genNonDuplicateID(12);
                                 dragdrop.fire({
                                     type:'clipClick',
                                     target:v0_dragging,
                                     x:event.clientX,
                                     y:event.clientY,
-                                    //intId:id
+                                    intId:id
                                 });
 
                                 var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
@@ -2423,7 +2440,7 @@ PLAYER.timeRuler = function() {
                                             target:dragging,
                                             x:event.clientX,
                                             y:event.clientY,
-                                            //intId:id
+                                            intId:id
                                         });
                                     }
                                 }
@@ -2998,13 +3015,15 @@ PLAYER.timeRuler = function() {
            $('.space').remove(); 
         }  
     }
+    var help_index;
     //拖拽中clip
     function handleClipDragEvent(ev){
         var config=self.config;
         var target=ev.target;
         var parentWidth=config.$header.width();
-        var cal_index;
+        
         var id=target.attr('data-time');
+        var cal_index;
         
         
         var helpElem=PLAYER.operateJson.getDraggingHelp(id); //联动助手
@@ -3032,7 +3051,7 @@ PLAYER.timeRuler = function() {
         var clipDir=target.attr('data-clipdir');
         PLAYER.operateJson.mouseMoveState(helpElem,clipDir);
         
-
+        
         if(clipDir==='middle'){
             var move=(ev.x-clipInitClientX);
             var  nowLeft=clipInitLeft+move;
@@ -3048,6 +3067,14 @@ PLAYER.timeRuler = function() {
             sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
             sequenceTrimOut=sequenceTrimIn+(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
             
+            
+
+            cal_index=getTrackIndex(clipInitType);
+
+            if(PLAYER.help_index && PLAYER.help_index>=1){
+                addHelpObj(helpElem,clipInitType,PLAYER.help_index);  
+            }
+          
             chcekAdhereMiddle(helpElem,id);
 
             helpElem.attr('data-sequencetrimin',sequenceTrimIn);
@@ -3135,6 +3162,34 @@ PLAYER.timeRuler = function() {
             helpElem.css('width',nowWidth);
         } 
 
+        function getTrackIndex(clipInitType){
+            
+            var cal_index;
+            if(clipInitType==='t' || clipInitType==='a'){
+                if(clipInitIndex>=2&&ev.y-clipInitClientY<-10){
+                    cal_index=clipInitIndex-Math.ceil((clipInitOffsetTop-ev.y)/70);
+                }
+                else if(clipInitIndex>=1&&ev.y-clipInitClientY>10){
+                    cal_index=clipInitIndex-Math.ceil((ev.y-clipInitClientY)/70);
+                }else if(Math.abs(ev.y-clipInitClientY)<10){
+                    cal_index=clipInitIndex;
+                }
+            }
+            else if(clipInitType==='v'){
+                if(clipInitIndex>=1&&ev.y-clipInitClientY<-10){
+                    cal_index=clipInitIndex+Math.ceil((clipInitOffsetTop-ev.y)/70);
+                }
+                else if(clipInitIndex>=2&&ev.y-clipInitClientY>10){
+                    cal_index=clipInitIndex-Math.ceil((ev.y-clipInitClientY)/70);  
+                }else if(Math.abs(ev.y-clipInitClientY)<5){
+                    cal_index=clipInitIndex;
+                }
+            }
+            if(cal_index){
+                return PLAYER.help_index=cal_index;
+            }
+            
+        }
         
         //判断吸附
         function chcekAdhereMiddle(dragging,targetId){
@@ -3214,6 +3269,14 @@ PLAYER.timeRuler = function() {
         }
 
     }
+    function addHelpObj(obj,clipInitType,cal_index){
+        $.each($('.time_ruler_bar[data-type="'+clipInitType+'"]'),function(i,n){
+            if(parseInt($(n).attr('data-index'))===cal_index){
+                $(this).append(obj);
+            }
+        });
+        return obj;
+    }
     //拖拽结束clip
     function handleClipDragEndEvent(ev){
 
@@ -3221,7 +3284,7 @@ PLAYER.timeRuler = function() {
         var target=ev.target;
         var id=target.attr('data-time');
         var helpElem=PLAYER.operateJson.getDraggingHelp(id); //联动助手
-
+        
         
         var sequenceTrimIn=parseInt(helpElem.attr('data-sequencetrimin'));
         var sequenceTrimOut=parseInt(helpElem.attr('data-sequencetrimout'));
@@ -3243,7 +3306,9 @@ PLAYER.timeRuler = function() {
         target.css('left',left);
         target.css('width',width);
 
-
+        var clipInitType=helpElem.parent().attr('data-type');
+        var cal_index=parseInt(helpElem.parent().attr('data-index'));
+        addHelpObj(target,clipInitType,cal_index);
         //判断重叠 （这个有问题 需要再解决）
 
         var arr=[];
@@ -4984,11 +5049,11 @@ PLAYER.timeRuler2 = function() {
             trimInCurrPos = this.trimInCurrTime /config.framePerPixel;
             trimOutCurrPos = this.trimOutCurrTime/config.framePerPixel;
             
-            if(PLAYER.keyNum===73&&this.trimInCurrTime===0){
+            /*if(PLAYER.keyNum===73&&this.trimInCurrTime===0){
                 trimOutCurrPos = config.maxTime/config.framePerPixel;
                 this.trimOutCurrTime=config.maxTime;
                 trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel; 
-            }
+            }*/
             if(trimInCurrPos>trimOutCurrPos){
                 trimOutCurrPos = config.maxTime/config.framePerPixel;
                 this.trimOutCurrTime=config.maxTime;
