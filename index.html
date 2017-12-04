@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link href="css/fonts.css" rel="stylesheet" type="text/css">
+<link href="css/player.css" rel="stylesheet" type="text/css">
+<script src="js/ip.js"></script>
+<script>
+	var PLAYER = PLAYER || {};
+	PLAYER.currentTime=0;
+	PLAYER.keyNum=0;			//存储快捷键
+	PLAYER.isPlaying=false;		//存储播放状态
+	PLAYER.loadState=false;		//存储加载状态
+	PLAYER.jsonObj=null;		//存储拖拽json
+	PLAYER.dbJsonObj=null;		//存储双击单素材json
+	PLAYER.copyOrcut='';		//存储复制或者剪切状态
+	PLAYER.clipboard=[];		//存储剪切板
+	PLAYER.clipboard.parent=[];
+	PLAYER.dbClick=false;		//判断是否双击
+	PLAYER.clickOrMove=false;	//判断是否move或click
+	PLAYER.goBackJson=[];		//撤销数组
+	PLAYER.model=null;			//字幕或者特技实例，防止创建多个实例对象
+	PLAYER.chooseArray=[];		//存储选择多个的素材
+	PLAYER.subtitleAttr={};		//存储选择多个的素材
+	PLAYER.subJsonTem=[]; 		//存储Json字幕模板
+	PLAYER.subDrawTem=[]; 		//存储draw字幕模板
+	PLAYER.programeInfo=null;
+	PLAYER.initDrag=false;
+	PLAYER.storeDraggingInfo=[];	//存储拖拽时候的切片info
+	PLAYER.cutIndex=0;              //存储游标处切割的index+ID
+</script>
+</head>
+<body id="body">
+<div class="container-fluid">
+	<!-- 侧边栏后续开发开始 -->
+	<div class="slider_context">
+		<div class="logo" >
+	 		<a href="#" class="icojam_honey" id="js_logo_toggle"></a>
+	 	</div>
+
+		<div class="notifications" id="js_notifications">
+            <ul class="header_box">
+            	<li class="active">
+                	<a href="javascript:;" title="任务列表" data-id="tab-1">
+                		<i class="fa fa-th-list"></i>
+                	</a>
+                </li>
+                <!-- <li class="">
+                	<a href="javascript:;" title="邮件" data-id="tab-2">
+                		<i class="fa fa-envelope"></i>
+                	</a>
+                </li>
+                <li class="">
+                	<a href="javascript:;" title="消息" data-id="tab-3">
+                		<i class="fa fa-bell"></i>
+                	</a>
+                </li> -->  
+            </ul>
+            <div class="tab_content" id="js_tab_content">
+                <div id="tab-1">
+                	<div class="select_box">
+            			<form class="form-inline" onclick="return false">
+							<div class="form-group">
+							    <label for="status">状态</label>
+                				<select name="status"  class="form-control" id="js_status_select">
+                					<option value="-1">全部</option>
+                					<option value="0">待处理</option>
+                					<option value="1">处理中</option>
+                					<option value="2">已完成</option>
+                					<option value="3">出错</option>
+                				</select>
+							</div>
+							<button class="btn btn-default fr btn-sm" id="js_status_btn">刷新</button>
+						</form>	
+                	</div>
+                	<ul id="js_export_list">
+                	</ul>
+
+					<div class="export_footer_pagination">
+						<nav class="pull-right">
+						  	<ul class="pager fr" id="js_pager_export">
+						  	</ul>
+						</nav>
+					</div>
+                </div>
+                <div id="tab-2">
+                    <p>信息后续开发</p>
+                </div>
+                <div id="tab-3">
+                    <p>消息后续开发</p>
+                </div>
+            </div>
+	        <iframe  src="" frameBorder="0" style="position: absolute;top: 0px; left: 0px; width: 100%; height: 100%; z-index: -1; filter: alpha(opacity = 0);">
+			</iframe>
+        </div>
+	</div>
+	<!-- 上部分开始 -->
+	<div class="row container-fluid-box">
+		<!-- 素材模板选择开始 -->
+		<div class="col-md-6  carve" id="js_carve">
+			<div class="row carve_header">
+			 	<div class="logo" title="任务详情">
+			 		<a href="#" class="icojam_honey" id="js_logo"></a>
+			 	</div>
+	          	<div class="user"> 
+	          		<!-- <span class="user-avatar"><img src="images/14.jpg"></span>  -->
+	          		<span class="user-name">Sherlock<a href="#" class="icojam_enter" id="js_loginout" title="登出"></a></span>
+	          	</div>
+	          	<ul class="list clearfix">
+	            	<li class="active"><a id="tab_material">视频库</a></li>
+	            	<li><a id="tab_subtitle">字幕</a></li>
+	            	<li><a id="tab_effect">特技</a></li>
+	            	<li><a id="tab_images">图片库</a></li>
+	            	<li><a id="tab_audio">音频库</a></li>
+	          	</ul>
+			</div>
+			<div id="tab_1" class="js_tab">
+				<div class="row carve_body_chooseBox">
+					<div class="col-sm-12 col-md-12 carve_body_form" >
+						<form class="form-inline" name="programForm" id="js_programForm">
+							<div class="form-group" id="js_programForm_name">
+							    <input type="text" class="form-control" name="name" placeholder="名称" value="">
+							</div>
+							<div class="form-group program_cpspcode" id="js_programForm_cpspcode">
+							</div>
+							<div class="form-group program_type" id="js_programForm_type">
+							</div>
+							<br/>
+							<div class="form-group" id="js_programForm_stime">
+							    <input type="text" class="form-control date_picker" name="startTime" placeholder="开始(yyyy-MM-dd)" value="">
+							</div>
+							<div class="form-group" id="js_programForm_etime">
+							    <input type="text" class="form-control  date_picker" name="endTime" placeholder="结束(yyyy-MM-dd)" value="">
+							</div>
+							<button type="button" class="btn btn-primary btn-xs" id="js_programForm_btn">搜索</button>
+						</form>
+						<button class="btn btn-xs btn-primary pull-right" id="js_add_groupProgram">批量上轨素材</button>
+					</div>
+					
+					<!-- <div class="col-sm-2 col-md-2 carve_body_tabs">
+						<ul class="nav nav-pills pull-right" style="padding-top: 55px">
+							<button type="button" class="btn btn-primary pull-right btn-xs" id="js_addProgram_btn" >添加网络素材</button>
+						   	<li class="active"><a href="#" class="icojam_preview_matrix" title="缩略图" id="js_style_thumbnail"></a></li> 
+						   							  	<li><a href="#" class="icojam_preview_list" title="列表" id="js_style_list"></a></li>
+						</ul>
+					</div> -->
+				</div>
+				<div class="row carve_body_meterialBox">
+					<!-- 缩略图 -->
+					<div class="meterial_thumbnail_box" id="js_thumbnail_box"></div>
+					<!-- 缩略图滚动条 -->
+					<div class="meterial_thumbnail_track">
+						<div class="meterial_thumbnail_scroll"></div>
+					</div>
+					<!-- 列表 -->
+					<!-- <div class="meterial_list_box">
+						<ul id="js_list_box"></ul>
+					</div> -->
+
+					<!-- 列表滚动条开始 -->
+					<!-- <div class="meterial_list_track">
+						<div class="meterial_list_scroll"></div>
+					</div> -->
+				</div>
+				
+				<div class="row carve_footer_pagination">
+					<nav class="pull-right">
+					  	<ul class="pager fr" id="js_pager">
+					  	</ul>
+					</nav>
+				</div>
+			</div>
+
+			<div id="tab_2" class="js_tab">
+				<ul class="subtitle_wrap" id="js_subtitle_wrap">
+					<li class="subtitle">
+						<span class="subtitle_list" data-subtitle="Name" data-temid="subtitle_01"></span>
+						<span class="subtitle_text">Name</span>
+					</li>
+					<li class="subtitle">
+						<span class="subtitle_list" data-subtitle="Special" data-temid="subtitle_02"></span>
+						<span class="subtitle_text">Special</span>
+					</li>
+					<li class="subtitle">
+						<span class="subtitle_list" data-subtitle="Line" data-temid="subtitle_03"></span>
+						<span class="subtitle_text">Line</span>
+					</li>
+					<li class="subtitle">
+						<span class="subtitle_list" data-subtitle="Year" data-temid="subtitle_04"></span>
+						<span class="subtitle_text">Year</span>
+					</li>
+					<li class="subtitle">
+						<span class="subtitle_list" data-subtitle="Light" data-temid="subtitle_05"></span>
+						<span class="subtitle_text">Light</span>
+					</li>
+					<li class="subtitle">
+						<span class="subtitle_list" data-subtitle="Website" data-temid="subtitle_06"></span>
+						<span class="subtitle_text">Website</span>
+					</li>
+					<li class="subtitle">
+						<span class="subtitle_list" data-subtitle="Lower" data-temid="subtitle_07"></span>
+						<span class="subtitle_text">Lower Third</span>
+					</li>
+					<li class="subtitle">
+						<span class="subtitle_list" data-subtitle="Subtitle" data-temid="subtitle_08"></span>
+						<span class="subtitle_text">Subtitle</span>
+					</li>
+					<li class="subtitle">
+						<span class="subtitle_list" data-subtitle="End" data-temid="subtitle_09"></span>
+						<span class="subtitle_text">End</span>
+					</li>
+				</ul>
+				<!-- <h4>
+					<span class="subtitle_title">字体模板</span>
+					<button type="button" class="btn btn-primary pull-right btn-xs" id="js_subtitle_new_btn" style="margin-top: 8px;">添加字幕</button>
+				</h4>
+				<div class="row subtitle_wrap">
+					<div class="header">
+						<span>名字</span>
+						<span>时长</span>
+						<span>编辑</span>
+						<span>删除</span>
+					</div>
+					<ul class="tab_subtitle" id="js_tab_subtitle">
+					</ul>
+					<div class="subtitle_list_track">
+						<div class="subtitle_list_scroll"></div>
+					</div>
+					<div class="row subtitle_footer_pagination">
+						<nav class="pull-right">
+						  	<ul class="pager fr" id="js_pager_subtitle">
+						  	</ul>
+						</nav>
+					</div>
+				</div> -->
+			</div>	
+
+			<div id="tab_3" class="js_tab">
+				<ul class="effect_wrap" id="js_effect_wrap">
+					<li draggable="true">
+						<span class="effect_list effect_fadeInOut" data-effect="fadeinout"  draggable="true"></span>
+						<span class="effect_text" draggable="false">淡入淡出</span>
+					</li>
+					<li>
+						<span class="effect_list effect_flashBlack" data-effect="flashblack"  draggable="true"></span>
+						<span class="effect_text" draggable="false">闪黑</span>
+					</li>
+					<li>
+						<span class="effect_list effect_flashWhite" data-effect="flashwhite"  draggable="true"></span>
+						<span class="effect_text" draggable="false">闪白</span>
+					</li>
+					<li>
+						<span class="effect_list effect_mosaic" data-effect="mosaic"  draggable="true"></span>
+						<span class="effect_text"  draggable="false">马赛克</span>
+					</li>
+				</ul>
+			</div>
+			<div id="tab_4" class="js_tab">
+				<ul class="images_wrap" id="js_images_wrap">
+					<ul class="images_wrap" id="js_images_wrap">
+					<li>
+						<span class="images_list" draggable="true" data-http="http://pic39.nipic.com/20140312/18085061_092729513131_2.jpg"></span>
+						<span class="images_text">测试图片一</span>
+					</li>
+					<li>
+						<span class="images_list" draggable="true" data-http="http://pic23.nipic.com/20120908/10639194_105138442151_2.jpg"></span>
+						<span class="images_text">测试图片二</span>
+					</li>
+					<li>
+						<span class="images_list" draggable="true" data-http="http://img01.taopic.com/150508/318763-15050PU9398.jpg"></span>
+						<span class="images_text">测试图片三</span>
+					</li>
+					<li>
+						<span class="images_list" draggable="true" data-http="http://img.taopic.com/uploads/allimg/110915/29-11091512035335.jpg"></span>
+						<span class="images_text">测试图片四</span>
+					</li>
+				</ul>
+				</ul>
+			</div>
+			<div id="tab_5" class="js_tab">
+				<ul class="audio_wrap" id="js_audio_wrap">
+					<ul class="audio_wrap" id="js_audio_wrap">
+					<li>
+						<span class="audio_list" draggable="true" data-http="http://mp3.9ku.com/m4a/637791.m4a"></span>
+						<span class="audio_text">测试音频一</span>
+					</li>
+					<li>
+						<span class="audio_list" draggable="true" data-http="http://mp3.9ku.com/m4a/637791.m4a"></span>
+						<span class="audio_text">测试音频二</span>
+					</li>
+					
+				</ul>
+				</ul>
+			</div>
+		</div>
+		<!-- 素材模板选择结束 -->
+
+		<!-- 播放器开始 -->
+		<div class="col-md-6 player_wrap">
+			<div class="row player_header">
+				<div class="player_title"></div>
+				<div class="player_time">
+					<span id="js_player_totalTime" title="总时长">00:00:00:00</span>
+					<span id="js_player_trimInOutTime" title="出入点时长">00:00:00:00</span>
+				</div>
+				<ul class="player_bar">
+		        	<li><a id="js_newProject" class="icojam_document_new" title="新建工程(ctrl+n)"></a></li>
+		        	<li><a id="js_openProject" class="icojam_folder_2_open" title="编辑工程(ctrl+o)"></a></li>
+		        	<li><a id="js_saveProject" class="icojam_base_check" title="保存工程(ctrl+s)"></a></li>
+		        	<li><a id="js_exportProject" class="fa fa-folder" title="合成输出(ctrl+b)"></a></li>
+		        	<!-- <li><a id="js_expand" class="icon_more" title="打开编辑工具栏"></a></li> -->
+		      	</ul>
+			</div>
+			<div class="player_box row">
+				<div class="row  player" >	
+				 	<div  id="ocx">
+				        <video id="stub"></video>
+				    </div>
+				</div>
+				<div class="player_time_ruler_box">
+					<div class="player_time_ruler"></div>
+				</div>
+				<div class="player_toolbar">
+					<div class="col-md-12">
+				      	<ul class="player_toolbar_list">
+				      	  	<li><a href="javascript:;" class="icon-16" title="转到片段入点(shift+i)" id="js_moveTrimIn"></a></li>
+				      	  	<li><a href="javascript:;" class="icon-11" title="设置片段入点(i)" id="js_setTrimIn"></a></li>
+				      	  	<li><a href="javascript:;" class="icon-1" title="到序列头(home)" id="js_toFirstFrame"></a></li>
+				      	  	<li><a href="javascript:;" class="icon-3" title="上一帧(方向键<-)" id="js_prevFrame"></a></li>
+				      	  	<li><a href="javascript:;" class="icon-4" id="js_play" title="播放(空格)"></a></li>
+				      	  	<!-- <li><a href="javascript:;" class="icon-5" id="js_play_content" title="区间播放(空格)"></a></li> -->
+				      	  	<li><a href="javascript:;" class="icon-7" title="下一帧(方向键->)" id="js_nextFrame"></a></li>
+				      	  	<li><a href="javascript:;" class="icon-9" title="到序列尾(end)" id="js_toLastFrame"></a></li>
+				      	  	<li><a href="javascript:;" class="icon-12" title="设置片段出点(o)" id="js_setTrimOut"></a></li>
+				      	  	<li><a href="javascript:;" class="icon-15" title="转到片段出点(shift+o)" id="js_moveTrimOut"></a></li>
+				      	  	<!-- <li><a href="javascript:;" class="icon-10" title="抽帧"></a></li> -->
+				      	  	<li><a href="javascript:;" class="icon-zoom" title="2d变换" id="js_zoom"></a></li>
+				      	  	<!-- <li><a href="javascript:;" class="icon-cut" title="裁剪" id="js_cut"></a></li> -->
+				      	  	<li><a href="javascript:;" class="icon-facial" title="视频分析" id="js_finding"></a></li>
+				      	</ul>
+				      	<!-- <div class="player_toolbar_sound">
+				      		<span class="icojam_speaker_2"></span>
+				      		<input type="range" value="40">
+				      	</div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 播放器结束 -->
+		<!-- 字幕特技编辑开始 -->
+		<div class="col-md-2 carve_edit" id="js_carve_edit" style="display: none;">
+			<div class="row carve_edit_header">
+	          	<ul class="list clearfix">
+	            	<li class="active"><a id="tab_edit_subtitle">字幕编辑</a></li>
+	            	<li><a id="tab_edit_effect">特技编辑</a></li>
+	          	</ul>
+			</div>
+			<div class="row carve_edit_body">
+				<div class="edit_subtitle">
+					<div class="subtitle_h_form_wrap">
+						<form class="subtitle_h_form form-horizontal" id="js_subtitle_h_form">  
+						</form>
+					</div>
+					<!-- 缩略图滚动条 -->
+					<div class="subtitle_edit_track">
+						<div class="subtitle_edit_scroll"></div>
+					</div>
+				</div>
+				<div class="edit_effect">
+					<div class="effect_h_form_wrap">
+						<form class="effect_h_form form-horizontal" id="js_effect_h_form">
+						</form>
+					</div>
+					<!-- 缩略图滚动条 -->
+					<div class="effect_edit_track">
+						<div class="effect_edit_scroll"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 中间工具条部分开始 -->
+	<div class="row toolbar_wrap">
+		<span class="toolbar_icon toolbar_icon_group" title="联动(shift+1)" id="js_toolbar_icon_group"></span>
+		<span class="toolbar_icon toolbar_icon_ungroup" title="独立(shift+2)" id="js_toolbar_icon_ungroup"></span>
+		<!-- <span class="toolbar_icon toolbar_icon_insert"></span>
+		<span class="toolbar_icon toolbar_icon_cover"></span> -->
+		<span class="toolbar_icon toolbar_icon_reverse"></span>
+		<span class="toolbar_icon toolbar_icon_volume"></span>		
+	</div>
+	<!-- 时间轴开始 -->
+	<div class="row time_ruler_container">
+		<div class="time_ruler_toolbar fl">
+			<span id="js_toolbar_select" class="select" title="选择工具(V)"></span>
+			<span id="js_toolbar_select_pre" class="select_pre" title="向前选择轨道(G)"></span>
+			<span id="js_toolbar_select_back" class="select_back" title="向后选择轨道(shift+G)"></span>
+			<span id="js_toolbar_cut" class="cut" title="切片工具(U)"></span>
+			<span id="js_toolbar_uCut" class="uCut" title="时码线切片工具(shift+U)"></span>
+			<span id="js_toolbar_zoom_plus" class="zoom_plus" title="缩放工具(+)"></span>
+			<span id="js_toolbar_zoom_minus" class="zoom_minus" title="缩放工具(-)"></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+		<div class="time_ruler_wrap fl">
+		    <div class="time_ruler"></div>
+		</div>
+		<div class="time_ruler_voiceBox fl" id="js_time_ruler_voiceBox">
+			<canvas class="time_ruler_voice" id="js_voCanvas"></canvas>
+		</div>	
+	</div>
+</div>
+
+<div id="js_pageCover" class="pageCover">
+</div>
+
+</body>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.date_input.pack.js"></script><!-- 日期选择器插件 -->
+<script src="js/jquery.minicolors.js"></script><!-- 颜色取色插件 -->
+<script src="js/simplewebrtc.bundle.js"></script>
+
+<script src="js/server.js"></script><!-- 服务 -->
+<script src="js/app.js"></script><!-- 首选项 -->
+<script src="js/time-ruler.js"></script><!-- 时间线 -->
+<script src="js/player.js"></script>
+</html>
+
+
+

@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>FastCarve-登录</title>
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="css/fonts.css" rel="stylesheet" type="text/css">
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/ip.js"></script>
+</head>
+<body class="login">
+<div class="login-container">
+    <div class="login-logo"><img src="images/logo.png"></div>
+    <form id="loginForm">
+        <div class="form-group" style="width:225px">
+            <input type="text" placeholder="账号" title="Please enter you username" name="userid" id="login-userid" class="form-control">
+        </div>
+        <div class="form-group" style="width:225px">
+            <input type="password" title="Please enter your password" placeholder="密码" name="password" id="login-userpass" class="form-control">
+        </div>
+        <div class="erro-info"></div>
+        <button class="login-btn icojam_arrow_right" id="js_login_btn"></button>
+    </form>
+</div>
+<div class="row">
+        <div>2016 Copyright CDV</div>
+ </div>
+
+<script>
+$(function(){
+    /*----------------------ajax设置开始----------------------*/
+    
+    $.ajaxSetup({
+      type: "POST",
+      dataType : "json",
+      error:function(XMLHttpRequest, textStatus, errorThrown){
+        console.log('失败XMLHttpRequest',XMLHttpRequest);
+        console.log('失败XMLHttpRequest',textStatus);
+        console.log('失败XMLHttpRequest',errorThrown);
+      }
+    });
+    /*----------------------ajax设置结束----------------------*/
+
+    /*----------------------登录相关开始----------------------*/
+    $('#js_login_btn').on('click',function(e){
+        var username = $('#login-userid').val();
+        var password = $('#login-userpass').val();
+        if(username==""||password==""){
+            $('.erro-info').html("用户名密码不能为空");
+            e.preventDefault();
+            return;
+        }
+        
+        $.ajax({
+            url:serverUrl+'login',
+            data:{
+                userid:username,
+                password:password
+            }, 
+            success:function(msg){
+                if(msg.code===0&&msg.data!==null){
+                    location.href=enterUrl;
+                }else{
+                    $('.erro-info').html(msg.data);
+                }
+            }
+        });
+        e.preventDefault(); 
+    }); 
+
+    //获取头像
+    $.ajax({
+        url:serverUrl+'user/avatar',
+        success:function(msg){
+            if(msg.code===0&&msg.data!==null){
+                $('#js_userAvatar img').attr('src','msg.data');
+            }
+        }
+    });
+
+
+    
+})
+</script>
+</body>
+</html>

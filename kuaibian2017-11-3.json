@@ -1,0 +1,289 @@
+{
+    "aSamplesPerSec":"48000",
+    "displayMode":"0",
+    "frameRate":"25",
+    "height":"576",
+    "id":"e97a810e-3a67-4b5a-bf47-c8fb98ddfada",
+    "savetime":"",
+    "version":"1",
+    "width":"720",
+    "reference": {
+        "material": [
+            {
+                "assetId":"bf89437f-0ed5-42b8-8c3e-e73f7a263b32",
+                "duration":7500,
+                "filePath":"http://192.168.2.30:8920170321bf89437f-0ed5-42b8-8c3e-e73f7a263b32/7min.mp4",
+                "name":"7min"
+            }
+        ]
+    },
+    "rootBin": {
+        "sequence": [
+            {
+                "maxDuration":17282,
+                "tracks": [
+                    {
+                        
+                        "type":"t",
+                        "index":1,
+                        "subclip":[{
+                            "createTime":"fastvideo1509692673163",
+                            "duration":2000,
+                            "height":312,
+                            "width":554,
+                            "id":"subtitle_01",
+                            "name":"subtitle_01",
+                            "pixel":[{
+                                        "x1": 403,                      
+                                        "y1": 11,                       
+                                        "width": 86,                       
+                                        "height": 82,                       
+                                        "attr":{
+                                            "type":"images",
+                                            "url":"...../images/square.png"
+                                        }
+                                    },
+                                    {
+                                        "x1":403,                      
+                                        "y1":104,                                       
+                                        "attr":{
+                                            "type":"text",
+                                            "text":"NAME",
+                                            "fontFamily":"PingFang Heavy",       
+                                            "fontSize":15,                
+                                            "fillStyle":"#fff",    
+                                            "textAlign":"left"
+                                        } 
+                                    },
+                                    {
+                                        "x1": 403,                      
+                                        "y1": 118,                                       
+                                        "attr":{
+                                            "type":"text",
+                                            "text":"hellp",
+                                            "fontFamily":"PingFang Regular",       
+                                            "fontSize":10,                
+                                            "fillStyle":"#fff",    
+                                            "textAlign":"left"
+                                        } 
+                                    }],
+                            "sequenceTrimIn":282,
+                            "sequenceTrimOut":2282,
+                            "trimIn":0,
+                            "trimOut":2000,
+                            "type":"subtitle"
+                        }]
+                    },
+                    {
+                        
+                        "type":"t",
+                        "index":2,
+                        "subclip":[{
+                            "createTime":"fastvideo1509692673163",
+                            "sequenceTrimIn":282,
+                            "sequenceTrimOut":2282,
+                            "trimIn":0,
+                            "trimOut":2000,
+                            "type":"subtitle",
+                            "duration":2000,
+                            "height":312,
+                            "width":554,
+                            "id":"subtitle_01",
+                            "name":"subtitle_01",
+                            "pixel":[{
+                                "x1": 403,                      
+                                "y1": 11,                       
+                                "width": 86,                       
+                                "height": 82,                       
+                                "attr":{
+                                    "type":"images",
+                                    "url":"...../images/square.png"
+                                }
+                            },
+                            {
+                                "x1":403,                      
+                                "y1":104,                                       
+                                "attr":{
+                                    "type":"text",
+                                    "text":"NAME",
+                                    "fontFamily":"PingFang Heavy",       
+                                    "fontSize":15,                
+                                    "fillStyle":"#fff",    
+                                    "textAlign":"left"
+                                } 
+                            },
+                            {
+                                "x1": 403,                      
+                                "y1": 118,                                       
+                                "attr":{
+                                    "type":"text",
+                                    "text":"hellp",
+                                    "fontFamily":"PingFang Regular",       
+                                    "fontSize":10,                
+                                    "fillStyle":"#fff",    
+                                    "textAlign":"left"
+                                } 
+                            }]
+                            
+                        }]
+                    },
+                    {
+                        
+                        "type":"v",
+                        "index":2,
+                        "subclip":[{
+                            "assetID":"bf89437f-0ed5-42b8-8c3e-e73f7a263b32",
+                            "sequenceTrimIn":178,
+                            "sequenceTrimOut":1969,
+                            "trimIn":0,
+                            "trimOut":1791,
+                            "effect": [{
+                                "type":"fadeinout",
+                                "attr":{},
+                                "duration":25,
+                                "trimIn":0,
+                                "trimOut":25, 
+                                "pos":"header"
+                            },
+                            {
+                                "type":"fadeinout",
+                                "attr":{},
+                                "duration":25,
+                                "trimIn":1766,
+                                "trimOut":1791, 
+                                "pos":"footer"
+                            },
+                            {
+                                "type":"mosaic",
+                                "attr":{
+                                    "x1":0,
+                                    "y1":0,
+                                    "x2":372,
+                                    "y2":209
+                                },
+                                "duration":1791,
+                                "trimIn":0,
+                                "trimOut":1791
+                            }],
+                            "createTime":"fastvideo1509693314555",  //切片唯一的标识符
+                            "interleaved":true,//切片唯一的标识符
+                            "type":"video_and_audio"
+                        },
+                        {
+                            "assetID":"bf89437f-0ed5-42b8-8c3e-e73f7a263b32",
+                            "sequenceTrimIn":2000,
+                            "sequenceTrimOut":5000,
+                            "trimIn":0,
+                            "trimOut":1791,
+                            "effect": [],
+                            "createTime":"fastvideo1509693314tgtt",
+                            "interleaved":true,
+                            "type":"video_and_audio"
+                        }]
+                    },
+                    {
+                        
+                        "type":"v",
+                        "index":1,
+                        "subclip":[]
+                    },
+                    {
+                        
+                        "type":"a",
+                        "index":1,
+                        "subclip":[]
+                    },
+                    {
+                        
+                        "type":"a",
+                        "index":2,
+                        "subclip":[{
+                            "assetID":"bf89437f-0ed5-42b8-8c3e-e73f7a263b32",
+                            "interleaved":true,
+                            "sequenceTrimIn":178,
+                            "sequenceTrimOut":1969,
+                            "trimIn":0,
+                            "trimOut":1791,
+                            "createTime":1507686640369,
+                            "volume":100
+                        },
+                        {
+                            "assetID":"bf89437f-0ed5-42b8-8c3e-e73f7a263b32",
+                            "interleaved":true,
+                            "sequenceTrimIn":2000,
+                            "sequenceTrimOut":5000,
+                            "trimIn":0,
+                            "trimOut":1791,
+                            "createTime":1507686640369,
+                            "volume":100
+                        }]
+                    }  
+                ]
+            }
+        ]
+    }
+}
+
+/*-----------特技-----*/
+{
+    "command": "adjustEffect",
+    "params":{
+        "trackType":"v", 
+        "trackIndex":2,  
+        "subClipId":"",
+        "Name":"mosaic",
+        "attr":{
+            "x1":0,
+            "y1":0,
+            "x2":372,
+            "y2":209
+        }     
+    }
+}
+
+/*-----------字幕-----*/
+{
+    "command": "adjustEffect",
+    "params":{
+        "trackType":"v", 
+        "trackIndex":2,  
+        "subClipId":"",
+        "Name":"subclip",
+        "attr":[
+            {
+                "x1": 403,                      
+                "y1": 11,                                             
+                "attr":{
+                    "type":"images",
+                    "url":"...../images/square.png"
+                }
+            },
+            {
+                "x1":403,                      
+                "y1":104,                                       
+                "attr":{
+                    "type":"fade",
+                    "text":"NAME",
+                    "fontFamily":"PingFang Heavy",       
+                    "fontSize":15,                
+                    "fillStyle":"#ffffff",    
+                    "textAlign":"left"
+                } 
+            },
+            {
+                "x1": 403,                      
+                "y1": 118,                                       
+                "attr":{
+                    "type":"fade",
+                    "text":"NAME",
+                    "fontFamily":"PingFang Heavy",       
+                    "fontSize":15,                
+                    "fillStyle":"#ffffff",    
+                    "textAlign":"left"
+                } 
+            }]
+    }
+}
+
+
+
