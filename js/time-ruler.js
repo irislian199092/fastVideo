@@ -274,6 +274,9 @@ PLAYER.playerFunction=function(){
                 PLAYER.keyNum=8500;
                 $('.time_ruler_toolbar').children('span').removeClass('active');
                 $('#js_toolbar_uCut').addClass('active'); 
+                if(PLAYER.TR.currTime===0){
+                    return;
+                }
                 PLAYER.TR.cutArrowCurrentTime();
             } 
         },

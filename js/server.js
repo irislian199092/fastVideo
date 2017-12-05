@@ -2005,10 +2005,13 @@ var dragEffectModule=(function(){
 			
 			e.preventDefault();
 			PLAYER.checkPlaying();
+			$(e.target).parent('li').siblings().children('.effect_list').removeClass('active');
+			$(e.target).addClass('active');
 			onOff=false;
 			type=$(e.target).attr('data-effect');
-
+			
 			curr_subclip=null;
+
 			$(document)[0].onmousemove = function(e) {
                 var e = e || window.event;
             	onOff=true; 
@@ -2022,6 +2025,7 @@ var dragEffectModule=(function(){
             $(document)[0].onmouseup = function(e) {
             	if(onOff){
             		PLAYER.observer.trigger('up_effect',e,type);
+
             		onOff=false; 
             	}
                 $(document)[0].onmousemove = null;
@@ -2147,6 +2151,7 @@ var dragEffectModule=(function(){
 				addEffectJson(curr_subclip,type);
 				console.log('增加特技',PLAYER.jsonObj.rootBin.sequence[0].tracks)
 				PLAYER.operateJson.sendJson();
+
 			});
 
 			//在切片上添加特技效果
@@ -2644,6 +2649,9 @@ var chooseClipModule=(function(){
                         
 						onOff=false;
                         if(self.$type==='video_and_audio'){
+                        	$(n).siblings().removeClass('active');
+							$(n).addClass('active');
+
                             var _id=$(n).attr('data-id');
                             $.ajax({
                                 url:serverUrl+'program/info',
@@ -2661,7 +2669,9 @@ var chooseClipModule=(function(){
                                 }
                             });
                         }else if(self.$type==='video'){
-                            console.log($(n).children('span'))
+                            
+                            $(n).addClass('active');
+                            $(n).siblings().removeClass('active');
                             materialAttr={
                                 assetId:"e"+Math.random(),
                                 duration:50,
@@ -2670,6 +2680,8 @@ var chooseClipModule=(function(){
                             }
                             PLAYER.observer.trigger('_down_'+self.$type,e,materialAttr);
                         }else if(self.$type==='audio'){
+                        	$(n).addClass('active');
+                            $(n).siblings().removeClass('active');
                             materialAttr={
                                 assetId:"e"+Math.random(),
                                 duration:1000,
@@ -2678,6 +2690,8 @@ var chooseClipModule=(function(){
                             }
                             PLAYER.observer.trigger('_down_'+self.$type,e,materialAttr);
                         }else if(self.$type==='subtitle'){
+                        	$(n).addClass('active');
+                            $(n).siblings().removeClass('active');
                             var _id=$(n).children('.subtitle_list').attr('data-temid');
                             var attr=JSON.parse(PLAYER.operateJson.getSubtitleTemp(_id));
                             if(attr){

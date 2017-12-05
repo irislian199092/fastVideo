@@ -1628,6 +1628,9 @@ h4{
                             font-size:12px;
                         }
                     }
+                    li.active .subtitle_list{
+                        border:2px solid #33bbff;
+                    }
                     li:nth-child(1) .subtitle_list{
                         background: #303236 url(../images/subtitles/name.jpg)center center no-repeat;
                     }
@@ -1693,17 +1696,20 @@ h4{
                         background: #303236 url(../images/icon_drdc.png)center center no-repeat;
                     }
                     li:nth-child(2) .effect_list{
-                        background: #303236 url(../images/icon_msk.png)center center no-repeat;
-                    }
-                    li:nth-child(3) .effect_list{
                         background: #303236 url(../images/icon_sh.png)center center no-repeat;
                     }
-                    li:nth-child(4) .effect_list{
+                    li:nth-child(3) .effect_list{
                         background: #303236 url(../images/icon_sb.png)center center no-repeat;
                     }
-                    li:nth-child(5) .effect_list{
-                        background: #303236 url(../images/icon_2d.png)center center no-repeat;
+                    li:nth-child(4) .effect_list{
+                        background: #303236 url(../images/icon_msk.png)center center no-repeat;
                     }
+                    li .effect_list.active{
+                        border:1px solid #33bbff;
+                    }
+                    /* li:nth-child(5) .effect_list{
+                        background: #303236 url(../images/icon_2d.png)center center no-repeat;
+                    } */
                 } 
             }
             #tab_4{
@@ -1725,7 +1731,7 @@ h4{
                             height: calc(100% - 24px);
                             display: inline-block;
                             background:#303236;
-                            border:1px solid #000;
+                            border:3px solid #000;
                         }
                         .images_text{
                             color:#909091;
@@ -1736,6 +1742,9 @@ h4{
                             line-height:24px;
                             font-size:12px;
                         }
+                    }
+                    li.active .images_list{
+                        border:3px solid #33bbff;
                     }
                     li:nth-child(1) .images_list{
                         background:url(http://pic39.nipic.com/20140312/18085061_092729513131_2.jpg)center center no-repeat;
@@ -1770,7 +1779,7 @@ h4{
                             height: calc(100% - 24px);
                             display: inline-block;
                             background:#303236;
-                            border:1px solid #000;
+                            border:3px solid #000;
                         }
                         .audio_text{
                             color:#909091;
@@ -1781,6 +1790,9 @@ h4{
                             line-height:24px;
                             font-size:12px;
                         }
+                    }
+                    li.active .audio_list{
+                        border:3px solid #33bbff;
                     }
                     li:nth-child(1) .audio_list{
                         background:url(../images/test_audio.jpg)center center no-repeat;
@@ -2827,7 +2839,7 @@ $timeRuler: "time_ruler";
                         width: 13px;
                         height: 14px;
                         background: url("../images/cursor.png") no-repeat;
-                        z-index: 30;
+                        z-index: 300;
                     }
                }
             }
