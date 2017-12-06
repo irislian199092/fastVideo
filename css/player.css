@@ -1686,7 +1686,7 @@ h4 {
 }
 .container-fluid .container-fluid-box .carve .carve_header .list {
   float: right;
-  width: 286px;
+  width: 320px;
   list-style: none;
   height: 46px;
 }
@@ -3486,7 +3486,7 @@ h4 {
   margin-left: 1px;
   top: 50px;
   border-left: 1px solid #0077b2;
-  z-index: 30;
+  z-index: 300;
   cursor: move;
 }
 .time_ruler_container .time_ruler_wrap .time_ruler .time_ruler_header .time_ruler_cursor .time_ruler_cursor_top {
@@ -3681,6 +3681,13 @@ h4 {
   height: 100px;
   background: #323338;
   border-radius: 8px;
+}
+.time_ruler_container .time_ruler_wrap .time_ruler .time_ruler_body .time_ruler_track_line {
+  /*  position: absolute;
+   margin-left: 1px;
+   top: 50px;
+   border-left: 1px solid #0077b2;
+   z-index: 100; */
 }
 .time_ruler_container .time_ruler_wrap .time_ruler .time_ruler_footer {
   padding-left: 151px;

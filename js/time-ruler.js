@@ -301,8 +301,8 @@ PLAYER.playerFunction=function(){
             if(s===0){
                 return false;
             }else{
-                $('#js_toolbar_icon_ungroup').addClass('active');
-                $('#js_toolbar_icon_ungroup').siblings().removeClass('active');
+                //$('#js_toolbar_icon_ungroup').addClass('active');
+                //$('#js_toolbar_icon_ungroup').siblings().removeClass('active');
 
                 $('#js_time_ruler_bar_box .onselected').each(function(i,n){
                     $(n).attr('data-interleaved',false);
@@ -320,8 +320,8 @@ PLAYER.playerFunction=function(){
             if(s===0){
                 return false;
             }else{
-                $('#js_toolbar_icon_group').addClass('active');
-                $('#js_toolbar_icon_group').siblings().removeClass('active');
+                //$('#js_toolbar_icon_group').addClass('active');
+                //$('#js_toolbar_icon_group').siblings().removeClass('active');
                 
                 $('#js_time_ruler_bar_box .onselected').each(function(i,n){
                     var time=$(n).attr('data-time');
@@ -1175,8 +1175,9 @@ PLAYER.operateJson={
         return arr;
     },
     mouseDownState:function(dragging){
-        console.log('PLAYER.keyNum',PLAYER.keyNum)
-        if(PLAYER.keyNum!==17){
+        //console.log('PLAYER.keyNum',PLAYER.keyNum)
+        if(PLAYER.keyNum!==17 && PLAYER.keyNum!==71 && PLAYER.keyNum!==7100){
+
             $('#js_time_ruler_bar_box .draggable').removeClass('onselected');
         }
 
@@ -1568,7 +1569,7 @@ PLAYER.operateJson={
                     }
                 ]    
             },
-            /*"subtitle_02":{
+            "subtitle_02":{
                 "id":"subtitle_02",
                 "name":'subtitle_02', 
                 "duration":2000,               
@@ -1653,10 +1654,10 @@ PLAYER.operateJson={
                         } 
                     }
                 ]    
-            },*/
+            },
 
         };
-        return JSON.stringify(PLAYER.subJsonTem[id]);
+        return JSON.stringify(PLAYER.subJsonTem(id,player_w,player_h,project_w,project_h));
     } 
 }
 /*------自定义事件开始------*/
@@ -2235,20 +2236,20 @@ PLAYER.timeRuler = function() {
         fixClipWidth:function(){
             var config = self.config;
             $.each($('.edit_box_v'),function(i,n){
-                var newWidth=($(n).attr('data-trimout')-$(n).attr('data-trimin'))/config.framePerPixel;
+                var newWidth=(parseInt($(n).attr('data-trimout'))-parseInt($(n).attr('data-trimin'))+1)/config.framePerPixel;
                 var newLeft=$(n).attr('data-sequencetrimin')/config.framePerPixel;
                 $(n).width(newWidth);
                 $(n).css('left',newLeft);
                 self.fixEffectWidth($(n));
             });
             $.each($('.edit_box_a'),function(i,n){
-                var newWidth=($(n).attr('data-trimout')-$(n).attr('data-trimin'))/config.framePerPixel;
+                var newWidth=(parseInt($(n).attr('data-trimout'))-parseInt($(n).attr('data-trimin'))+1)/config.framePerPixel;
                 var newLeft=$(n).attr('data-sequencetrimin')/config.framePerPixel;
                 $(n).width(newWidth);
                 $(n).css('left',newLeft);
             });
             $.each($('.edit_box_t'),function(i,n){
-                var newWidth=($(n).attr('data-sequencetrimout')-$(n).attr('data-sequencetrimin'))/config.framePerPixel;
+                var newWidth=(parseInt($(n).attr('data-trimout'))-parseInt($(n).attr('data-trimin'))+1)/config.framePerPixel;
                 var newLeft=$(n).attr('data-sequencetrimin')/config.framePerPixel;
                 $(n).width(newWidth);
                 $(n).css('left',newLeft);
@@ -2419,7 +2420,7 @@ PLAYER.timeRuler = function() {
                                     
                                     PLAYER.operateJson.sendJson();
                                     PLAYER.help_index=null;
-                                    PLAYER.keyNum=86;
+                                    //PLAYER.keyNum=86;
                                 }
 
                                 
@@ -2659,15 +2660,19 @@ PLAYER.timeRuler = function() {
         config.$clipTrackLeftRight.append(config.$clipTrackBar);
         config.$clipTrackLeftRight.append(config.$line);
 
+
         config.$clipTrackContainer.append(config.$clipTrackLeft);
         config.$clipTrackContainer.append(config.$clipTrackLeftRight);
-        
 
         config.$scrollBar=$('<div class="'+targetObj+'_track">'
                 +'<div class="'+targetObj+'_scroll"></div>'
             +'</div>');
+        config.$clipLine=$('<div class="time_ruler_track_line" id="js_time_ruler_track_line"></div>');
+
         config.$body.append(config.$clipTrackContainer);
         config.$body.append(config.$scrollBar);
+
+        config.$body.append(config.$clipLine);
 
         /*---------添加滚动条---------*/
         config.$footer=$('<div class="' + targetObj + '_footer">');
@@ -2988,7 +2993,7 @@ PLAYER.timeRuler = function() {
         attr.clipInitTrimOut=parseInt(target.attr('data-trimout'));
         attr.clipInitSequenceTrimIn=parseInt(target.attr('data-sequencetrimin'));
         attr.clipInitSequenceTrimOut=parseInt(target.attr('data-sequencetrimout'));
-        attr.clipMaxFrame=parseInt(target.attr('data-duration'))||0;
+        attr.clipMaxFrame=(parseInt(target.attr('data-duration'))-1)||0;
 
         return JSON.stringify(attr);
     }
@@ -3070,8 +3075,6 @@ PLAYER.timeRuler = function() {
             sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
             sequenceTrimOut=sequenceTrimIn+(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
             
-            
-
             cal_index=getTrackIndex(clipInitType);
 
             if(PLAYER.help_index && PLAYER.help_index>=1){
@@ -3294,7 +3297,9 @@ PLAYER.timeRuler = function() {
         var trimIn=parseInt(helpElem.attr('data-trimin'));
         var trimOut=parseInt(helpElem.attr('data-trimout'));
         var left=helpElem.css('left');
-        var width=helpElem.css('width');
+        var width=helpElem.width();
+        console.log('width',width)
+
 
         var subClipAttr={
             sequenceTrimIn:sequenceTrimIn,
@@ -3307,6 +3312,7 @@ PLAYER.timeRuler = function() {
         target.attr('data-trimin',trimIn);
         target.attr('data-trimout',trimOut);
         target.css('left',left);
+
         target.css('width',width);
 
         var clipInitType=helpElem.parent().attr('data-type');
@@ -3848,7 +3854,6 @@ PLAYER.timeRuler = function() {
             updateJson(jsonObj);
         };
         
-
         function changeLeft(value){
             for (var i = 0; i < jsonObj.attr.length; i++) {
                 jsonObj.attr[i].x1+=parseInt($(e.target).val())-initL;
