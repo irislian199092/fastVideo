@@ -2886,11 +2886,10 @@ var chooseClipModule=(function(){
             var self=this;
             var dragElem_v;
             var initTrimin=0;
-            var initTrimout=materialInfo.duration-1;
+            var initTrimout=materialInfo.duration;
             var initSequencetrimin=parseInt(e.clientX*PLAYER.TR.config.framePerPixel);
-            var initSequencetrimout=materialInfo.duration+initSequencetrimin-1;
+            var initSequencetrimout=materialInfo.duration+initSequencetrimin;
             var _w=self._calculateWidth(materialInfo.duration);
-            console.log('materialInfo.duration',materialInfo.duration)
             $.each($('#js_time_ruler_bar_box .bar_v'),function(i,n){
                 dragElem_v=$('<div class="edit_box edit_box_v draggable draghelper">'+materialInfo.name+'</div>');
                 dragElem_v.attr('data-duration',materialInfo.duration);
@@ -2898,8 +2897,6 @@ var chooseClipModule=(function(){
                 dragElem_v.attr('data-id',materialInfo.assetId);
                 dragElem_v.css('left',e.clientX);
                 dragElem_v.css('width',_w);
-
-                console.log('')
 
                 dragElem_v.attr('data-trimin',initTrimin);
                 dragElem_v.attr('data-trimout',initTrimout);
@@ -2919,9 +2916,9 @@ var chooseClipModule=(function(){
             var dragElem_a;
 
             var initTrimin=0;
-            var initTrimout=materialInfo.duration-1;
+            var initTrimout=materialInfo.duration;
             var initSequencetrimin=parseInt(e.clientX*PLAYER.TR.config.framePerPixel);
-            var initSequencetrimout=materialInfo.duration+initSequencetrimin-1;
+            var initSequencetrimout=materialInfo.duration+initSequencetrimin;
 
             var _w=self._calculateWidth(materialInfo.duration);
             $.each($('#js_time_ruler_bar_box .bar_a'),function(i,n){
@@ -2946,12 +2943,11 @@ var chooseClipModule=(function(){
             var dragElem;
 
             var initTrimin=0;
-            var initTrimout=materialInfo.duration-1;
+            var initTrimout=materialInfo.duration;
             var initSequencetrimin=parseInt(e.clientX*PLAYER.TR.config.framePerPixel);
-            var initSequencetrimout=materialInfo.duration+initSequencetrimin-1;
+            var initSequencetrimout=materialInfo.duration+initSequencetrimin;
 
             var _w=self._calculateWidth(materialInfo.duration);
-
 
             $.each($('#js_time_ruler_bar_box .bar_t'),function(i,n){
                 dragElem=$('<div class="edit_box edit_box_t draggable draghelper">'+materialInfo.name+'</div>');
@@ -2976,7 +2972,7 @@ var chooseClipModule=(function(){
             	PLAYER.TR.config.maxTime=duration+15000;
                 PLAYER.TR.updateEvent(duration+15000,true);//更新时间轴
                 res=duration/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
-                console.log('duration',duration)
+               console.log('dffff',res)
                 PLAYER.initDrag=true;
             }else{
             	res=duration/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度

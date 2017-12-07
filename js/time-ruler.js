@@ -339,6 +339,7 @@ PLAYER.playerFunction=function(){
             if(PLAYER.loadState&&PLAYER.isPlaying){
                 var s=PLAYER.OCX.getPosition();
                 
+                console.log('PLAYER.TR.currTime',PLAYER.TR.currTime)
                 console.log('s',s)
                 if(s>lastFrame){
                     s=0;
@@ -503,10 +504,8 @@ PLAYER.ocxFunction=function(){
     }
     constructor.prototype ={
         updateProjectJson:function(projStr){
-
             var projStr1 = PLAYER.operateJson.translateFfpToMS(JSON.stringify(projStr));
             try {
-                
                 var jsonObj = {
                     command: "updateproject",
                     params:{
@@ -598,7 +597,7 @@ PLAYER.ocxFunction=function(){
         },
         seek:function(point){
             try {
-                console.log('point',point)
+                console.log('seek-point',point)
                 var point=PLAYER.ffToNm(point);
                 var jsonObj = {
                     command: "seek",
@@ -666,8 +665,11 @@ PLAYER.operateJson={
     },
     translateFfpToMS:function(json){
         var json=JSON.parse(json);
+        
         var pWidth;
         //转换帧到毫秒
+        json.rootBin.sequence[0].maxDuration=40*json.rootBin.sequence[0].maxDuration;
+
         for (var i = 0,track; track=json.rootBin.sequence[0].tracks[i++];) {
             $.each(track.subclip,function(i,n){
                 if(n){
@@ -1418,7 +1420,7 @@ PLAYER.operateJson={
             }
         }
         if(arr.length!==0){
-            return Math.max.apply(null,arr);
+            return (Math.max.apply(null,arr)+1);
         }
     },
     updateMaxDuration:function(maxDuration){
@@ -2219,22 +2221,23 @@ PLAYER.timeRuler = function() {
         },
         fixClipWidth:function(){
             var config = self.config;
+
             $.each($('.edit_box_v'),function(i,n){
-                var newWidth=(parseInt($(n).attr('data-trimout'))-parseInt($(n).attr('data-trimin'))+1)/config.framePerPixel;
-                var newLeft=$(n).attr('data-sequencetrimin')/config.framePerPixel;
+                var newWidth=($(n).attr('data-trimout')-$(n).attr('data-trimin'))/config.framePerPixel;
+                newLeft=(parseInt($(n).attr('data-sequencetrimin')))/config.framePerPixel;
                 $(n).width(newWidth);
                 $(n).css('left',newLeft);
                 self.fixEffectWidth($(n));
             });
             $.each($('.edit_box_a'),function(i,n){
-                var newWidth=(parseInt($(n).attr('data-trimout'))-parseInt($(n).attr('data-trimin'))+1)/config.framePerPixel;
-                var newLeft=$(n).attr('data-sequencetrimin')/config.framePerPixel;
+                var newWidth=($(n).attr('data-trimout')-$(n).attr('data-trimin'))/config.framePerPixel;
+                newLeft=(parseInt($(n).attr('data-sequencetrimin')))/config.framePerPixel;
                 $(n).width(newWidth);
                 $(n).css('left',newLeft);
             });
             $.each($('.edit_box_t'),function(i,n){
-                var newWidth=(parseInt($(n).attr('data-trimout'))-parseInt($(n).attr('data-trimin'))+1)/config.framePerPixel;
-                var newLeft=$(n).attr('data-sequencetrimin')/config.framePerPixel;
+                var newWidth=($(n).attr('data-trimout')-$(n).attr('data-trimin'))/config.framePerPixel;
+                newLeft=(parseInt($(n).attr('data-sequencetrimin')))/config.framePerPixel;
                 $(n).width(newWidth);
                 $(n).css('left',newLeft);
             });
@@ -2651,12 +2654,11 @@ PLAYER.timeRuler = function() {
         config.$scrollBar=$('<div class="'+targetObj+'_track">'
                 +'<div class="'+targetObj+'_scroll"></div>'
             +'</div>');
-        config.$clipLine=$('<div class="time_ruler_track_line" id="js_time_ruler_track_line"></div>');
 
         config.$body.append(config.$clipTrackContainer);
         config.$body.append(config.$scrollBar);
 
-        config.$body.append(config.$clipLine);
+
 
         /*---------添加滚动条---------*/
         config.$footer=$('<div class="' + targetObj + '_footer">');
@@ -2909,8 +2911,8 @@ PLAYER.timeRuler = function() {
             //重新计算刻度容器
             config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
             config.$ruler.css("left", newContainerMarginLeft); 
-            config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
 
+            config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
             //更新canvas画布
             drawCanvas(newContainerMarginLeft);   
         }
@@ -2928,14 +2930,15 @@ PLAYER.timeRuler = function() {
             config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
             config.$ruler.css("left", newContainerMarginLeft); 
             config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
-
+            
             //更新canvas画布
             drawCanvas(newContainerMarginLeft);
         }
 
         config.$cursor.css("left", currPos);
+        config.$line.css("left", currPos);
 
-        var preSeekTime = self.currTime;
+        var preSeekTime = self.currTime; 
         self.currTime =  Math.round(currPos*config.framePerPixel);        
         if (callback !== null && preSeekTime !==self.currTime) {
             callback(self.currTime);
@@ -2977,7 +2980,7 @@ PLAYER.timeRuler = function() {
         attr.clipInitTrimOut=parseInt(target.attr('data-trimout'));
         attr.clipInitSequenceTrimIn=parseInt(target.attr('data-sequencetrimin'));
         attr.clipInitSequenceTrimOut=parseInt(target.attr('data-sequencetrimout'));
-        attr.clipMaxFrame=(parseInt(target.attr('data-duration'))-1)||0;
+        attr.clipMaxFrame=parseInt(target.attr('data-duration'))||0;
 
         return JSON.stringify(attr);
     }
@@ -4111,14 +4114,12 @@ PLAYER.timeRuler = function() {
                 PLAYER.operateJson.sendJson();
             }
         } 
-        else if(e.ctrl&&key===90){//ctrl+z撤销     
-            if((PLAYER.goBackJson.length-2)<0){
+        else if(e.ctrl&&key===90){//ctrl+z撤销  
+
+           if((PLAYER.goBackJson.length-1)<=0){
                 $('.time_ruler_bar').empty();
-                //indexCancel=0;
                 PLAYER.goBackJson=[];
                 
-                PLAYER.TR.config.maxTime=15000;
-                PLAYER.TR.updateEvent(15000);
                 $.each($('#js_time_ruler_bar_box .time_ruler_bar'),function(i,n){
                     var attr={
                         type:$(n).attr('data-type'),
@@ -4135,10 +4136,6 @@ PLAYER.timeRuler = function() {
                 //获取上一步json
                 var prevObj=PLAYER.goBackJson[PLAYER.goBackJson.length-2];
                 PLAYER.jsonObj.rootBin.sequence[0]=JSON.parse(prevObj);
-
-                console.log('0000',PLAYER.jsonObj);
-                //更新时间
-                $('#js_player_totalTime').html(PLAYER.getDurationToString(PLAYER.operateJson.getLastFrame()));
 
                 //渲染视频
                 $('.time_ruler_bar').empty();
@@ -4212,17 +4209,12 @@ PLAYER.timeRuler = function() {
                             current_track.append(subclipBox);
                         });
 
-                        //更新时间轨道配置
-                        PLAYER.TR.config.maxTime=PLAYER.operateJson.getLastFrame()+15000;
-                        PLAYER.TR.updateEvent(PLAYER.TR.config.maxTime,true);
-                        $('#js_player_totalTime').html(PLAYER.getDurationToString(PLAYER.operateJson.getLastFrame()));
-                        PLAYER.TR.fixClipWidth();
                         //更新播放器时间配置
+                        $('#js_player_totalTime').html(PLAYER.getDurationToString(PLAYER.operateJson.getLastFrame()));
                         PLAYER.PTR.config.maxTime=PLAYER.operateJson.getLastFrame();
                         PLAYER.PTR.updateEvent(PLAYER.PTR.config);
                     }
                 } 
-
 
                 PLAYER.goBackJson.pop();
                 //提交json

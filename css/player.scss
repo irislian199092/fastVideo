@@ -3008,11 +3008,11 @@ $timeRuler: "time_ruler";
                         .#{$timeRuler}_line{
                            position: absolute;
                                 width: 1px;
-                                background: #000;
+                                background: #0077b2;
                                 left: 0px;
-                                top:0px;
+                                top:-3px;
                                 height: 100%;
-                               /*  display: none;  */
+                                margin-left: 1px;  
                         }
                     }
                     
@@ -3035,13 +3035,7 @@ $timeRuler: "time_ruler";
                         border-radius: 8px;
                     }
                 } 
-                .#{$timeRuler}_track_line{
-                   /*  position: absolute;
-                    margin-left: 1px;
-                    top: 50px;
-                    border-left: 1px solid #0077b2;
-                    z-index: 100; */
-                }
+
                 
             }
             

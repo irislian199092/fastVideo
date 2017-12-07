@@ -79,7 +79,7 @@
                         "type":"t",
                         "index":2,
                         "subclip":[{
-                            "createTime":"fastvideo1509692673163",
+                            "createTime":"subtitle_6xbim3yr6w000000",
                             "sequenceTrimIn":282,
                             "sequenceTrimOut":2282,
                             "trimIn":0,
@@ -97,7 +97,7 @@
                                 "height": 82,                       
                                 "attr":{
                                     "type":"images",
-                                    "url":"...../images/square.png"
+                                    "url":"http://112.126.71.150:82/FastCarve/s1_01.png"
                                 }
                             },
                             {
@@ -204,7 +204,7 @@
                             "sequenceTrimOut":1969,
                             "trimIn":0,
                             "trimOut":1791,
-                            "createTime":1507686640369,
+                            "createTime":"fastvideo1509693314tgtt",
                             "volume":100
                         },
                         {
@@ -214,7 +214,7 @@
                             "sequenceTrimOut":5000,
                             "trimIn":0,
                             "trimOut":1791,
-                            "createTime":1507686640369,
+                            "createTime":"fastvideo1509693314tgtt",
                             "volume":100
                         }]
                     }  
