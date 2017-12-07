@@ -1438,7 +1438,7 @@ h4 {
   top: 0;
   right: 0;
   bottom: 0;
-  z-index: 500;
+  z-index: 5000;
   background-color: #000;
   opacity: 0.9;
   display: none;
@@ -3514,7 +3514,7 @@ h4 {
   background: #1e1f1f;
   border-right: 1px solid #000;
   position: absolute;
-  z-index: 100;
+  z-index: 1000;
 }
 .time_ruler_container .time_ruler_wrap .time_ruler .time_ruler_body .time_ruler_track_box .time_ruler_title_box .time_ruler_title_list {
   width: 150px;

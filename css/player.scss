@@ -186,7 +186,7 @@ h4{
     top:0;
     right: 0;
     bottom: 0;
-    z-index:500;
+    z-index:5000;
     background-color:#000;
     opacity:0.9;
     display: none;
@@ -2858,7 +2858,7 @@ $timeRuler: "time_ruler";
                         background:#1e1f1f;
                         border-right: 1px solid #000;
                         position: absolute;
-                        z-index: 100;
+                        z-index: 1000;
                         .#{$timeRuler}_title_list{
                             width: 150px;
                             padding-left: 14px;

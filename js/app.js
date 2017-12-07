@@ -57,7 +57,18 @@ $(function(){
   		$('.carve_edit_body').children().eq(index).show();
   		$('.carve_edit_body').children().eq(index).siblings().hide();
   	});
-	
+	/*----------------------联动状态----------------------------*/
+	$('#js_toolbar_icon_ungroup').mousemove(function(){
+		$(this).addClass('active');
+	}).mouseout(function(){
+		$(this).removeClass('active');
+	});
+	$('#js_toolbar_icon_group').mousemove(function(){
+		$(this).addClass('active');
+	}).mouseout(function(){
+		$(this).removeClass('active');
+	});
+
 	/*----------------------添加轨道(以后待用)---------------------------------*/
 	/*$('#js_add_video_track').on('click',function(){
 		var track_video=$('<div class="time_ruler_bar bar_v" data-type="v"></div>');

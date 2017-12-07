@@ -18,7 +18,6 @@ PLAYER.playerFunction=function(){
         setInterval(function() {
             var s=PLAYER.TR.config.seekComandTimesMonitor.length;
             if(s!== 0){
-                console.log('shuzu',PLAYER.TR.config.seekComandTimesMonitor);
                 var lastSeekTime = PLAYER.TR.config.seekComandTimesMonitor[s - 1];
                 PLAYER.TR.config.seekComandTimesMonitor = [];
             
@@ -301,9 +300,7 @@ PLAYER.playerFunction=function(){
             if(s===0){
                 return false;
             }else{
-                //$('#js_toolbar_icon_ungroup').addClass('active');
-                //$('#js_toolbar_icon_ungroup').siblings().removeClass('active');
-
+                
                 $('#js_time_ruler_bar_box .onselected').each(function(i,n){
                     $(n).attr('data-interleaved',false);
                     var time=$(n).attr('data-time');
@@ -320,8 +317,6 @@ PLAYER.playerFunction=function(){
             if(s===0){
                 return false;
             }else{
-                //$('#js_toolbar_icon_group').addClass('active');
-                //$('#js_toolbar_icon_group').siblings().removeClass('active');
                 
                 $('#js_time_ruler_bar_box .onselected').each(function(i,n){
                     var time=$(n).attr('data-time');
@@ -340,34 +335,24 @@ PLAYER.playerFunction=function(){
     function setPlayer(){ 
         var timer=setInterval(function(){
             var lastFrame=PLAYER.operateJson.getLastFrame();//拖拽素材时候的最后一帧
-            //var db_lastFrame=PLAYER.PTR.config.maxTime;     //双击素材时候的最后一帧
+            
             if(PLAYER.loadState&&PLAYER.isPlaying){
                 var s=PLAYER.OCX.getPosition();
-                if(!PLAYER.dbClick){
-                    if(s>lastFrame){
-                        s=0;
-                    }
-                    if(s===lastFrame){
-                        PLAYER.OCX.doPause();
-                        PLAYER.isPlaying=false; 
-                        $("#js_play").removeClass("stop")
-                        $("#js_play").attr("title", "播放"); 
-                        clearInterval(timer);    
-                    }
-                    PLAYER.TR.fixArrowCurrentTime(s);
-                    PLAYER.TR.currTime=s; 
-                }else{
-                    if(s>db_lastFrame){
-                        s=0;
-                    }
-                    if(s===db_lastFrame){
-                        PLAYER.OCX.doPause();
-                        PLAYER.isPlaying=false; 
-                        $("#js_play").removeClass("stop")
-                        $("#js_play").attr("title", "播放"); 
-                        clearInterval(timer);  
-                    }
+                
+                console.log('s',s)
+                if(s>lastFrame){
+                    s=0;
                 }
+                if(s===lastFrame){
+                    PLAYER.OCX.doPause();
+                    PLAYER.isPlaying=false; 
+                    $("#js_play").removeClass("stop")
+                    $("#js_play").attr("title", "播放"); 
+                    clearInterval(timer);    
+                }
+                PLAYER.TR.fixArrowCurrentTime(s);
+                PLAYER.TR.currTime=s; 
+                
                 PLAYER.PTR.fixArrowCurrentTime(s);
                 PLAYER.PTR.currTime=s;
                 $('#js_time_ruler_title_nowTime').html(PLAYER.getDurationToString(PLAYER.TR.currTime));
@@ -599,7 +584,6 @@ PLAYER.ocxFunction=function(){
         doStop:function(){
             try {
                 form1.TestActiveX.Seek(0);
-                console.log();
             } catch (e) {
                 console.log('停止失败！');
                 return;
@@ -632,7 +616,7 @@ PLAYER.ocxFunction=function(){
             try {
                 return form1.TestActiveX.GetVUMeterInfo();
             } catch (e) {
-                console.log('error');
+                //console.log('error');
                 return;
             }
         },
@@ -1568,8 +1552,8 @@ PLAYER.operateJson={
                         "attrID":'attrID_'+PLAYER.genNonDuplicateID(12)
                     }
                 ]    
-            },
-            "subtitle_02":{
+            }
+            /*,"subtitle_02":{
                 "id":"subtitle_02",
                 "name":'subtitle_02', 
                 "duration":2000,               
@@ -1654,10 +1638,10 @@ PLAYER.operateJson={
                         } 
                     }
                 ]    
-            },
+            },*/
 
         };
-        return JSON.stringify(PLAYER.subJsonTem(id,player_w,player_h,project_w,project_h));
+        return JSON.stringify(PLAYER.subJsonTem[id]);
     } 
 }
 /*------自定义事件开始------*/
