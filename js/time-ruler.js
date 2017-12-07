@@ -339,8 +339,6 @@ PLAYER.playerFunction=function(){
             if(PLAYER.loadState&&PLAYER.isPlaying){
                 var s=PLAYER.OCX.getPosition();
                 
-                console.log('PLAYER.TR.currTime',PLAYER.TR.currTime)
-                console.log('s',s)
                 if(s>lastFrame){
                     s=0;
                 }
@@ -698,7 +696,6 @@ PLAYER.operateJson={
         }
         json.pHeight=$('#ocx').height();
         json.pWidth=pWidth;
-        
         return json;
     },
     addVideoClipAttr:function(subClipAttr,_index){
@@ -1074,6 +1071,7 @@ PLAYER.operateJson={
         
         return _s;
     },
+    
     getAllsiblingsWidth(dragging){
         var _s=[];
         $.each(dragging.siblings(),function(i,n){
@@ -1102,7 +1100,6 @@ PLAYER.operateJson={
     hideAdhere:function(dragging){
         if(dragging.find('.point')){
             dragging.find('.point').remove();
-            $('.time_ruler_line').hide();
         }  
     },
     chooseInterleavedElem:function(dragging){
@@ -1231,9 +1228,8 @@ PLAYER.operateJson={
                 obj=$(n);
             }
         });
-        if(obj!==null){
-            return obj;
-        }
+        
+        return obj;
     },
     checkNextSubClip:function(s_out){
         var obj=null;
@@ -1242,9 +1238,7 @@ PLAYER.operateJson={
                 obj=$(n);
             }
         });
-        if(obj!==null){
-            return obj;
-        }
+        return obj;
     },
     addEffectClip:function(time,obj){
         for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
@@ -1328,27 +1322,13 @@ PLAYER.operateJson={
         }
         console.log('更新特技',PLAYER.jsonObj.rootBin.sequence[0].tracks);
     },
-    removeMosaicEffectClip:function(time){
-        for (var  i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
-            $.each(track.subclip,function(index,elem){
-                if(elem && elem.createTime===time && elem.effect){
-                    $.each(elem.effect,function(i,n){
-                        if(n.type==='mosaic'){
-                            elem.effect.splice(i,1);
-                        }
-                    });
-                    
-                }
-            });   
-        }
-        console.log("删除马赛克等的切片",PLAYER.jsonObj.rootBin.sequence[0].tracks)
-    },
-    removeOtherEffectClip:function(time){
+    
+    removeOtherEffectClip:function(time,type,pos){
         for (var  i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
             $.each(track.subclip,function(index,elem){
                 if(elem && elem.createTime===time && elem.effect){
                     elem.effect.forEach(function(n,i){
-                        if(n.type==='fadeinout' || n.type==='flashblack' || n.type==='flashwhite'){
+                        if(n.type===type&&n.pos===pos){
                             elem.effect.splice(i,1);
                         }
                     });
@@ -1420,7 +1400,7 @@ PLAYER.operateJson={
             }
         }
         if(arr.length!==0){
-            return (Math.max.apply(null,arr)+1);
+            return (Math.max.apply(null,arr));
         }
     },
     updateMaxDuration:function(maxDuration){
@@ -1993,6 +1973,7 @@ PLAYER.timeRuler = function() {
             self.currTime=time;
             $('#js_time_ruler_title_nowTime').html(PLAYER.getDurationToString(self.currTime));
             config.$cursor.css("left",currPos);
+            config.$line.css("left",currPos);
         },
         fixTrimInByCurrentTime: function(time) {
             var config = this.config;
@@ -2982,6 +2963,14 @@ PLAYER.timeRuler = function() {
         attr.clipInitSequenceTrimOut=parseInt(target.attr('data-sequencetrimout'));
         attr.clipMaxFrame=parseInt(target.attr('data-duration'))||0;
 
+        
+        if(target.find('.effect_box_r').length>=1 && PLAYER.operateJson.checkNextSubClip(attr.clipInitSequenceTrimOut)){
+            attr.nextClip=PLAYER.operateJson.checkNextSubClip(attr.clipInitSequenceTrimOut).attr('data-time');
+        }
+        if(target.find('.effect_box_l').length>=1 && PLAYER.operateJson.checkPrevSubClip(attr.clipInitSequenceTrimIn)){
+            attr.prevClip=PLAYER.operateJson.checkPrevSubClip(attr.clipInitSequenceTrimIn).attr('data-time');
+        }
+
         return JSON.stringify(attr);
     }
     function getClipDir(attr){
@@ -3276,8 +3265,10 @@ PLAYER.timeRuler = function() {
         var config=self.config;
         var target=ev.target;
         var id=target.attr('data-time');
+        var initAttr=JSON.parse(PLAYER.operateJson.getDraggingAttr(id));
+
+        console.log('int',initAttr);
         var helpElem=PLAYER.operateJson.getDraggingHelp(id); //联动助手
-        
         
         var sequenceTrimIn=parseInt(helpElem.attr('data-sequencetrimin'));
         var sequenceTrimOut=parseInt(helpElem.attr('data-sequencetrimout'));
@@ -3285,8 +3276,7 @@ PLAYER.timeRuler = function() {
         var trimOut=parseInt(helpElem.attr('data-trimout'));
         var left=helpElem.css('left');
         var width=helpElem.width();
-        console.log('width',width)
-
+        
 
         var subClipAttr={
             sequenceTrimIn:sequenceTrimIn,
@@ -3299,32 +3289,64 @@ PLAYER.timeRuler = function() {
         target.attr('data-trimin',trimIn);
         target.attr('data-trimout',trimOut);
         target.css('left',left);
-
         target.css('width',width);
+
+        
+        //判断对象是否有中间淡入淡出特技
+        if(initAttr.nextClip){
+            
+            var _type=target.find('.effect_box_r').attr('data-type');
+            var _pos=target.find('.effect_box_r').attr('data-pos');
+            PLAYER.operateJson.removeOtherEffectClip(id,_type,_pos);
+            $('.edit_box_v').each(function(i,n){
+                if($(n).attr('data-time')===initAttr.nextClip){
+                    
+                    var _type=$(n).find('.effect_box_l').attr('data-type');
+                    var _pos=$(n).find('.effect_box_l').attr('data-pos');
+                    PLAYER.operateJson.removeOtherEffectClip(initAttr.nextClip,_type,_pos);
+
+                    $(n).find('.effect_box_l').remove();
+                }
+            });
+            target.find('.effect_box_r').remove();
+            
+        }else if(initAttr.prevClip){
+            var _type=target.find('.effect_box_l').attr('data-type');
+            var _pos=target.find('.effect_box_l').attr('data-pos');
+            PLAYER.operateJson.removeOtherEffectClip(id,_type,_pos);
+
+            $('.edit_box_v').each(function(i,n){
+                if($(n).attr('data-time')===initAttr.prevClip){
+                    var _type=$(n).find('.effect_box_r').attr('data-type');
+                    var _pos=$(n).find('.effect_box_r').attr('data-pos');
+                    PLAYER.operateJson.removeOtherEffectClip(initAttr.nextClip,_type,_pos);
+                    $(n).find('.effect_box_r').remove();
+                }
+            });
+            target.find('.effect_box_l').remove();
+        }
 
         var clipInitType=helpElem.parent().attr('data-type');
         var cal_index=parseInt(helpElem.parent().attr('data-index'));
         addHelpObj(target,clipInitType,cal_index);
+        
         //判断重叠 （这个有问题 需要再解决）
-
         var arr=[];
         $.each(helpElem.siblings(),function(i,n){
             if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
                 arr.push($(n));
             }
         });
-        
         if(arr.length>=1){
             PLAYER.operateJson.checkCoverEvent(helpElem,helpElem.attr('data-intid'));
         }
-
+        //更新json
         var _index=parseInt(helpElem.parent().attr('data-index'));
         var _type=helpElem.parent().attr('data-type');
         
         PLAYER.operateJson.updateClipAttr(subClipAttr,id); 
         PLAYER.operateJson.changeIndexClipAttr(_type,_index,id); 
-
-        
+        //移除助手
         PLAYER.operateJson.removeDraggingInfo(id);
         helpElem.remove();
     }
@@ -4045,9 +4067,11 @@ PLAYER.timeRuler = function() {
                 if($('#js_time_ruler_bar_box .onEffect').length>0){
                     $.each($('.onEffect'),function(i,n){
                         var time=$(n).parent('.edit_box_v').attr('data-time');
-                        $(n).remove();
-                        PLAYER.operateJson.removeOtherEffectClip(time);
+                        var _type=$(n).attr('data-type');
+                        var _pos=$(n).attr('data-pos');
                         
+                        PLAYER.operateJson.removeOtherEffectClip(time,_type,_pos);
+                        $(n).remove();
                     }); 
                     PLAYER.operateJson.sendJson();
                 }
@@ -4619,7 +4643,7 @@ PLAYER.timeRuler = function() {
                     config.$rulerWrap.css("margin-left", parseInt(-newContainerMarginLeft));
                     config.$ruler.css("left", newContainerMarginLeft);
                     config.$clipTrackBar.css("margin-left", parseInt(-newContainerMarginLeft));
-
+                    config.$line.css("margin-left", parseInt(-newContainerMarginLeft)+1);
                     //更新canvas画布
                     drawCanvas(newContainerMarginLeft); 
                     return false;
@@ -4741,6 +4765,7 @@ PLAYER.timeRuler = function() {
         config.$rulerWrap.css("width", newContainerWidth); 
         config.$ruler.css("left", newContainerMarginLeft); 
         config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
+        config.$line.css("margin-left", parseInt(-newContainerMarginLeft)+1);
 
         //更新canvas画布
         drawCanvas(newContainerMarginLeft); 

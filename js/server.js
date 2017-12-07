@@ -2198,6 +2198,7 @@ var dragEffectModule=(function(){
 					var effect_trimout=(_trimin+25);
 
 					effect_box.attr('data-trimin',effect_trimin);
+					effect_box.attr('data-type',type);
 					effect_box.attr('data-trimout',effect_trimout);
 					effect_box.attr('data-duration',25);
 					effect_box.attr('data-pos','header');
@@ -2222,7 +2223,7 @@ var dragEffectModule=(function(){
 					effect_box.attr('data-duration',25);
 					effect_box.attr('data-pos','footer');
 					effect_box.css('width',_boxWidth);
-
+					effect_box.attr('data-type',type);
 					curr_subclip.append(effect_box);
 
 					var time=curr_subclip.attr('data-time');
@@ -2251,12 +2252,14 @@ var dragEffectModule=(function(){
 					effectBox1.attr('data-duration',duration);
 					effectBox1.css('width',_boxWidth);
 					effectBox1.attr('data-pos','header-middle');
+					effectBox1.attr('data-type',type);
 
 					effectBox2.attr('data-trimin',effect2_trimin);
 					effectBox2.attr('data-trimout',effect2_trimout);
 					effectBox2.attr('data-duration',duration);
 					effectBox2.css('width',_boxWidth);
 					effectBox2.attr('data-pos','footer-middle');
+					effectBox2.attr('data-type',type);
 
 					curr_subclip.append(effectBox1);
 					curr_subclip.prevSubclip.append(effectBox2);
@@ -2294,12 +2297,14 @@ var dragEffectModule=(function(){
 					effectBox1.attr('data-duration',duration);
 					effectBox1.css('width',_boxWidth);
 					effectBox1.attr('data-pos','footer-middle');
+					effectBox1.attr('data-type',type);
 
 					effectBox2.attr('data-trimin',effect2_trimin);
 					effectBox2.attr('data-trimout',effect2_trimout);
 					effectBox2.attr('data-duration',duration);
 					effectBox2.css('width',_boxWidth);
 					effectBox2.attr('data-pos','header-middle');
+					effectBox2.attr('data-type',type);
 
 
 					curr_subclip.append(effectBox1);
@@ -2322,6 +2327,7 @@ var dragEffectModule=(function(){
 					effect_box.attr('data-duration',(_trimout-_trimin));
 					effect_box.css('width',_width);
 					effect_box.attr('data-pos','all');
+					effect_box.attr('data-type',type);
 
 					curr_subclip.append(effect_box);
 

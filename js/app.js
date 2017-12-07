@@ -445,7 +445,7 @@ $(function(){
 	        		contextElem.hide();
 	            	return false;
 	            }else{
-	            	PLAYER.operateJson.removeMosaicEffectClip(time);
+	            	PLAYER.operateJson.removeEffectClip(time,'mosaic','all');
 	            	$('.edit_box_v.onselected').children('.effect_box_all').remove();
             		PLAYER.operateJson.sendJson();
 	            } 
