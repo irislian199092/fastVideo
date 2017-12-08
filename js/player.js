@@ -65,7 +65,7 @@ $.ajax({
     
             //Handle incoming video from target peer
             webrtc.on('videoAdded', function (video, peer) {
-                console.log('video added', peer);
+                //console.log('video added', peer);
                 var container = document.getElementById('ocx');
                 if (peer.id == targetId || peer.strongID == targetId || peer.nickName == targetId) {
     
@@ -84,7 +84,7 @@ $.ajax({
     
             //Handle removing video by target peer
             webrtc.on('videoRemoved', function (video, peer) {
-                console.log('video removed ', peer);
+                //console.log('video removed ', peer);
                 var container = document.getElementById('ocx');
                 if (peer.id == targetId || peer.strongId == targetId || peer.nickName == targetId) {
     
@@ -110,7 +110,7 @@ $.ajax({
         
     },
     error:function () {      
-        console.log("请求失败");
+        alert("请求失败");
     }
  });
 function initCanvas(e) {

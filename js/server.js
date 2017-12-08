@@ -923,9 +923,9 @@ $.ajaxSetup({
   type: "POST",
   dataType : "json",
   error:function(XMLHttpRequest, textStatus, errorThrown){
-  	console.log('失败XMLHttpRequest',XMLHttpRequest);
-  	console.log('失败XMLHttpRequest',textStatus);
-  	console.log('失败XMLHttpRequest',errorThrown);
+  	alert('失败XMLHttpRequest',XMLHttpRequest);
+  	alert('失败XMLHttpRequest',textStatus);
+  	alert('失败XMLHttpRequest',errorThrown);
   }
 });
 /*----------------------发布数据----------------------*/
@@ -2379,6 +2379,9 @@ var drawClipModule=(function(){
 			        	subclipBox.attr('data-time',n.createTime);
 						subclipBox.css('width',initWidth);
 						subclipBox.css('left',_left);
+						subclipBox.attr('data-intid',n.interleaved_id);
+
+
 						var className='edit_box_'+current_track.attr('data-type');
 						subclipBox.addClass(className);
 
@@ -2504,6 +2507,8 @@ var chooseClipModule=(function(){
 					//更新切片参数
 					var videoEdit=$('<div class="edit_box edit_box_v draggable" data-trimin="'+initTrimin+'" data-trimout="'+initTrimout+'" data-sequencetrimin="'+initSequencetrimin+'" data-sequencetrimout="'+initSequencetrimout+'">'+_name+'</div>');
 					var audioEdit=$('<div class="edit_box edit_box_a draggable" data-trimin="'+initTrimin+'" data-trimout="'+initTrimout+'" data-sequencetrimin="'+initSequencetrimin+'" data-sequencetrimout="'+initSequencetrimout+'">'+_name+'</div>');
+					
+					
 
 					videoEdit.attr('data-time',_createTime_v);
 					audioEdit.attr('data-time',_createTime_a);
@@ -2649,6 +2654,14 @@ var chooseClipModule=(function(){
                         
                         PLAYER.hideSubititleEdit();
                         PLAYER.hideEffectEdit();
+
+
+                       
+                        if($('#js_time_ruler_bar_box').find('.edit_box').length===0){
+                        	PLAYER.initDrag=true;
+                        }else{
+                        	PLAYER.initDrag=false;
+                        }
                         
 						onOff=false;
                         if(self.$type==='video_and_audio'){
@@ -2971,11 +2984,10 @@ var chooseClipModule=(function(){
         _calculateWidth:function(duration){
             var self=this;
             var res;
-            if(!PLAYER.initDrag){
+            if(PLAYER.initDrag){
             	PLAYER.TR.config.maxTime=duration+15000;
                 PLAYER.TR.updateEvent(duration+15000,true);//更新时间轴
                 res=duration/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
-               console.log('dffff',res)
                 PLAYER.initDrag=true;
             }else{
             	res=duration/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
@@ -3021,7 +3033,8 @@ var chooseClipModule=(function(){
                         
                         if(dragging.siblings().length!==0){
                             var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging);//获取所有切片的吸附点
-
+							
+							console.log('adhere_point',adhere_point)
 		                    var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
 		                    if(offset<=5){
 		                        nowLeft=adhere_point/config.framePerPixel;

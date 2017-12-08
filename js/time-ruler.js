@@ -1035,10 +1035,13 @@ PLAYER.operateJson={
                 }
             });
         }
-
+        
         arr.each(function(){
+            console.log('s_point',s_point)
             var offset1=Math.abs(s_point-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
             var offset2=Math.abs(s_point-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
+
+            console.log('offset2',offset2)
             if(offset1<=10){
                 _s=parseInt($(this).attr('data-sequencetrimin'));
             }
@@ -1114,23 +1117,14 @@ PLAYER.operateJson={
     },
     chooseInterleavedElem:function(dragging){
         var element=null;
-        var arr=[];
         var time=dragging.attr('data-time');
         var intid=dragging.attr('data-intid');
-
-
-        $.each($('.edit_box'),function(i,n){
-            if($(this).attr('data-interleaved')==='true' && $(this).attr('data-intid')===intid){
-               element=$(this);
-               arr.push(element);
+        $.each(dragging.parent('.time_ruler_bar').siblings().children('.edit_box'),function(i,n){
+            if($(n).attr('data-interleaved')==='true' && $(n).attr('data-intid')===intid && !$(n).hasClass('changeHelp')){
+               element=$(n);
             }
         });
-        arr.forEach(function(n,i){
-            if(arr[i].attr('data-time')===time){
-                arr.splice(i,1);
-            }
-        });
-        return arr;
+        return $(element);
     },
     chooseGroupElem:function(dragging){
         var element=null;
@@ -1170,15 +1164,12 @@ PLAYER.operateJson={
     mouseDownState:function(dragging){
         //console.log('PLAYER.keyNum',PLAYER.keyNum)
         if(PLAYER.keyNum!==17 && PLAYER.keyNum!==71 && PLAYER.keyNum!==7100){
-
             $('#js_time_ruler_bar_box .draggable').removeClass('onselected');
         }
 
         dragging.addClass('onselected');
         if(dragging.attr('data-interleaved')==="true"){
-            $.each(PLAYER.operateJson.chooseInterleavedElem(dragging),function(i,n){
-                n.addClass('onselected');
-            });
+            PLAYER.operateJson.chooseInterleavedElem(dragging).addClass('onselected');
         }
     },
     mouseMoveState:function(dragging,clipDir){//mousemove事件状态
@@ -1440,10 +1431,9 @@ PLAYER.operateJson={
     },
     addDraggingInfo:function(dragging,initAttr){
         var id=dragging.attr('data-time');
-
         var createTime='helpElem_'+PLAYER.genNonDuplicateID(12);
         var helpElem=dragging.clone().addClass('changeHelp');
-
+        
         helpElem.removeClass('onselected');
         helpElem.attr('data-time',createTime);
         dragging.parent().append(helpElem);
@@ -1957,7 +1947,7 @@ PLAYER.timeRuler = function() {
                 config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
                 config.$ruler.css("left", newContainerMarginLeft); 
                 config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
-
+                config.$line.css("margin-left", -newContainerMarginLeft);
                 //更新canvas画布
                 drawCanvas(newContainerMarginLeft);   
             }
@@ -2265,8 +2255,6 @@ PLAYER.timeRuler = function() {
                 clipping=null;
 
             var initClientX=0; 
-            var helpElem=null; 
-            var helpElem_init=null; 
             //游标
             var cursoring=null;
             var offsetX=0;
@@ -2290,8 +2278,6 @@ PLAYER.timeRuler = function() {
                 target.attr('data-clipdir',dir);
                 return dir;
             }
-            
-
             function getInitLeft(attr){
                 var left=JSON.parse(attr).clipInitLeft;
                 return left;
@@ -2339,14 +2325,37 @@ PLAYER.timeRuler = function() {
                                 y:event.clientY
                             });
                             
+                            if(v0_dir==='middle'){
+                                var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
+                                if(seleElem.length!==0){
+                                    for (let  i = 0,dragging; dragging=seleElem[i++];) {
+                                        vd_attr=getDragInfo(dragging,event);
+                                        dragging.attr('data-clipdir',v0_dir);
 
-                            var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
-                            if(seleElem.length!==0){
-                                for (let  i = 0,dragging; dragging=seleElem[i++];) {
+                                        PLAYER.operateJson.addDraggingInfo(dragging,vd_attr);
+                                        arr_left.push(getInitLeft(vd_attr));
+                                        arr_right.push(getInitRight(vd_attr));
+                                        arr_in.push(getInitIn(vd_attr));
+                                        arr_out.push(getInitOut(vd_attr));
+
+                                        dragdrop.fire({
+                                            type:'clipDragstart',
+                                            target:dragging,
+                                            x:event.clientX,
+                                            y:event.clientY
+                                        });
+                                    }
+                                }
+                            }
+                            else if(v0_dir==='left' || v0_dir==='right'){
+                                var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
+
+                                if(dragging){
                                     vd_attr=getDragInfo(dragging,event);
                                     dragging.attr('data-clipdir',v0_dir);
 
                                     PLAYER.operateJson.addDraggingInfo(dragging,vd_attr);
+
                                     arr_left.push(getInitLeft(vd_attr));
                                     arr_right.push(getInitRight(vd_attr));
                                     arr_in.push(getInitIn(vd_attr));
@@ -2360,6 +2369,7 @@ PLAYER.timeRuler = function() {
                                     });
                                 }
                             }
+                            
 
                             min_left=Math.min.apply(null,arr_left);
                             max_right=Math.max.apply(null,arr_right);
@@ -2375,6 +2385,7 @@ PLAYER.timeRuler = function() {
                                 PLAYER.clickOrMove=false; //click
                             }else{
                                 PLAYER.clickOrMove=true; //move
+
                                 dragdrop.fire({
                                     type:'clipDrag',
                                     target:v0_dragging,
@@ -2385,21 +2396,38 @@ PLAYER.timeRuler = function() {
                                     min_in:min_in,
                                     max_out:max_out
                                 });
-                                var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
-                                if(seleElem.length!==0){
-                                    for (let  i = 0,dragging; dragging=seleElem[i++];) {
-                                        dragdrop.fire({
-                                            type:'clipDrag',
-                                            target:dragging,
-                                            x:event.clientX,
-                                            y:event.clientY,
-                                            min_left:min_left,
-                                            max_right:max_right,
-                                            min_in:min_in,
-                                            max_out:max_out
-                                        });
+                                if(v0_dir==='middle'){
+                                    //移动可以全体移动
+                                    var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
+                                    if(seleElem.length!==0){
+                                        for (let  i = 0,dragging; dragging=seleElem[i++];) {
+                                            dragdrop.fire({
+                                                type:'clipDrag',
+                                                target:dragging,
+                                                x:event.clientX,
+                                                y:event.clientY,
+                                                min_left:min_left,
+                                                max_right:max_right,
+                                                min_in:min_in,
+                                                max_out:max_out
+                                            });
+                                        }
                                     }
+                                }else if(v0_dir==='left' || v0_dir==='right'){
+                                    //缩放只能联动一起缩放
+                                    var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
+                                    dragdrop.fire({
+                                        type:'clipDrag',
+                                        target:dragging,
+                                        x:event.clientX,
+                                        y:event.clientY,
+                                        min_left:min_left,
+                                        max_right:max_right,
+                                        min_in:min_in,
+                                        max_out:max_out
+                                    });
                                 }
+                                
                                 
                             }
                         }
@@ -2432,23 +2460,32 @@ PLAYER.timeRuler = function() {
                                         target:v0_dragging,
                                         x:event.clientX,
                                         y:event.clientY
-                                    });
 
-                                    var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
-                                    if(seleElem.length!==0){
-                                        for (let  i = 0,dragging; dragging=seleElem[i++];) {
-                                            dragdrop.fire({
-                                                type:'clipDragend',
-                                                target:dragging,
-                                                x:event.clientX,
-                                                y:event.clientY
-                                            });
+                                    });
+                                    
+                                    if(v0_dir==='middle'){
+                                        var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
+                                        if(seleElem.length!==0){
+                                            for (let  i = 0,dragging; dragging=seleElem[i++];) {
+                                                dragdrop.fire({
+                                                    type:'clipDragend',
+                                                    target:dragging,
+                                                    x:event.clientX,
+                                                    y:event.clientY
+                                                });
+                                            }
                                         }
+                                    }else if(v0_dir==='left' || v0_dir==='right'){
+                                        var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
+                                        dragdrop.fire({
+                                            type:'clipDragend',
+                                            target:dragging,
+                                            x:event.clientX,
+                                            y:event.clientY
+                                        });
                                     }
                                     
                                     PLAYER.operateJson.sendJson();
-                                    PLAYER.help_index=null;
-                                    //PLAYER.keyNum=86;
                                 }
 
                                 
@@ -2463,19 +2500,34 @@ PLAYER.timeRuler = function() {
                                     y:event.clientY,
                                     intId:id
                                 });
-
-                                var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
-                                if(seleElem.length!==0){
-                                    for (let  i = 0,dragging; dragging=seleElem[i++];) {
-                                        dragdrop.fire({
-                                            type:'clipClick',
-                                            target:dragging,
-                                            x:event.clientX,
-                                            y:event.clientY,
-                                            intId:id
-                                        });
+                               
+                                
+                                if(v0_dir==='middle'){
+                                    var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
+                                    if(seleElem.length!==0){
+                                        for (let  i = 0,dragging; dragging=seleElem[i++];) {
+                                            dragdrop.fire({
+                                                type:'clipClick',
+                                                target:dragging,
+                                                x:event.clientX,
+                                                y:event.clientY,
+                                                intId:id
+                                            });
+                                        }
                                     }
                                 }
+                                else if(v0_dir==='left' || v0_dir==='right'){
+                                    var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
+                                    dragdrop.fire({
+                                        type:'clipClick',
+                                        target:dragging,
+                                        x:event.clientX,
+                                        y:event.clientY,
+                                        intId:id
+                                    });
+                                        
+                                }
+
                                 if(PLAYER.keyNum===85){
                                     PLAYER.operateJson.sendJson();
                                 }
@@ -2484,8 +2536,14 @@ PLAYER.timeRuler = function() {
                             
                             v0_dragging=null; 
                             dragging=null;
-                            arr_sIn=[];
-                            arr_sOut=[];
+                            min_left=0;
+                            max_right=0;
+                            min_in=0;
+                            max_out=0;
+                            arr_left=[]; 
+                            arr_right=[];
+                            arr_in=[]; 
+                            arr_out=[];
                         break;
                     case 'click':
                         if(target.className.indexOf('effect_box_l')>-1 || target.className.indexOf('effect_box_r')>-1){
@@ -3043,8 +3101,8 @@ PLAYER.timeRuler = function() {
         var id=target.attr('data-time');
         var cal_index;
         
-        
         var helpElem=PLAYER.operateJson.getDraggingHelp(id); //联动助手
+        
         helpElem.show();
         var initAttr=JSON.parse(PLAYER.operateJson.getDraggingAttr(id));
         
@@ -3071,31 +3129,79 @@ PLAYER.timeRuler = function() {
         
         
         if(clipDir==='middle'){
-            var    move=(ev.x-clipInitClientX);
-            var    nowLeft=clipInitLeft+move;
+            var move=(ev.x-clipInitClientX);
+            var nowLeft=clipInitLeft+move;
+
+            
             if(ev.min_left+(ev.x-clipInitClientX)<=0){
                 ev.x=clipInitClientX-ev.min_left;
                 nowLeft=clipInitLeft-ev.min_left;
             }
+
             if(nowLeft<=0){
                 nowLeft=0;
                 ev.x=clipInitClientX-clipInitLeft;
             }
+
+            
             nowLeft=parseInt(nowLeft*config.framePerPixel)/config.framePerPixel;
             sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
             sequenceTrimOut=sequenceTrimIn+(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
             
-            cal_index=getTrackIndex(clipInitType);
+            $.each(helpElem.siblings(':not(.onselected)'),function(i,n){
+                
+                if(move>0){
+                    //往右走
+                    var offset_f=parseInt($(n).attr('data-sequencetrimin'))-ev.max_out;
+                    var offset_px=offset_f/config.framePerPixel-move;
+                    
+                    if(offset_px<=15&&offset_px>=0){
 
+                        var s=ev.max_out-clipInitSequenceTrimOut; //计算拖拽对象与联动对象之间最大sout的值
+                        
+                        console.log('s',s)
+                        sequenceTrimOut=parseInt($(n).attr('data-sequencetrimin'))-s;
+
+                        sequenceTrimIn=sequenceTrimOut-(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
+                        nowLeft=sequenceTrimIn/config.framePerPixel;
+                        PLAYER.operateJson.showAdhere(helpElem,'backward');
+                    }else{
+                        PLAYER.operateJson.hideAdhere(helpElem);
+                    }
+                }else{
+                    //往左走
+                    var offset_f=parseInt($(n).attr('data-sequencetrimout'))-ev.min_in;
+                    var offset_px=offset_f/config.framePerPixel-move;
+                    
+                    if(offset_px>=-15&&offset_px<=0){
+                        //move=(parseInt($(n).attr('data-sequencetrimout'))-ev.min_in)/config.framePerPixel;
+                        var s=clipInitSequenceTrimIn-ev.min_in;
+
+                        sequenceTrimIn=parseInt($(n).attr('data-sequencetrimout'))+s;
+                        sequenceTrimOut=sequenceTrimIn+(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
+                        nowLeft=sequenceTrimIn/config.framePerPixel;
+                        PLAYER.operateJson.showAdhere(helpElem,'forward');
+                    }else{
+                        PLAYER.operateJson.hideAdhere(helpElem);
+                    }
+                }
+                
+            })
+            
+
+
+            cal_index=getTrackIndex(clipInitType);
             if(PLAYER.help_index && PLAYER.help_index>=1){
                 addHelpObj(helpElem,clipInitType,PLAYER.help_index);  
             }
           
-            chcekAdhereMiddle(helpElem,id);
+            //chcekAdhereMiddle(helpElem,id);
 
             helpElem.attr('data-sequencetrimin',sequenceTrimIn);
             helpElem.attr('data-sequencetrimout',sequenceTrimOut);
             helpElem.css('left',nowLeft);
+
+            console.log('helpElem',helpElem.attr('data-sequencetrimin'));
 
         }
         else if(clipDir==='left'){
@@ -3300,8 +3406,7 @@ PLAYER.timeRuler = function() {
         var target=ev.target;
         var id=target.attr('data-time');
         var initAttr=JSON.parse(PLAYER.operateJson.getDraggingAttr(id));
-
-        console.log('int',initAttr);
+        var dir=target.attr('data-clipdir');
         var helpElem=PLAYER.operateJson.getDraggingHelp(id); //联动助手
         
         var sequenceTrimIn=parseInt(helpElem.attr('data-sequencetrimin'));
@@ -3310,6 +3415,7 @@ PLAYER.timeRuler = function() {
         var trimOut=parseInt(helpElem.attr('data-trimout'));
         var left=helpElem.css('left');
         var width=helpElem.width();
+        
         
 
         var subClipAttr={
@@ -3327,7 +3433,7 @@ PLAYER.timeRuler = function() {
 
         
         //判断对象是否有中间淡入淡出特技
-        if(initAttr.nextClip){
+        if(dir!=='left'&&initAttr.nextClip){
             
             var _type=target.find('.effect_box_r').attr('data-type');
             var _pos=target.find('.effect_box_r').attr('data-pos');
@@ -3344,7 +3450,7 @@ PLAYER.timeRuler = function() {
             });
             target.find('.effect_box_r').remove();
             
-        }else if(initAttr.prevClip){
+        }else if(dir!=='right'&&initAttr.prevClip){
             var _type=target.find('.effect_box_l').attr('data-type');
             var _pos=target.find('.effect_box_l').attr('data-pos');
             PLAYER.operateJson.removeOtherEffectClip(id,_type,_pos);
@@ -3353,7 +3459,7 @@ PLAYER.timeRuler = function() {
                 if($(n).attr('data-time')===initAttr.prevClip){
                     var _type=$(n).find('.effect_box_r').attr('data-type');
                     var _pos=$(n).find('.effect_box_r').attr('data-pos');
-                    PLAYER.operateJson.removeOtherEffectClip(initAttr.nextClip,_type,_pos);
+                    PLAYER.operateJson.removeOtherEffectClip(initAttr.prevClip,_type,_pos);
                     $(n).find('.effect_box_r').remove();
                 }
             });
@@ -3364,7 +3470,6 @@ PLAYER.timeRuler = function() {
         var cal_index=parseInt(helpElem.parent().attr('data-index'));
         addHelpObj(target,clipInitType,cal_index);
         
-        //判断重叠 （这个有问题 需要再解决）
         var arr=[];
         $.each(helpElem.siblings(),function(i,n){
             if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
@@ -3390,7 +3495,6 @@ PLAYER.timeRuler = function() {
         var id=v_target.attr('data-time');
         var helpElem=PLAYER.operateJson.getDraggingHelp(id); //联动助手
         
-
         PLAYER.operateJson.removeDraggingInfo(id);
         helpElem.remove();
 
@@ -3640,12 +3744,12 @@ PLAYER.timeRuler = function() {
             
 
             if(right_dom.attr('data-interleaved')==="true"){
-                for (let  i = 0,dragging; dragging=PLAYER.operateJson.chooseInterleavedElem(right_dom)[i++];) {
-                    arr_init_sequenceTrimIn.push(parseInt(dragging.attr('data-sequencetrimin')));
-                    if(parseInt(dragging.siblings().attr('data-sequencetrimout'))<=parseInt(dragging.attr('data-sequencetrimin'))){
-                        arr_init_sequenceTrimOut.push(parseInt(dragging.siblings().attr('data-sequencetrimout')));  
-                    }
-                    
+
+                var dragging=PLAYER.operateJson.chooseInterleavedElem(right_dom)
+                
+                arr_init_sequenceTrimIn.push(parseInt(dragging.attr('data-sequencetrimin')));
+                if(parseInt(dragging.siblings().attr('data-sequencetrimout'))<=parseInt(dragging.attr('data-sequencetrimin'))){
+                    arr_init_sequenceTrimOut.push(parseInt(dragging.siblings().attr('data-sequencetrimout')));  
                 }
             }
             var vcut_init_sequenceTrimIn;
@@ -4094,9 +4198,10 @@ PLAYER.timeRuler = function() {
                         if($(n).attr('data-sequencetrimin')>=currFrame){
                             move($(n));
                             if($(n).attr('data-interleaved')==="true"){
-                                for (let  i = 0,dragging; dragging=PLAYER.operateJson.chooseInterleavedElem($(n))[i++];) {
-                                    move(dragging);
-                                }
+                                var dragging=PLAYER.operateJson.chooseInterleavedElem($(n))
+                                
+                                move(dragging);
+                                
                             }
                         }  
                     });

@@ -3581,7 +3581,7 @@ h4 {
   z-index: 100;
 }
 .time_ruler_container .time_ruler_wrap .time_ruler .time_ruler_body .time_ruler_track_box .time_ruler_edit_box .time_ruler_bar_box .time_ruler_bar .edit_box.changeHelp {
-  background: #333;
+  /* background: #333; */
   z-index: 50;
 }
 .time_ruler_container .time_ruler_wrap .time_ruler .time_ruler_body .time_ruler_track_box .time_ruler_edit_box .time_ruler_bar_box .time_ruler_bar .edit_box_v.effectActive, .time_ruler_container .time_ruler_wrap .time_ruler .time_ruler_body .time_ruler_track_box .time_ruler_edit_box .time_ruler_bar_box .time_ruler_bar .edit_box_v.effectActive2 {
