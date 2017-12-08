@@ -236,11 +236,14 @@ $(function(){
 		//点击播放暂停
 		if(e.target.id==='js_play'){
 			var lastFrame=PLAYER.operateJson.getLastFrame();
+
+
             if(PLAYER.TR.currTime>=lastFrame){//如果seek位置大于素材长度，则跳到0处开始播放
-                PLAYER.TR.initTime();
+                return false;
+                /*PLAYER.TR.initTime();
                 PLAYER.PTR.initTime();
                 PLAYER.OCX.seek(0);
-                PLAYER.player.play();
+                PLAYER.player.play();*/
             }else{
             	PLAYER.player.play();
             }

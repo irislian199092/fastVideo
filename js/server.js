@@ -1545,28 +1545,25 @@ var facialListModule=(function(){
 /*----------------------点击工具条按钮----------------------------------*/
 //显示保存工程模态框
 var showSaveModal=function(type){
-	if(PLAYER.isPlaying){
-        PLAYER.OCX.doPause();
-        PLAYER.isPlaying=false; 
-        $("#js_play").removeClass("stop")
-        $("#js_play").attr("title", "播放");       
-    } 
+	PLAYER.checkPlaying();
 	var s1=createSaveModal();
+
 	$('#js_modal_savePro').attr('data-type',type);
 	s1.show();
 	$('#js_pageCover').show();
+
 	//点击取消按钮
-	$('#js_saveProjectModal #js_modal_cancelPro').on('click',function(){
+	$('#js_saveProjectModal #js_modal_cancelPro').off().click(function(){
 		s1.hide();
 		$('#js_pageCover').hide();
 	});
 	//点击X按钮
-	$('#js_saveProjectModal .icojam_delete').on('click',function(){
+	$('#js_saveProjectModal .icojam_delete').off().click(function(){
 		s1.hide();
 		$('#js_pageCover').hide();
 	});
 	//点击确定按钮
-	$('#js_modal_savePro').on('click',function(){
+	$('#js_modal_savePro').off().click(function(){
 		$.ajax({
 	  		url:serverUrl+'proj/update',
 	  		data:{
@@ -1587,7 +1584,7 @@ var showSaveModal=function(type){
 	});
 };
 //点击工具条保存工程按钮
-$('#js_saveProject').on('click',function(){
+$('#js_saveProject').click(function(){
 	showSaveModal('savepro');
 	PLAYER.observer.listen('saveProModal',function(data,type){
 		if(data && (type==="savepro")){
@@ -1680,9 +1677,9 @@ $('#js_openProject').on('click',function(){
 });
 //点击工具条打包输出按钮
 $('#js_exportProject').on('click',function(){
-	var s1=showSaveModal();
-	PLAYER.observer.listen('saveProModal',function(data){
-		if(data){
+	showSaveModal('exportpro');
+	PLAYER.observer.listen('saveProModal',function(data,type){
+		if(data && (type==="exportpro")){
 			if($('.time_ruler_bar').children().length>0){
 				$('#js_saveProjectModal').hide();
 				$('#js_pageCover').show();
@@ -1705,17 +1702,17 @@ $('#js_exportProject').on('click',function(){
 				});
 				$('#js_exportProjectModal').show();
 				//点击X
-				$('#js_exportProjectModal .icojam_delete').on('click',function(){
+				$('#js_exportProjectModal .icojam_delete').off().click(function(){
 					$('#js_exportProjectModal').hide();
 					$('#js_pageCover').hide();
 				});
 				//点击取消	
-				$('#js_export_modal_cancelPro').on('click',function(){
+				$('#js_export_modal_cancelPro').off().click(function(){
 					$('#js_exportProjectModal').hide();
 					$('#js_pageCover').hide();
 				});
 				//点击打包
-				$('#js_modal_export').on('click',function(){
+				$('#js_modal_export').off().click(function(){
 					var schemaValue=$('#js_export_form_schema').val();
 					var nameValue=$('#js_export_form_name').val()?$('#js_export_form_name').val():'打包文件';
 					var checkOff=$('#js_export_form_check').prop('checked');
