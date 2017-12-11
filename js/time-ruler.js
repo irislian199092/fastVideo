@@ -1144,7 +1144,7 @@ PLAYER.operateJson={
                element=$(n);
             }
         });
-        return $(element);
+        return element;
     },
     chooseGroupElem:function(dragging){
         var element=null;
@@ -2369,7 +2369,6 @@ PLAYER.timeRuler = function() {
                             }
                             else if(v0_dir==='left' || v0_dir==='right'){
                                 var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
-
                                 if(dragging){
                                     vd_attr=getDragInfo(dragging,event);
                                     dragging.attr('data-clipdir',v0_dir);
@@ -2436,16 +2435,19 @@ PLAYER.timeRuler = function() {
                                 }else if(v0_dir==='left' || v0_dir==='right'){
                                     //缩放只能联动一起缩放
                                     var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
-                                    dragdrop.fire({
-                                        type:'clipDrag',
-                                        target:dragging,
-                                        x:event.clientX,
-                                        y:event.clientY,
-                                        min_left:min_left,
-                                        max_right:max_right,
-                                        min_in:min_in,
-                                        max_out:max_out
-                                    });
+                                    if(dragging){
+                                        dragdrop.fire({
+                                            type:'clipDrag',
+                                            target:dragging,
+                                            x:event.clientX,
+                                            y:event.clientY,
+                                            min_left:min_left,
+                                            max_right:max_right,
+                                            min_in:min_in,
+                                            max_out:max_out
+                                        });
+                                    }
+                                    
                                 }
                                 
                                 
@@ -2497,12 +2499,15 @@ PLAYER.timeRuler = function() {
                                         }
                                     }else if(v0_dir==='left' || v0_dir==='right'){
                                         var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
-                                        dragdrop.fire({
-                                            type:'clipDragend',
-                                            target:dragging,
-                                            x:event.clientX,
-                                            y:event.clientY
-                                        });
+                                        if(dragging){
+                                            dragdrop.fire({
+                                                type:'clipDragend',
+                                                target:dragging,
+                                                x:event.clientX,
+                                                y:event.clientY
+                                            });
+                                        }
+                                        
                                     }
                                     
                                     PLAYER.operateJson.sendJson();
@@ -2538,13 +2543,16 @@ PLAYER.timeRuler = function() {
                                 }
                                 else if(v0_dir==='left' || v0_dir==='right'){
                                     var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
-                                    dragdrop.fire({
-                                        type:'clipClick',
-                                        target:dragging,
-                                        x:event.clientX,
-                                        y:event.clientY,
-                                        intId:id
-                                    });
+                                    if(dragging){
+                                        dragdrop.fire({
+                                            type:'clipClick',
+                                            target:dragging,
+                                            x:event.clientX,
+                                            y:event.clientY,
+                                            intId:id
+                                        });
+                                    }
+                                    
                                         
                                 }
 
@@ -3059,8 +3067,11 @@ PLAYER.timeRuler = function() {
         attr.clipInitTime=target.attr('data-time');
         
         attr.clipInitWidth=parseInt(target.outerWidth());
+         console.log('f000',target.attr('class'));
         attr.clipInitLeft=parseInt(target.position().left);
         attr.clipInitClientX=ev.x;
+
+
         attr.clipInitOffsetLeft=parseInt(target.parent().offset().left);
 
         attr.clipInitTop=parseInt(target.position().top);
@@ -3115,7 +3126,7 @@ PLAYER.timeRuler = function() {
     //拖拽中clip
     function handleClipDragEvent(ev){
         var config=self.config;
-        var target=ev.target;
+        var target=$(ev.target);
         var parentWidth=config.$header.width();
         
         var id=target.attr('data-time');
@@ -3166,7 +3177,15 @@ PLAYER.timeRuler = function() {
             
             checkAdhereMiddle(helpElem,moveFrame);
 
-            cal_index=getTrackIndex(clipInitType);
+            //cal_index=getTrackIndex(clipInitType);
+
+            if(clipInitType==='t' || clipInitType==='a'){
+                cal_index=getTrackIndexAOrT(clipInitType);
+            }
+            if(clipInitType==='v'){
+                cal_index=getTrackIndexV(clipInitType);
+            }
+
             if(PLAYER.help_index && PLAYER.help_index>=1){
                 addHelpObj(helpElem,clipInitType,PLAYER.help_index);  
             }
@@ -3395,19 +3414,9 @@ PLAYER.timeRuler = function() {
                 PLAYER.operateJson.hideAdhere(helpElem);
             } 
         }
-        function getTrackIndex(clipInitType){
+        function getTrackIndexV(clipInitType){
             var cal_index;
-            if(clipInitType==='t' || clipInitType==='a'){
-                if(clipInitIndex>=2&&ev.y-clipInitClientY<-10){
-                    cal_index=clipInitIndex-Math.ceil((clipInitOffsetTop-ev.y)/70);
-                }
-                else if(clipInitIndex>=1&&ev.y-clipInitClientY>10){
-                    cal_index=clipInitIndex-Math.ceil((ev.y-clipInitClientY)/70);
-                }else if(Math.abs(ev.y-clipInitClientY)<10){
-                    cal_index=clipInitIndex;
-                }
-            }
-            else if(clipInitType==='v'){
+            if(clipInitType==='v'){
                 if(clipInitIndex>=1&&ev.y-clipInitClientY<-10){
                     cal_index=clipInitIndex+Math.ceil((clipInitOffsetTop-ev.y)/70);
                 }
@@ -3422,6 +3431,24 @@ PLAYER.timeRuler = function() {
             }
         }
 
+        function getTrackIndexAOrT(clipInitType){
+            var cal_index;
+            if(clipInitType==='t' || clipInitType==='a'){
+                if(clipInitIndex>=2&&ev.y-clipInitClientY<-10){
+                    cal_index=clipInitIndex-Math.ceil((clipInitOffsetTop-ev.y)/70);
+                }
+                else if(clipInitIndex>=1&&ev.y-clipInitClientY>10){
+
+                    cal_index=clipInitIndex+Math.ceil((ev.y-clipInitClientY)/70);
+                }else if(Math.abs(ev.y-clipInitClientY)<10){
+                    cal_index=clipInitIndex;
+                }
+            }
+            
+            if(cal_index){
+                return PLAYER.help_index=cal_index;
+            }
+        }
     }
     function addHelpObj(obj,clipInitType,cal_index){
         $.each($('.time_ruler_bar[data-type="'+clipInitType+'"]'),function(i,n){
@@ -4442,6 +4469,8 @@ PLAYER.timeRuler = function() {
                 PLAYER.goBackJson.pop();
                 //提交json
                 PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
+
+                console.log('PLAYER.jsonObj',PLAYER.jsonObj)
                 PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime));
             }
         }
