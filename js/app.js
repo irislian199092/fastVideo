@@ -384,6 +384,39 @@ $(function(){
 	$('#js_toolbar_icon_group').on('click',function(){
 		PLAYER.player.toolbar_group();
 	});
+	/*----------------------点击改变音量---------------------------------------------*/
+	var isVolShow=true;
+	$('#js_toolbar_icon_volume').off().click(function(){
+		var length=$('.onselected.edit_box_a').length;
+
+		if(!isVolShow){
+			$('#js_toolbar_icon_volume_track').hide();
+			isVolShow=true;
+		}
+		else if( length>0 && isVolShow){
+			$('#js_toolbar_icon_volume_track').show();
+			isVolShow=false;
+		}
+	});
+
+	$('#js_toolbar_icon_volume_track')[0].onchange=function(e){
+		$.each($('.onselected.edit_box_a'),function(i,n){
+			var id=$(n).attr('data-time');
+			var value=parseInt($(e.target).val());
+			$(e.target).attr('title',value);
+			PLAYER.operateJson.updateAudioClipVolume(id,value);
+			PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
+        	PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime));
+
+        	console.log('更新音量',PLAYER.jsonObj.rootBin.sequence[0])
+		});
+	}
+
+	
+
+
+
+
 	/*----------------------右击菜单马赛克---------------------------------------------*/
 
 	var contextOperate=(function(){

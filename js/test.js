@@ -3123,31 +3123,83 @@ PLAYER.timeRuler = function() {
         
         
         if(clipDir==='middle'){
-            var   move=(ev.x-clipInitClientX);
-            var   nowLeft=clipInitLeft+move;
-            if(ev.min_left+(ev.x-clipInitClientX)<=0){
-                ev.x=clipInitClientX-ev.min_left;
-                nowLeft=clipInitLeft-ev.min_left;
+            var move=(ev.x-clipInitClientX);
+            var moveFrame=(ev.x-clipInitClientX)*config.framePerPixel;
+
+            sequenceTrimIn=clipInitSequenceTrimIn+moveFrame;
+            if(ev.min_in+moveFrame<=0){
+                moveFrame=-ev.min_in;
+                sequenceTrimIn=clipInitSequenceTrimIn-ev.min_in;
             }
-            if(nowLeft<=0){
-                nowLeft=0;
-                ev.x=clipInitClientX-clipInitLeft;
+            if(sequenceTrimIn<=0){
+                sequenceTrimIn=0;
             }
-            nowLeft=parseInt(nowLeft*config.framePerPixel)/config.framePerPixel;
-            sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
+           
             sequenceTrimOut=sequenceTrimIn+(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
+            nowLeft=sequenceTrimIn/config.framePerPixel;
+
+            $.each(helpElem.siblings(),function(i,n){
+                if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
+                    if(move>0){
+                        //往右走
+                        var offsetFrameIn=parseInt($(n).attr('data-sequencetrimin'))-ev.max_out;
+                        var offsetPxIn=offsetFrameIn/config.framePerPixel-move;
+
+                        var offsetFrameOut=parseInt($(n).attr('data-sequencetrimout'))-ev.max_out;
+                        var offsetPxOut=offsetFrameOut/config.framePerPixel-move;
+                        
+                        var s=ev.max_out-clipInitSequenceTrimOut; //计算拖拽对象与联动对象之间最大sout的值
+                        console.log('offsetPxIn---',offsetPxIn)
+                        if(Math.abs(offsetPxIn)<=10){
+                            move=offsetFrameIn/config.framePerPixel;
+                            sequenceTrimOut=parseInt($(n).attr('data-sequencetrimin'))-s;
+                            sequenceTrimIn=sequenceTrimOut-(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
+                            nowLeft=sequenceTrimIn/config.framePerPixel;
+                            
+                            PLAYER.operateJson.showAdhere(helpElem,'backward');
+                        }else if(Math.abs(offsetPxOut)<=10){
+                            sequenceTrimOut=parseInt($(n).attr('data-sequencetrimout'))-s;
+                            sequenceTrimIn=sequenceTrimOut-(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
+                            nowLeft=sequenceTrimIn/config.framePerPixel;
+
+                            PLAYER.operateJson.showAdhere(helpElem,'backward');
+                        }
+                        else{
+                            console.log('hide')
+                            PLAYER.operateJson.showAdhere(helpElem,'backward');
+                            PLAYER.operateJson.hideAdhere(helpElem);
+                        }
+                    }else{
+                        //往左走
+                        var offset_f=parseInt($(n).attr('data-sequencetrimout'))-ev.min_in;
+                        var offset_px=offset_f/config.framePerPixel-move;
+                        
+                        if(Math.abs(offset_px)<=10){
+                            //move=(parseInt($(n).attr('data-sequencetrimout'))-ev.min_in)/config.framePerPixel;
+                            var s=clipInitSequenceTrimIn-ev.min_in;
+
+                            sequenceTrimIn=parseInt($(n).attr('data-sequencetrimout'))+s;
+                            sequenceTrimOut=sequenceTrimIn+(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
+                            nowLeft=sequenceTrimIn/config.framePerPixel;
+                            PLAYER.operateJson.showAdhere(helpElem,'forward');
+                        }else{
+                            PLAYER.operateJson.hideAdhere(helpElem);
+                        }
+                    }
+                }
+            });
             
             cal_index=getTrackIndex(clipInitType);
-
             if(PLAYER.help_index && PLAYER.help_index>=1){
                 addHelpObj(helpElem,clipInitType,PLAYER.help_index);  
             }
           
-            chcekAdhereMiddle(helpElem,id);
-
+            //chcekAdhereMiddle(helpElem,id);
             helpElem.attr('data-sequencetrimin',sequenceTrimIn);
             helpElem.attr('data-sequencetrimout',sequenceTrimOut);
             helpElem.css('left',nowLeft);
+
+            console.log('helpElem',helpElem.attr('data-sequencetrimin'));
 
         }
         else if(clipDir==='left'){

@@ -12,6 +12,7 @@
 <script src="js/ip.js"></script>
 <script>
 	var PLAYER = PLAYER || {};
+	PLAYER.VUMeterInfo=null;
 	PLAYER.currentTime=0;
 	PLAYER.keyNum=0;			//存储快捷键
 	PLAYER.isPlaying=false;		//存储播放状态
@@ -343,7 +344,7 @@
 				      	  	<!-- <li><a href="javascript:;" class="icon-10" title="抽帧"></a></li> -->
 				      	  	<li><a href="javascript:;" class="icon-zoom" title="2d变换" id="js_zoom"></a></li>
 				      	  	<!-- <li><a href="javascript:;" class="icon-cut" title="裁剪" id="js_cut"></a></li> -->
-				      	  	<li><a href="javascript:;" class="icon-facial" title="视频分析" id="js_finding"></a></li>
+				      	  	<!-- <li><a href="javascript:;" class="icon-facial" title="视频分析" id="js_finding"></a></li> -->
 				      	</ul>
 				      	<!-- <div class="player_toolbar_sound">
 				      		<span class="icojam_speaker_2"></span>
@@ -393,8 +394,12 @@
 		<span class="toolbar_icon toolbar_icon_ungroup" title="独立(shift+2)" id="js_toolbar_icon_ungroup"></span>
 		<!-- <span class="toolbar_icon toolbar_icon_insert"></span>
 		<span class="toolbar_icon toolbar_icon_cover"></span> -->
-		<span class="toolbar_icon toolbar_icon_reverse"></span>
-		<span class="toolbar_icon toolbar_icon_volume"></span>		
+		<span class="toolbar_icon toolbar_icon_volume_num" ></span>
+		<!-- <span class="toolbar_icon toolbar_icon_volume_track">
+			
+		</span> -->
+		
+		<span class="toolbar_icon toolbar_icon_volume" id="js_toolbar_icon_volume"><input type="range" id="js_toolbar_icon_volume_track" min="0" max="400" value="100" /></span>		
 	</div>
 	<!-- 时间轴开始 -->
 	<div class="row time_ruler_container">

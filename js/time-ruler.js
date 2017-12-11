@@ -388,6 +388,7 @@ PLAYER.playerFunction=function(){
     function setVuInfo(){
         setTimeout(function(){
             var str = PLAYER.OCX.getVUMeterInfo();
+
             if(str){
                 drawVoiceTable(str.split(","),true);
             }
@@ -402,7 +403,9 @@ PLAYER.playerFunction=function(){
         function drawVoiceTable(arr,isDraw){  
             var c1 = document.getElementById("js_voCanvas"); 
             var _h=$("#js_time_ruler_voiceBox").height()-21;  
+
             if(c1.getContext('2d')){  
+
                 var ctx = c1.getContext("2d");  
                 ctx.clearRect(0,0,100,500)
                 if(isDraw){
@@ -412,7 +415,6 @@ PLAYER.playerFunction=function(){
                     for(var i=0;i<parseInt(arr[0]);i++){
                         var voice = parseFloat(arr[i+1]/100)+0.99;
                         canvasGradient=ctx.createLinearGradient(x,height,x,0);  
-                        
                         canvasGradient.addColorStop(0,'#33FF00'); 
                         canvasGradient.addColorStop(0.4,'#33FF00');
                         canvasGradient.addColorStop(1,'red');
@@ -611,7 +613,7 @@ PLAYER.ocxFunction=function(){
         },
         getVUMeterInfo:function(){
             try {
-                return form1.TestActiveX.GetVUMeterInfo();
+                return PLAYER.VUMeterInfo;
             } catch (e) {
                 //console.log('error');
                 return;
@@ -712,6 +714,19 @@ PLAYER.operateJson={
             }
         }
     },
+    updateAudioClipVolume:function(time,value){
+        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+            $.each(track.subclip,function(index,elem){
+                if(elem){
+                    if(elem.createTime===time){
+                        $.extend(track.subclip[index],{
+                            volume:value
+                        });
+                    }
+                }
+            });   
+        } 
+    },
     addSubtitleClipAttr:function(subClipAttr,_index){
         for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
             if(track.type==='t'&&track.index===_index){
@@ -803,6 +818,7 @@ PLAYER.operateJson={
         } 
         console.log('更新切片',PLAYER.jsonObj.rootBin.sequence[0].tracks);
     },
+
     changeIndexClipAttr:function(type,index,time){
         var obj=null;
         for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
@@ -1100,7 +1116,9 @@ PLAYER.operateJson={
         return _s;
     },
     showAdhere:function(dragging,dir){
-        dragging.find('.point').remove();
+        if(dragging.find('.point')){
+            dragging.find('.point').remove();
+        }  
         var _line=$('<div class="point"></div>');
         if(dir==='forward'){
             _line.css('left',-5);
@@ -1108,7 +1126,9 @@ PLAYER.operateJson={
         if(dir==='backward'){
            _line.css('left',(dragging.width()-5));
         }
+        
         _line.appendTo(dragging);
+        console.log('point',dragging.find('.point').length);
     },
     hideAdhere:function(dragging){
         if(dragging.find('.point')){
@@ -3130,95 +3150,48 @@ PLAYER.timeRuler = function() {
         
         if(clipDir==='middle'){
             var move=(ev.x-clipInitClientX);
-            var nowLeft=clipInitLeft+move;
+            var moveFrame=Math.floor((ev.x-clipInitClientX)*config.framePerPixel);
 
-            
-            if(ev.min_left+(ev.x-clipInitClientX)<=0){
-                ev.x=clipInitClientX-ev.min_left;
-                nowLeft=clipInitLeft-ev.min_left;
+            sequenceTrimIn=clipInitSequenceTrimIn+moveFrame;
+            if(ev.min_in+moveFrame<=0){
+                moveFrame=-ev.min_in;
+                sequenceTrimIn=clipInitSequenceTrimIn-ev.min_in;
             }
-
-            if(nowLeft<=0){
-                nowLeft=0;
-                ev.x=clipInitClientX-clipInitLeft;
+            if(sequenceTrimIn<=0){
+                sequenceTrimIn=0;
             }
-
-            
-            nowLeft=parseInt(nowLeft*config.framePerPixel)/config.framePerPixel;
-            sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
+           
             sequenceTrimOut=sequenceTrimIn+(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
+            nowLeft=sequenceTrimIn/config.framePerPixel;
             
-            $.each(helpElem.siblings(':not(.onselected)'),function(i,n){
-                
-                if(move>0){
-                    //往右走
-                    var offset_f=parseInt($(n).attr('data-sequencetrimin'))-ev.max_out;
-                    var offset_px=offset_f/config.framePerPixel-move;
-                    
-                    if(offset_px<=15&&offset_px>=0){
-
-                        var s=ev.max_out-clipInitSequenceTrimOut; //计算拖拽对象与联动对象之间最大sout的值
-                        
-                        console.log('s',s)
-                        sequenceTrimOut=parseInt($(n).attr('data-sequencetrimin'))-s;
-
-                        sequenceTrimIn=sequenceTrimOut-(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
-                        nowLeft=sequenceTrimIn/config.framePerPixel;
-                        PLAYER.operateJson.showAdhere(helpElem,'backward');
-                    }else{
-                        PLAYER.operateJson.hideAdhere(helpElem);
-                    }
-                }else{
-                    //往左走
-                    var offset_f=parseInt($(n).attr('data-sequencetrimout'))-ev.min_in;
-                    var offset_px=offset_f/config.framePerPixel-move;
-                    
-                    if(offset_px>=-15&&offset_px<=0){
-                        //move=(parseInt($(n).attr('data-sequencetrimout'))-ev.min_in)/config.framePerPixel;
-                        var s=clipInitSequenceTrimIn-ev.min_in;
-
-                        sequenceTrimIn=parseInt($(n).attr('data-sequencetrimout'))+s;
-                        sequenceTrimOut=sequenceTrimIn+(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
-                        nowLeft=sequenceTrimIn/config.framePerPixel;
-                        PLAYER.operateJson.showAdhere(helpElem,'forward');
-                    }else{
-                        PLAYER.operateJson.hideAdhere(helpElem);
-                    }
-                }
-                
-            })
-            
-
+            checkAdhereMiddle(helpElem,moveFrame);
 
             cal_index=getTrackIndex(clipInitType);
             if(PLAYER.help_index && PLAYER.help_index>=1){
                 addHelpObj(helpElem,clipInitType,PLAYER.help_index);  
             }
           
-            //chcekAdhereMiddle(helpElem,id);
-
+            
             helpElem.attr('data-sequencetrimin',sequenceTrimIn);
             helpElem.attr('data-sequencetrimout',sequenceTrimOut);
             helpElem.css('left',nowLeft);
-
-            console.log('helpElem',helpElem.attr('data-sequencetrimin'));
 
         }
         else if(clipDir==='left'){
             var nowWidth=clipInitWidth-(ev.x-clipInitClientX);
             var nowLeft=clipInitLeft+(ev.x-clipInitClientX);
             var _offset=(ev.x-clipInitClientX)*config.framePerPixel/config.framePerPixel;
-            var _moveIn=Math.round(_offset*config.framePerPixel);//求得移动的帧数
+            var moveFrame=Math.round(_offset*config.framePerPixel);//求得移动的帧数
 
-            trimIn=clipInitTrimIn+_moveIn;
+            trimIn=clipInitTrimIn+moveFrame;
             sequenceTrimIn=clipInitSequenceTrimOut-clipInitTrimOut+trimIn;
             
             if(target.attr('data-type')!=='subtitle'&&target.attr('data-type')!=='video'){
                 if(trimIn<=0){
                     trimIn=0;
                     sequenceTrimIn=clipInitSequenceTrimOut-clipInitTrimOut;
-                    _moveIn= trimIn-clipInitTrimIn;
-                    _offset= _moveIn/config.framePerPixel;
+                    moveFrame= trimIn-clipInitTrimIn;
+                    _offset= moveFrame/config.framePerPixel;
                     nowLeft=clipInitLeft+_offset;
                     nowWidth=clipInitWidth-_offset;
                 }
@@ -3227,8 +3200,8 @@ PLAYER.timeRuler = function() {
                 trimIn=clipInitTrimOut-1;
 
                 sequenceTrimIn=clipInitSequenceTrimOut-1;
-                _moveIn= trimIn-clipInitTrimIn;
-                _offset= _moveIn/config.framePerPixel;
+                moveFrame= trimIn-clipInitTrimIn;
+                _offset= moveFrame/config.framePerPixel;
                 nowLeft=clipInitLeft+_offset;
                 nowWidth=clipInitWidth-_offset;
             }
@@ -3238,7 +3211,7 @@ PLAYER.timeRuler = function() {
                 trimIn=clipInitTrimOut-clipInitSequenceTrimOut;
                 nowWidth=clipInitWidth+clipInitLeft;  
             }
-            chcekAdhereLeft(helpElem,id);  //这个有问题 需要再解决
+            checkAdhereLeft(helpElem,moveFrame);
 
             helpElem.attr('data-trimin',trimIn);
             helpElem.attr('data-sequencetrimin',sequenceTrimIn);
@@ -3248,9 +3221,9 @@ PLAYER.timeRuler = function() {
         else if(clipDir==='right'){
             var nowWidth=clipInitWidth+(ev.x-clipInitClientX);
             var _offset=(ev.x-clipInitClientX)*config.framePerPixel/config.framePerPixel;
-            var _moveOut=Math.round(_offset*config.framePerPixel);//求得移动的帧数
+            var moveFrame=Math.round(_offset*config.framePerPixel);//求得移动的帧数
 
-            trimOut=clipInitTrimOut+_moveOut;
+            trimOut=clipInitTrimOut+moveFrame;
             sequenceTrimOut=clipInitSequenceTrimIn+trimOut-clipInitTrimIn;
 
             if(target.attr('data-type')!=='subtitle'&&target.attr('data-type')!=='video'){
@@ -3258,34 +3231,171 @@ PLAYER.timeRuler = function() {
                     trimOut=clipMaxFrame;
 
                     sequenceTrimOut=clipInitSequenceTrimIn+trimOut-clipInitTrimIn;
-                    _moveOut=trimOut-clipInitTrimOut;
-                    _offset=_moveOut/config.framePerPixel;
+                    moveFrame=trimOut-clipInitTrimOut;
+                    _offset=moveFrame/config.framePerPixel;
                     nowWidth=clipInitWidth+_offset;
                 }
             }
             if(trimOut<=clipInitTrimIn+1){
                 trimOut=clipInitTrimIn+1;
                 sequenceTrimOut=clipInitSequenceTrimIn+trimOut-clipInitTrimIn;
-                _moveOut=trimOut-clipInitTrimOut;
-                _offset=_moveOut/config.framePerPixel;
+                moveFrame=trimOut-clipInitTrimOut;
+                _offset=moveFrame/config.framePerPixel;
                 nowWidth=clipInitWidth+_offset;
             }
             if(nowWidth+clipInitLeft>=config.$rulerWrap.width()){
                 nowWidth=config.$rulerWrap.width()-clipInitLeft;
                 _offset=nowWidth-clipInitWidth;
-                _moveOut=Math.round(_offset*config.framePerPixel);
-                trimOut=clipInitTrimOut+_moveOut;
+                moveFrame=Math.round(_offset*config.framePerPixel);
+                trimOut=clipInitTrimOut+moveFrame;
                 sequenceTrimOut=clipInitSequenceTrimIn+trimOut-clipInitTrimIn;
             }
-            chcekAdhereRight(helpElem,id);
+            checkAdhereRight(helpElem,moveFrame);
 
             helpElem.attr('data-trimout',trimOut);
             helpElem.attr('data-sequencetrimout',sequenceTrimOut);
             helpElem.css('width',nowWidth);
         } 
+        
+        function getOut(max_out){
+            var _s;
+            $.each(helpElem.siblings(),function(i,n){
+                if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
 
-        function getTrackIndex(clipInitType){
+                    var offset1=Math.abs(max_out-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
+                    var offset2=Math.abs(max_out-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
+                    if(Math.abs(offset1)<=10){
+                        _s=parseInt($(this).attr('data-sequencetrimin'));
+                    }
+                    if(Math.abs(offset2)<=10){
+                        _s=parseInt($(this).attr('data-sequencetrimout'));
+                    }
+                }
+            });
+            return _s;
+        }
+        function getIn(min_in){
+            var _s;
+            $.each(helpElem.siblings(),function(i,n){
+                if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
+
+                    var offset1=Math.abs(min_in-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
+                    var offset2=Math.abs(min_in-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
+                    if(Math.abs(offset1)<=10){
+                        _s=parseInt($(this).attr('data-sequencetrimin'));
+                    }
+                    if(Math.abs(offset2)<=10){
+                        _s=parseInt($(this).attr('data-sequencetrimout'));
+                    }
+                }
+            });
+            return _s;
+        }
+       
+        function checkAdhereMiddle(helpElem,moveFrame){
+            if(move>0){
+                var max_sout=ev.max_out+moveFrame;
+                var adhere_point=getOut(max_sout);   //获取所有切片的吸附点
+                
+                var offset=Math.abs(max_sout-adhere_point)/config.framePerPixel;
+
+                if(Math.abs(offset)<=10){
+                    //更具吸附点设置切片位置属性
+                    max_sout=adhere_point;
+                    sequenceTrimOut=clipInitSequenceTrimOut+max_sout-ev.max_out;
+
+                    sequenceTrimIn=sequenceTrimOut-(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
+                    nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
+                    //显示吸附线
+                    PLAYER.operateJson.showAdhere(helpElem,'backward');
+                }else{
+                    //隐藏吸附线
+                    PLAYER.operateJson.hideAdhere(helpElem);
+                }
+            }else{
+                var min_sIn=ev.min_in+moveFrame;
+                var adhere_point=getIn(min_sIn);   //获取所有切片的吸附点
+                
+                var offset=Math.abs(min_sIn-adhere_point)/config.framePerPixel;
+
+                if(Math.abs(offset)<=10){
+                    //更具吸附点设置切片位置属性
+                    min_sIn=adhere_point;
+
+                    sequenceTrimIn=clipInitSequenceTrimIn+min_sIn-ev.min_in;
+                    sequenceTrimOut=sequenceTrimIn+(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
+                    nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
+                    //显示吸附线
+                    PLAYER.operateJson.showAdhere(helpElem,'forward');
+                }else{
+                    //隐藏吸附线
+                    PLAYER.operateJson.hideAdhere(helpElem);
+                }
+            }
+        }
+        function checkAdhereLeft(helpElem,moveFrame){
+
+            var min_sIn=ev.min_in+moveFrame;
+            var adhere_point=getIn(min_sIn);   //获取所有切片的吸附点
             
+            var offset=Math.abs(min_sIn-adhere_point)/config.framePerPixel;
+
+            if(Math.abs(offset)<=10){
+                //更具吸附点设置切片位置属性
+                min_sIn=adhere_point;
+
+                sequenceTrimIn=clipInitSequenceTrimIn+min_sIn-ev.min_in;
+                trimIn=clipInitTrimIn+min_sIn-ev.min_in;
+                nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
+                nowWidth=(clipInitSequenceTrimOut-sequenceTrimIn)/config.framePerPixel;
+
+                //显示吸附线
+                PLAYER.operateJson.showAdhere(helpElem,'forward');
+            }else{
+                //隐藏吸附线
+                PLAYER.operateJson.hideAdhere(helpElem);
+            }
+
+
+            /*if(dragging.siblings().length!==0){
+                
+                var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging,targetId);//获取所有切片的吸附点 
+                
+                var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
+                if(offset<=5){
+                    sequenceTrimIn=adhere_point;
+                    trimIn=clipInitTrimOut-clipInitSequenceTrimOut+sequenceTrimIn;
+                    
+                    nowLeft=sequenceTrimIn/config.framePerPixel;
+                    nowWidth=(clipInitSequenceTrimOut-sequenceTrimIn)/config.framePerPixel;
+                    PLAYER.operateJson.showAdhere(dragging,'forward'); 
+                }else{
+                    PLAYER.operateJson.hideAdhere(dragging);
+                }
+
+            }*/
+        }
+        function checkAdhereRight(helpElem,moveFrame){
+            var max_sout=ev.max_out+moveFrame;
+            var adhere_point=getOut(max_sout);   //获取所有切片的吸附点
+            var offset=(max_sout-adhere_point)/config.framePerPixel;
+            
+            if(Math.abs(offset)<=10){
+                //更具吸附点设置切片位置属性
+                max_sout=adhere_point;
+                
+                sequenceTrimOut=clipInitSequenceTrimOut+max_sout-ev.max_out;
+                
+                trimOut=clipInitTrimOut+(sequenceTrimOut-clipInitSequenceTrimOut);
+                nowWidth=Math.round((sequenceTrimOut-clipInitSequenceTrimIn)/config.framePerPixel);
+                //显示吸附线
+                PLAYER.operateJson.showAdhere(helpElem,'backward');
+            }else{
+                //隐藏吸附线
+                PLAYER.operateJson.hideAdhere(helpElem);
+            } 
+        }
+        function getTrackIndex(clipInitType){
             var cal_index;
             if(clipInitType==='t' || clipInitType==='a'){
                 if(clipInitIndex>=2&&ev.y-clipInitClientY<-10){
@@ -3309,84 +3419,6 @@ PLAYER.timeRuler = function() {
             }
             if(cal_index){
                 return PLAYER.help_index=cal_index;
-            }
-            
-        }
-        
-        //判断吸附
-        function chcekAdhereMiddle(dragging,targetId){
-            if(dragging.siblings().length!==0){
-                if(ev.x-clipInitClientX>0){//->右
-                    var adhere_point=PLAYER.operateJson.getAllsequenceTrimOut(dragging,targetId);   //获取所有切片的吸附点
-                    
-                    var offset=Math.abs(sequenceTrimOut-adhere_point)/config.framePerPixel;
-                    
-                    if(offset<=5){
-                        //更具吸附点设置切片位置属性
-                        sequenceTrimOut=adhere_point;
-                        sequenceTrimIn=adhere_point-(dragging.attr('data-trimout')-dragging.attr('data-trimin'));
-                        nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
-
-                        //显示吸附线
-                        PLAYER.operateJson.showAdhere(dragging,'backward');
-                    }else{
-                        //隐藏吸附线
-                        PLAYER.operateJson.hideAdhere(dragging);
-                    }
-                }
-                else if(ev.x-clipInitClientX<0){
-                    var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging,targetId);//获取所有切片的吸附点 
-                    var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
-                    if(offset<=5){
-                        nowLeft=adhere_point/config.framePerPixel;
-                        sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
-                        sequenceTrimOut=sequenceTrimIn+(dragging.attr('data-trimout')-dragging.attr('data-trimin'));
-
-                        PLAYER.operateJson.showAdhere(dragging,'forward');
-                    }else{
-                        PLAYER.operateJson.hideAdhere(dragging);
-                    }
-                }
-                
-            }
-        }
-        function chcekAdhereLeft(dragging,targetId){
-            if(dragging.siblings().length!==0){
-                
-                var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging,targetId);//获取所有切片的吸附点 
-                
-                var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
-                if(offset<=5){
-                    sequenceTrimIn=adhere_point;
-                    trimIn=clipInitTrimOut-clipInitSequenceTrimOut+sequenceTrimIn;
-                    
-                    nowLeft=sequenceTrimIn/config.framePerPixel;
-                    nowWidth=(clipInitSequenceTrimOut-sequenceTrimIn)/config.framePerPixel;
-                    PLAYER.operateJson.showAdhere(dragging,'forward'); 
-                }else{
-                    PLAYER.operateJson.hideAdhere(dragging);
-                }
-
-            }
-        }
-        function chcekAdhereRight(dragging,targetId){
-            if(dragging.siblings().length!==0){
-                
-                var adhere_point=PLAYER.operateJson.getAllsequenceTrimOut(dragging,targetId);   //获取所有切片的吸附点
-                var offset=Math.abs(sequenceTrimOut-adhere_point)/config.framePerPixel;
-                
-                if(offset<=5){
-                    //更具吸附点设置切片位置属性
-                    sequenceTrimOut=adhere_point;
-                    trimOut=parseInt(dragging.attr('data-trimin'))+(sequenceTrimOut-parseInt(dragging.attr('data-sequencetrimin')));
-                    nowWidth=Math.round((sequenceTrimOut-parseInt(dragging.attr('data-sequencetrimin')))/config.framePerPixel);
-                    
-                    PLAYER.operateJson.showAdhere(dragging,'backward');
-                }else{
-                    PLAYER.operateJson.hideAdhere(dragging);
-                }
-                
-                
             }
         }
 
@@ -3416,8 +3448,6 @@ PLAYER.timeRuler = function() {
         var left=helpElem.css('left');
         var width=helpElem.width();
         
-        
-
         var subClipAttr={
             sequenceTrimIn:sequenceTrimIn,
             sequenceTrimOut:sequenceTrimOut,
@@ -3649,7 +3679,10 @@ PLAYER.timeRuler = function() {
             var e_attr2=PLAYER.operateJson.getCutOldEffectClip(v_dataTime,v0_trimIn,v0_trimOut);
 
             PLAYER.operateJson.updateClipAttr(v0_subClipAttr,v_dataTime,e_attr2);
-        }    
+        } 
+        
+        //console.log($('.onselected').hasClass('.edit_box_a '))
+
     }
     /*关于clip移入函数开始*/
     function handleClipCheckDirEvent(ev){

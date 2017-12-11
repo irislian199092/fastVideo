@@ -100,7 +100,9 @@ $.ajax({
             //Handle message from target peer
             webrtc.on('channelMessage', function (peer, label, data) {
                 if (data.type == 'custommessage') {
-                    console.log(data.payload);
+                    
+                    PLAYER.VUMeterInfo=JSON.parse(data.payload).params.value;
+                    //console.log(PLAYER.VUMeterInfo);
                 }
             });
             //////////////////////////////////
