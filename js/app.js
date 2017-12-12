@@ -7,14 +7,6 @@ $(function(){
 	$('#js_initProjectModal').show();
 	$('#js_pageCover').show();
 
-	document.onselectstart=function(e){
-		if(e.srcElement.tagName==='input'||e.srcElement.tagName==='INPUT'||e.srcElement.tagName==="textarea" || e.srcElement.tagName==="TEXTAREA"||e.srcElement.tagName==='span'||e.srcElement.tagName==='SPAN'){
-			return true;
-		}else{
-			return false;
-		}	
-	};
-
 	/*-----------登出-----------*/
 	$('#js_loginout').on('click',function(){
 		PLAYER.checkPlaying();
@@ -121,36 +113,39 @@ $(function(){
 	/*----------------------每大块选中蓝框状态----------------------*/
 	var maskElem=null;
 	var maskText=null;
+
+	var materialActive=false;
+
+
+	$('#js_thumbnail_box').delegate($('#js_thumbnail_box').children(),'dblclick',function(e){
+		if($(e.target).parent().hasClass('thumbnail')){
+			
+			var s=$(e.target).parent().parent('.col-md-3');
+			if(s.hasClass('active')){
+				s.removeClass('active');
+				$.each(PLAYER.chooseArray,function(i,n){
+					if(n===s.attr('data-id')){
+						PLAYER.chooseArray.splice(i,1);
+					}
+				});
+			}else{
+				s.addClass('active');
+				PLAYER.chooseArray.push(s.attr('data-id'));
+			}
+			console.log('PLAYER.chooseArray',PLAYER.chooseArray);	
+		}
+	})
+	
 	$('.carve').delegate($('.carve').children(),'click',function(e){
 		$('.carve').addClass('choose');
 		$('.time_ruler_wrap').removeClass('choose');
 		$('.player_box').removeClass('choose');
 		$('.time_ruler_toolbar').removeClass('choose');
 		$('.time_ruler_voiceBox').removeClass('choose');
+
 		PLAYER.PTR.DragDrop.disable();
 		PLAYER.TR.DragDrop.disable();
 		
-		//点击素材
-		if($(e.target).parent().hasClass('thumbnail')){
-			var s=$(e.target).parent().parent('.col-md-3');
-			if(!$(e.target).parent().parent('.col-md-3').hasClass('active')){
-				maskElem=$('<span class="mask_thumbnail"></span>');
-				//maskText=$('<i class="mask_text_thumbnail"></i>');
-				$(e.target).parent().append(maskElem);
-				//$(e.target).parent().append(maskText);
-				$(e.target).parent().parent('.col-md-3').addClass('active');
-				PLAYER.chooseArray.push(s.attr('data-id'));
-			}else{
-				$(e.target).parent().parent('.col-md-3').removeClass('active');
-				$(e.target).parent().children('.mask_thumbnail').remove();
-				//$(e.target).parent().children('.mask_text_thumbnail').remove();
-				$.each(PLAYER.chooseArray,function(i,n){
-					if(n===s.attr('data-id')){
-						PLAYER.chooseArray.splice(i,1);
-					}
-				})
-			}
-		}
 		//点击字幕列表
 		if($(e.target).parent('li').hasClass('subtitle')){
 			$(e.target).addClass('active');
@@ -216,10 +211,6 @@ $(function(){
 			$('#tab_5').show();
 			$('#tab_5').siblings('.js_tab').hide();
 		}
-	});
-	//点击打开编辑工具栏
-	$('#js_expand').on('click',function(){
-		PLAYER.showSubititleEdit();
 	});	
 	
 	/*----------------------点击播放器工具条---------------------------------------------*/
@@ -386,7 +377,7 @@ $(function(){
 	});
 	/*----------------------点击改变音量---------------------------------------------*/
 	var isVolShow=true;
-	$('#js_toolbar_icon_volume').off().click(function(){
+	$('#js_toolbar_icon_volume').click(function(){
 		var length=$('.onselected.edit_box_a').length;
 
 		if(!isVolShow){
@@ -411,10 +402,6 @@ $(function(){
         	console.log('更新音量',PLAYER.jsonObj.rootBin.sequence[0])
 		});
 	}
-
-	
-
-
 
 
 	/*----------------------右击菜单马赛克---------------------------------------------*/
@@ -486,6 +473,7 @@ $(function(){
             		PLAYER.operateJson.sendJson();
 	            } 
 	        }
+
 	        var contextElem=contextElemModal();
 	        contextElem.hide();
 	    });

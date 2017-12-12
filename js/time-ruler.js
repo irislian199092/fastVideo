@@ -659,7 +659,7 @@ PLAYER.operateJson={
         //更新时间轴
         PLAYER.operateJson.updateRulerMaxTime();
         PLAYER.operateJson.pushCancelArray(PLAYER.jsonObj.rootBin.sequence[0]);
-        console.log('sendJson',PLAYER.jsonObj.rootBin.sequence[0]);
+        console.log('sendJson',PLAYER.jsonObj);
         PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
         PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
     },
@@ -849,6 +849,7 @@ PLAYER.operateJson={
                 
             });  
         } 
+        console.log('删除切片',PLAYER.jsonObj.rootBin.sequence[0])
     },
     checkCoverEvent:function(dragging,intid){
         var config=PLAYER.TR.config;
@@ -3067,7 +3068,6 @@ PLAYER.timeRuler = function() {
         attr.clipInitTime=target.attr('data-time');
         
         attr.clipInitWidth=parseInt(target.outerWidth());
-         console.log('f000',target.attr('class'));
         attr.clipInitLeft=parseInt(target.position().left);
         attr.clipInitClientX=ev.x;
 
@@ -3086,7 +3086,6 @@ PLAYER.timeRuler = function() {
         attr.clipInitSequenceTrimOut=parseInt(target.attr('data-sequencetrimout'));
         attr.clipMaxFrame=parseInt(target.attr('data-duration'))||0;
 
-        
         if(target.find('.effect_box_r').length>=1 && PLAYER.operateJson.checkNextSubClip(attr.clipInitSequenceTrimOut)){
             attr.nextClip=PLAYER.operateJson.checkNextSubClip(attr.clipInitSequenceTrimOut).attr('data-time');
         }
@@ -3434,8 +3433,9 @@ PLAYER.timeRuler = function() {
         function getTrackIndexAOrT(clipInitType){
             var cal_index;
             if(clipInitType==='t' || clipInitType==='a'){
-                if(clipInitIndex>=2&&ev.y-clipInitClientY<-10){
+                if(clipInitIndex>=2&&ev.y-clipInitClientY>10){
                     cal_index=clipInitIndex-Math.ceil((clipInitOffsetTop-ev.y)/70);
+                    
                 }
                 else if(clipInitIndex>=1&&ev.y-clipInitClientY>10){
 
@@ -4153,6 +4153,7 @@ PLAYER.timeRuler = function() {
             $('#js_pageCover').hide();
         });
     }
+
     /*键盘+-快捷键*/
     function privateKeyDownEvent(e){
         var config=self.config;
@@ -4172,6 +4173,7 @@ PLAYER.timeRuler = function() {
         var time=0;             //每个切片的创建时间
         var subClipAttr=null;   //更新切片json
         var prevClipSequenceTrimOut=0;
+        
 
         if(key===189){//--
             //PLAYER.keyNum=189;
@@ -4318,15 +4320,17 @@ PLAYER.timeRuler = function() {
         else if(e.ctrl&&key===88){//ctrl+x
             PLAYER.checkPlaying();
             PLAYER.copyOrcut='cut'; 
-
+            var arr_sIn=[];
+            
             $.each($('.onselected'),function(i,n){
+                arr_sIn.push(parseInt($(this).attr('data-sequencetrimin')));
                 PLAYER.clipboard.push($(this));
                 PLAYER.clipboard.parent.push($(this).parent('.time_ruler_bar'))
                 $(n).remove();
                 var time=$(n).attr('data-time');
                 PLAYER.operateJson.deleteClipAttr(time);
             });
-
+            PLAYER.cut_min_sIn=Math.min.apply(null,arr_sIn);
             PLAYER.operateJson.pushCancelArray(PLAYER.jsonObj.rootBin.sequence[0]);
             PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
             PLAYER.OCX.seek(parseInt(self.currTime));
@@ -4341,10 +4345,15 @@ PLAYER.timeRuler = function() {
             var config = self.config;
             var targetObj = self.targetObj;
             var currFrame= self.currTime; //时码线帧数
-            var intId='interleaved_id_'+PLAYER.genNonDuplicateID(12);
             var checkId='check_interleaved_id_'+PLAYER.genNonDuplicateID(12);
+            var arr_sIn=[];
+            var min_sIn;
             $('.onselected').each(function(i,n){
-                addClipboardClip($(n),$(n).parent('.time_ruler_bar'),intId,checkId);
+                arr_sIn.push(parseInt($(n).attr('data-sequencetrimin')))
+            }); 
+            min_sIn=Math.min.apply(null,arr_sIn);
+            $('.onselected').each(function(i,n){
+                addClipboardClip($(n),$(n).parent('.time_ruler_bar'),checkId,min_sIn);
             });  
 
             PLAYER.operateJson.sendJson();
@@ -4354,15 +4363,17 @@ PLAYER.timeRuler = function() {
             var config = self.config;
             var targetObj = self.targetObj;
             var currFrame= self.currTime; //时码线帧数
-            var intId='interleaved_id_'+PLAYER.genNonDuplicateID(12);
             var checkId='check_interleaved_id_'+PLAYER.genNonDuplicateID(12);
+
             if(PLAYER.clipboard){
                 for (var i = 0; i < PLAYER.clipboard.length; i++) {
-                    addClipboardClip(PLAYER.clipboard[i],PLAYER.clipboard.parent[i],intId,checkId);
+                    addClipboardClip(PLAYER.clipboard[i],PLAYER.clipboard.parent[i],checkId,PLAYER.cut_min_sIn);
                 }
                 
                 PLAYER.operateJson.sendJson();
             }
+            PLAYER.clipboard=[];
+            PLAYER.clipboard.parent=[];
         } 
         else if(e.ctrl&&key===90){//ctrl+z撤销  
 
@@ -4441,6 +4452,8 @@ PLAYER.timeRuler = function() {
                                     effectBox.attr('data-duration',item.duration);
                                     effectBox.attr('data-trimin',item.trimIn);
                                     effectBox.attr('data-trimout',item.trimOut);
+                                    effectBox.attr('data-pos',item.pos);
+                                    effectBox.attr('data-type',item.type);
 
                                     _w=(item.trimOut-item.trimIn)/PLAYER.TR.config.framePerPixel;
                                     effectBox.width(_w);
@@ -4475,7 +4488,7 @@ PLAYER.timeRuler = function() {
             }
         }
 
-        function addClipboardClip(v_target,v_parent,intId,checkId){
+        function addClipboardClip(v_target,v_parent,checkId,min_sIn){
             var cloneBox;
             var add_subclip_attr,
                 v_dataId,
@@ -4491,7 +4504,8 @@ PLAYER.timeRuler = function() {
                 vcut_sequenceTrimOut,
                 vcut_trimIn,
                 vcut_trimOut;
-
+            v_initId=v_target.attr('data-intid');
+            intId=v_initId+1;
             v_dataId=v_target.attr('data-id');
             v_type=v_target.attr('data-type');
             v_interleaved=v_target.attr('data-interleaved');
@@ -4506,8 +4520,8 @@ PLAYER.timeRuler = function() {
             //复制后数据
             vcut_trimIn=v0_trimIn;
             vcut_trimOut=v0_trimOut;
-            vcut_sequenceTrimIn=currFrame;
-            vcut_sequenceTrimOut=currFrame+v0_trimOut-v0_trimIn;
+            vcut_sequenceTrimIn=v0_sequenceTrimIn-min_sIn+currFrame;
+            vcut_sequenceTrimOut=vcut_sequenceTrimIn+v0_trimOut-v0_trimIn;
 
             cloneBox=v_target.clone();
             cloneBox.css('left',vcut_sequenceTrimIn/config.framePerPixel);
@@ -4523,13 +4537,15 @@ PLAYER.timeRuler = function() {
             if(v_parent.hasClass('bar_v')){
                 var time=v_target.attr('data-time');
                 var e_attr=JSON.parse(PLAYER.operateJson.getEffectClip(time));
-                if(e_attr.length!==0){
+                if(e_attr&&e_attr.length!==0){
                     $.each(e_attr,function(i,n){
                         if($(this).pos==='all'){
                             $(this).trimIn=vcut_trimIn;
                             $(this).trimOut=vcut_trimOut;
                         }
                     });
+                }else{
+                    e_attr=[];
                 }
                 add_subclip_attr={
                     "assetID": v_dataId,

@@ -677,6 +677,14 @@
 /*--------------------------------------------server--------------------------------------------*/
 $(document).ready(function() {
 
+document.onselectstart=function(e){
+	if(e.srcElement.tagName==='input'||e.srcElement.tagName==='INPUT'||e.srcElement.tagName==="textarea" || e.srcElement.tagName==="TEXTAREA"||e.srcElement.tagName==='span'||e.srcElement.tagName==='SPAN'){
+		return true;
+	}else{
+		return false;
+	}	
+};
+
 /*----------------------初始化模态框开始----------------------*/
 //初始化工程模态框
 var createInitModal=PLAYER.singelton(function(){
@@ -2447,6 +2455,7 @@ var chooseClipModule=(function(){
 					},
 					success:function(msg){
 						if(msg.code===0&&msg.data!==null){
+							msg.data.data.assetId=PLAYER.chooseArray[i];
 							arr_attr.push(msg.data.data);
 							if(arr_attr.length===PLAYER.chooseArray.length){
 								addClip(arr_attr);
@@ -2484,8 +2493,8 @@ var chooseClipModule=(function(){
 					initSequencetrimout=PLAYER.TR.currTime,
 					_name,
 					_createTime_v,
-					_createTime_a,
-					_id;
+					_createTime_a;
+					console.log('program_info',program_info)
 				for (var i = 0; i < program_info.length; i++) {
 					_createTime_v='video_'+i+PLAYER.genNonDuplicateID(12);
 					_createTime_a='audio_'+i+PLAYER.genNonDuplicateID(12);
@@ -2496,39 +2505,37 @@ var chooseClipModule=(function(){
 					initSequencetrimout+=program_info[i].duration;
 					initSequencetrimin=initSequencetrimout-program_info[i].duration;
 					_duration=program_info[i].duration;
-					_id=program_info[i].assetId;
 					_name=program_info[i].name;
 					_left=initSequencetrimin/PLAYER.TR.config.framePerPixel;
-
-					//_width=calcWidth(program_info[i].duration);
-					
+					_id=program_info[i].assetId;
 					_width=program_info[i].duration/PLAYER.TR.config.framePerPixel;
 
 					//更新切片参数
 					var videoEdit=$('<div class="edit_box edit_box_v draggable" data-trimin="'+initTrimin+'" data-trimout="'+initTrimout+'" data-sequencetrimin="'+initSequencetrimin+'" data-sequencetrimout="'+initSequencetrimout+'">'+_name+'</div>');
 					var audioEdit=$('<div class="edit_box edit_box_a draggable" data-trimin="'+initTrimin+'" data-trimout="'+initTrimout+'" data-sequencetrimin="'+initSequencetrimin+'" data-sequencetrimout="'+initSequencetrimout+'">'+_name+'</div>');
 					
-					
-
 					videoEdit.attr('data-time',_createTime_v);
-					audioEdit.attr('data-time',_createTime_a);
+					videoEdit.attr('data-interleaved','true');
+					videoEdit.attr('data-type','video_and_audio');
 					videoEdit.attr('data-intid',int_id);
-					audioEdit.attr('data-intid',int_id);
 					videoEdit.attr('data-duration',_duration);
-					audioEdit.attr('data-duration',_duration);
 					videoEdit.attr('data-id',_id);
-					audioEdit.attr('data-id',_id);
 					videoEdit.attr('data-name',_name);
-					audioEdit.attr('data-name',_name);
 					videoEdit.css('left',_left);
-					audioEdit.css('left',_left);
 					videoEdit.css('width',_width);
+
+					audioEdit.attr('data-time',_createTime_a);
+					audioEdit.attr('data-interleaved','true');
+					audioEdit.attr('data-type','video_and_audio');
+					audioEdit.attr('data-intid',int_id);
+					audioEdit.attr('data-duration',_duration);
+					audioEdit.attr('data-id',_id);
+					audioEdit.attr('data-name',_name);
+					audioEdit.css('left',_left);
 					audioEdit.css('width',_width);
 
 					$('.bar_v[data-index="1"]').append(videoEdit);
 					$('.bar_a[data-index="1"]').append(audioEdit);	
-
-
 
 					var clipObj={
 			            "assetID": _id,
@@ -2555,9 +2562,12 @@ var chooseClipModule=(function(){
 			            "volume":100
 					}
 					//判断覆盖
-					/*if($('.bar_v').children().length>=2){
+					if($('.bar_v').children().length>=1){
 						PLAYER.operateJson.checkCoverEvent(videoEdit);
-					}*/
+					}
+					if($('.bar_a').children().length>=1){
+						PLAYER.operateJson.checkCoverEvent(audioEdit);
+					}
 
 					PLAYER.operateJson.addVideoClipAttr(clipObj,_index);
 					PLAYER.operateJson.addAudioClipAttr(clipObj2,_index);
@@ -2567,11 +2577,9 @@ var chooseClipModule=(function(){
 			function updateJson(){
 				//更新播放器时常
 	            $('#js_player_totalTime').html(PLAYER.getDurationToString(PLAYER.operateJson.getLastFrame()));
-
 	            //更新轨道时间线
 	            var n=Math.max(PLAYER.TR.config.maxTime,PLAYER.operateJson.getLastFrame()+15000);
-	            console.log('maxTime',n)
-	            PLAYER.TR.updateEvent(n,true);
+	            PLAYER.TR.updateEvent(n);
 	            PLAYER.TR.fixClipWidth();
 
 	            //更新播放器时间线
@@ -2583,7 +2591,6 @@ var chooseClipModule=(function(){
 				//置空
 				PLAYER.chooseArray=[];	
 				$('#js_thumbnail_box .col-md-3').removeClass('active');
-				$('#js_thumbnail_box .mask_thumbnail').remove();
 			}
 		});
 
@@ -2655,8 +2662,6 @@ var chooseClipModule=(function(){
                         PLAYER.hideSubititleEdit();
                         PLAYER.hideEffectEdit();
 
-
-                       
                         if($('#js_time_ruler_bar_box').find('.edit_box').length===0){
                         	PLAYER.initDrag=true;
                         }else{
@@ -2665,8 +2670,8 @@ var chooseClipModule=(function(){
                         
 						onOff=false;
                         if(self.$type==='video_and_audio'){
-                        	$(n).siblings().removeClass('active');
-							$(n).addClass('active');
+                        	//$(n).siblings().removeClass('active');
+							//$(n).addClass('active');
 
                             var _id=$(n).attr('data-id');
                             $.ajax({
@@ -3472,7 +3477,6 @@ var chooseClipModule=(function(){
             //更新播放器时间线
             PLAYER.PTR.config.maxTime=PLAYER.operateJson.getLastFrame();
             PLAYER.PTR.updateEvent(PLAYER.PTR.config);
-
 
             //更新material,json
             PLAYER.operateJson.addProjectMaterial(self.materialAttr);
