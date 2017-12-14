@@ -927,7 +927,7 @@ PLAYER.operateJson={
                     $(n).css('left',s0_out/config.framePerPixel);
                     $(n).width((sn_out-s0_out)/config.framePerPixel);
                     
-                    console.log('ff')
+                    
                     if($(n).find('.effect_box_l')){
                         $(n).find('.effect_box_l').remove();
                     }
@@ -944,7 +944,6 @@ PLAYER.operateJson={
                     //PLAYER.operateJson.updateClipAttr(subClipAttr,time);
                 }
                 else{
-                    console.log('rr')
                     var time=$(n).attr('data-time');
                     PLAYER.operateJson.deleteClipAttr(time);
                     $(n).remove();
@@ -964,9 +963,14 @@ PLAYER.operateJson={
                 var v_type=$(n).attr('data-type');
                 var v_index=parseInt($(n).parent('.time_ruler_bar').attr('data-index'));
 
-                console.log('gg')
+
                 if($(n).find('.effect_box_r')){
                     $(n).find('.effect_box_r').remove();
+                }
+                if($(n).find('.effect_box_all')){
+                    $(n).find('.effect_box_all').attr('data-trimin',tn_in);
+                    $(n).find('.effect_box_all').attr('data-trimout',tn_in+s0_in-sn_in);
+                    $(n).find('.effect_box_all').attr('data-duration',s0_in-sn_in);
                 }
 
                 //原兄弟节点切片属性
@@ -995,8 +999,12 @@ PLAYER.operateJson={
                     if(add_subclip.find('.effect_box_l')){
                         add_subclip.find('.effect_box_l').remove();
                     }
-
-                    
+                    if(add_subclip.find('.effect_box_all')){
+                        add_subclip.find('.effect_box_all').attr('data-trimin',vcut_trimIn);
+                        add_subclip.find('.effect_box_all').attr('data-trimout',vcut_trimOut);
+                        add_subclip.find('.effect_box_all').attr('data-duration',vcut_trimOut-vcut_trimIn);
+                    }
+                
                     add_subclip.removeClass('onselected');
                     add_subclip.attr('data-trimin',vcut_trimIn);
                     add_subclip.attr('data-trimout',vcut_trimOut);
@@ -1010,16 +1018,16 @@ PLAYER.operateJson={
 
                     if($(n).parent('.time_ruler_bar').hasClass('bar_v')){
                         var e_attr=PLAYER.operateJson.getCutNewEffectClip(v_dataTime,vcut_trimIn,vcut_trimOut);
+                        
                         if(e_attr.length!==0){
                             $.each(e_attr,function(i,n){
                                 if($(n).type==='mosaic'){
                                     $(n).trimIn=vcut_trimIn;
                                     $(n).trimOut=vcut_trimOut;
-                                }else{
-                                    e_attr.splice(i,1);
                                 }
                             });
                         }
+
                         add_subclip_attr={
                             "assetID": v_dataId,
                             "trimIn": vcut_trimIn,
@@ -1036,6 +1044,7 @@ PLAYER.operateJson={
                         }else{
                             add_subclip_attr.interleaved=false;
                         }
+
                         
                         PLAYER.operateJson.addVideoClipAttr(add_subclip_attr,v_index);
                         
@@ -1102,11 +1111,9 @@ PLAYER.operateJson={
         }
         
         arr.each(function(){
-            console.log('s_point',s_point)
             var offset1=Math.abs(s_point-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
             var offset2=Math.abs(s_point-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
 
-            console.log('offset2',offset2)
             if(offset1<=10){
                 _s=parseInt($(this).attr('data-sequencetrimin'));
             }
@@ -1232,7 +1239,7 @@ PLAYER.operateJson={
         return arr;
     },
     mouseDownState:function(dragging){
-        //console.log('PLAYER.keyNum',PLAYER.keyNum)
+        console.log('PLAYER.keyNum',PLAYER.keyNum)
         if(PLAYER.keyNum!==17 && PLAYER.keyNum!==71 && PLAYER.keyNum!==7100){
             $('#js_time_ruler_bar_box .draggable').removeClass('onselected');
         }
@@ -2399,7 +2406,37 @@ PLAYER.timeRuler = function() {
                 var left=JSON.parse(attr).clipInitSequenceTrimOut;
                 return left;
             }
-
+            function getIndex(v0_attr,clientY){
+                var clipInitType=JSON.parse(v0_attr).clipInitType;
+                var clipInitOffsetTop=JSON.parse(v0_attr).clipInitOffsetTop;
+                var clipInitIndex=JSON.parse(v0_attr).clipInitIndex;
+                var clipInitClientY=JSON.parse(v0_attr).clipInitClientY;
+                var cal_index;
+                if(clipInitType==='v'){
+                    if(clipInitIndex>=1&&clientY-clipInitClientY<-10){
+                        cal_index=clipInitIndex+Math.ceil((clipInitOffsetTop-clientY)/70);
+                    }
+                    else if(clipInitIndex>=2&&clientY-clipInitClientY>10){
+                        cal_index=clipInitIndex-Math.ceil((clientY-clipInitClientY)/70);  
+                    }else if(Math.abs(clientY-clipInitClientY)<5){
+                        cal_index=clipInitIndex;
+                    }
+                }
+                else if(clipInitType==='t' || clipInitType==='a'){
+                    if(clipInitIndex>=1&&clientY-clipInitClientY>10){
+                        cal_index=clipInitIndex+Math.ceil((clientY-clipInitOffsetTop)/70);
+                    }
+                    else if(clipInitIndex>=2&&clientY-clipInitClientY<-10){
+                        cal_index=clipInitIndex-Math.ceil((clipInitClientY-clientY)/70);  
+                    }else if(Math.abs(clientY-clipInitClientY)<5){
+                        cal_index=clipInitIndex;
+                    }
+                }
+                if(cal_index){
+                    return cal_index;
+                }
+                
+            }
             function handleEvent(event){
                 event=PLAYER.EventUtil.getEvent(event);
                 var target=PLAYER.EventUtil.getTarget(event);
@@ -2474,7 +2511,6 @@ PLAYER.timeRuler = function() {
                                 }
                             }
                             
-
                             min_left=Math.min.apply(null,arr_left);
                             max_right=Math.max.apply(null,arr_right);
                             min_in=Math.min.apply(null,arr_in);
@@ -2489,34 +2525,7 @@ PLAYER.timeRuler = function() {
                                 PLAYER.clickOrMove=false; //click
                             }else{
                                 PLAYER.clickOrMove=true; //move
-                                
-                                var clipInitType=JSON.parse(v0_attr).clipInitType;
-                                var clipInitOffsetTop=JSON.parse(v0_attr).clipInitOffsetTop;
-                                var clipInitIndex=JSON.parse(v0_attr).clipInitIndex;
-                                var clipInitClientY=JSON.parse(v0_attr).clipInitClientY;
-                                var cal_index;
-                                if(clipInitType==='v'){
-
-                                    if(clipInitIndex>=1&&event.clientY-clipInitClientY<-10){
-                                        cal_index=clipInitIndex+Math.ceil((clipInitOffsetTop-event.clientY)/70);
-                                    }
-                                    else if(clipInitIndex>=2&&event.clientY-clipInitClientY>10){
-                                        cal_index=clipInitIndex-Math.ceil((event.clientY-clipInitClientY)/70);  
-                                    }else if(Math.abs(event.clientY-clipInitClientY)<5){
-                                        cal_index=clipInitIndex;
-                                    }
-                                }
-                                else if(clipInitType==='t' || clipInitType==='a'){
-                                    console.log(event.clientY-clipInitClientY)
-                                    if(clipInitIndex>=1&&event.clientY-clipInitClientY>10){
-                                        cal_index=clipInitIndex+Math.ceil((event.clientY-clipInitOffsetTop)/70);
-                                    }
-                                    else if(clipInitIndex>=2&&event.clientY-clipInitClientY<-10){
-                                        cal_index=clipInitIndex-Math.ceil((clipInitClientY-event.clientY)/70);  
-                                    }else if(Math.abs(event.clientY-clipInitClientY)<5){
-                                        cal_index=clipInitIndex;
-                                    }
-                                }
+                                var cal_index=getIndex(v0_attr,event.clientY);
                                 
                                 dragdrop.fire({
                                     type:'clipDrag',
@@ -3391,6 +3400,7 @@ PLAYER.timeRuler = function() {
         
         function getOut(max_out){
             var _s;
+            
             $.each(helpElem.siblings(),function(i,n){
                 if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
 
@@ -3404,6 +3414,32 @@ PLAYER.timeRuler = function() {
                     }
                 }
             });
+            
+
+            if(!_s){
+                var intid=helpElem.attr('data-intid');
+                var elem;
+                $.each(helpElem.parent().siblings().children('.changeHelp'),function(i,n){
+                    if($(n).attr('data-intid')===intid){
+                       elem= $(n);
+
+                        $.each(elem.siblings(),function(i,n){
+                            if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
+
+                                var offset1=Math.abs(max_out-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
+                                var offset2=Math.abs(max_out-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
+                                if(Math.abs(offset1)<=10){
+                                    _s=parseInt($(this).attr('data-sequencetrimin'));
+                                }
+                                if(Math.abs(offset2)<=10){
+                                    _s=parseInt($(this).attr('data-sequencetrimout'));
+                                }
+                            }
+                        });
+                    }
+                }); 
+            }
+
             return _s;
         }
         function getIn(min_in){
@@ -3421,12 +3457,36 @@ PLAYER.timeRuler = function() {
                     }
                 }
             });
+            
+            if(!_s){
+                var intid=helpElem.attr('data-intid');
+                var elem;
+                $.each(helpElem.parent().siblings().children('.changeHelp'),function(i,n){
+                    if($(n).attr('data-intid')===intid){
+                        elem= $(n);
+                        $.each(elem.siblings(),function(i,n){
+                            if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
+
+                                var offset1=Math.abs(min_in-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
+                                var offset2=Math.abs(min_in-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
+                                if(Math.abs(offset1)<=10){
+                                    _s=parseInt($(this).attr('data-sequencetrimin'));
+                                }
+                                if(Math.abs(offset2)<=10){
+                                    _s=parseInt($(this).attr('data-sequencetrimout'));
+                                }
+                            }
+                        });
+                    }
+                }); 
+            }
             return _s;
         }
         function checkAdhereMiddle(helpElem,moveFrame){
             if(move>0){
                 var max_sout=ev.max_out+moveFrame;
                 var adhere_point=getOut(max_sout);   //获取所有切片的吸附点
+                
                 
                 var offset=Math.abs(max_sout-adhere_point)/config.framePerPixel;
 
@@ -3439,6 +3499,8 @@ PLAYER.timeRuler = function() {
                     nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
                     //显示吸附线
                     PLAYER.operateJson.showAdhere(helpElem,'backward');
+
+
                 }else{
                     //隐藏吸附线
                     PLAYER.operateJson.hideAdhere(helpElem);
@@ -3446,7 +3508,7 @@ PLAYER.timeRuler = function() {
             }else{
                 var min_sIn=ev.min_in+moveFrame;
                 var adhere_point=getIn(min_sIn);   //获取所有切片的吸附点
-                
+                console.log('adhere_point',adhere_point)
                 var offset=Math.abs(min_sIn-adhere_point)/config.framePerPixel;
 
                 if(Math.abs(offset)<=10){
@@ -3617,6 +3679,7 @@ PLAYER.timeRuler = function() {
         var _index=parseInt(helpElem.parent().attr('data-index'));
         var _type=helpElem.parent().attr('data-type');
         
+
         PLAYER.operateJson.updateClipAttr(subClipAttr,id); 
         PLAYER.operateJson.changeIndexClipAttr(_type,_index,id); 
         //移除助手
@@ -6465,6 +6528,7 @@ PLAYER.hideEffectEdit=function(){
     $('#js_carve').removeClass('col-md-4').addClass('col-md-6');
     $('#js_effect_h_form').empty();
     $('#move_box').remove();
+    $('.edit_box').removeClass('onselected');
 }
 PLAYER.genNonDuplicateID=function(randomLength){
     return Number(Math.random().toString().substr(3,randomLength) + Date.now()).toString(36);

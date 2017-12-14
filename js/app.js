@@ -689,7 +689,6 @@ $(function(){
 				name:effectType,
 				attr:JSON.parse(effectAttr)
 			};
-			console.log('attr',obj.attr)
 			obj.attr.x1=parseFloat($('#js_effect_left').val());
 			obj.attr.y1=parseFloat($('#js_effect_top').val());
 			
@@ -753,10 +752,12 @@ $(function(){
 				PLAYER.OCX.adjustEffect(obj);
 				PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
 				PLAYER.operateJson.updateEffectClip(id,obj.attr);
+
 			}
 
 	        $('#js_effect_btn').on('click',function(){
 	            PLAYER.hideEffectEdit();
+	            $('.edit_box').removeClass('onselected');
 	        });
 		}
 		
