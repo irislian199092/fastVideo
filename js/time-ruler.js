@@ -358,7 +358,7 @@ PLAYER.playerFunction=function(){
                 PLAYER.PTR.currTime=s;
                 $('#js_time_ruler_title_nowTime').html(PLAYER.getDurationToString(PLAYER.TR.currTime));
             }
-        },10);
+        },40);
 
         /*setTimeout(function(){
             var s=PLAYER.OCX.getPosition();
@@ -388,7 +388,6 @@ PLAYER.playerFunction=function(){
     function setVuInfo(){
         setTimeout(function(){
             var str = PLAYER.OCX.getVUMeterInfo();
-
             if(str){
                 drawVoiceTable(str.split(","),true);
             }
@@ -397,8 +396,8 @@ PLAYER.playerFunction=function(){
                    setTimeout(arguments.callee,100); 
                 }else{
                     drawVoiceTable("",false)
-               }
-            } 
+               } 
+            }  
         },100); 
         function drawVoiceTable(arr,isDraw){  
             var c1 = document.getElementById("js_voCanvas"); 
@@ -664,10 +663,9 @@ PLAYER.operateJson={
         PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
     },
     translateFfpToMS:function(json){
-        var json=JSON.parse(json);
-        
-        var pWidth;
         //转换帧到毫秒
+        var json=JSON.parse(json);
+        var pWidth;
         json.rootBin.sequence[0].maxDuration=40*json.rootBin.sequence[0].maxDuration;
 
         for (var i = 0,track; track=json.rootBin.sequence[0].tracks[i++];) {
@@ -698,6 +696,33 @@ PLAYER.operateJson={
         }
         json.pHeight=$('#ocx').height();
         json.pWidth=pWidth;
+        return json;
+    },
+    translateMsToFfp:function(json){
+        //转毫秒到帧数
+        var json=JSON.parse(json);
+        json.rootBin.sequence[0].maxDuration=json.rootBin.sequence[0].maxDuration/40;
+
+        for (var i = 0,track; track=json.rootBin.sequence[0].tracks[i++];) {
+            $.each(track.subclip,function(i,n){
+                if(n){
+                    n.trimIn=n.trimIn/40;
+                    n.trimOut=n.trimOut/40;
+                    n.sequenceTrimIn=n.sequenceTrimIn/40;
+                    n.sequenceTrimOut=n.sequenceTrimOut/40;
+                    if(n.effect &&n.effect.length!==0){
+                        $.each(n.effect,function(index,item){
+                            item.trimIn=item.trimIn/40;
+                            item.trimOut=item.trimOut/40;
+                            item.duration=item.duration/40;
+                        });
+                    }
+                }
+            });  
+        }
+        for (var i = 0,mas; mas=json.reference.material[i++];) {
+            mas.duration=mas.duration/40;
+        }
         return json;
     },
     addVideoClipAttr:function(subClipAttr,_index){
@@ -1116,6 +1141,7 @@ PLAYER.operateJson={
         });
         return _s;
     },
+
     showAdhere:function(dragging,dir){
         if(dragging.find('.point')){
             dragging.find('.point').remove();
@@ -1233,6 +1259,22 @@ PLAYER.operateJson={
                 PLAYER.operateJson.hideAdhere(n);
             });
         }*/
+    },
+    checkCorsorhasClip:function(currTime){
+        var hasClip=false;
+        //检查游标处是否有切片
+        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+            if(track.type==='a' && (track.subclip.length>0)){
+                $.each(track.subclip,function(index,elem){
+                    console.log('currTime',currTime)
+                    if(elem.sequenceTrimIn<currTime && elem.sequenceTrimOut>currTime){
+                       return  hasClip=true;
+                    }
+                    
+                });  
+            }
+        }
+        return hasClip;    
     },
     checkNoClip:function(){
         for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
@@ -3050,6 +3092,7 @@ PLAYER.timeRuler = function() {
         PLAYER.checkPlaying();
         self.currTime=time;
         self.fixArrowCurrentTime(time);
+
         PLAYER.OCX.seek(time);   //必须seek在播放器轨道前，因为播放器最大时常不加15000帧
         
         if(time>=PLAYER.PTR.config.maxTime){
@@ -3057,6 +3100,14 @@ PLAYER.timeRuler = function() {
         }
         PLAYER.PTR.currTime=time;
         PLAYER.PTR.fixArrowCurrentTime(time);
+        
+        var s=PLAYER.operateJson.checkCorsorhasClip(self.currTime);
+        
+        if(!s){
+            var c1 = document.getElementById("js_voCanvas"); 
+            var ctx = c1.getContext("2d"); 
+            ctx.clearRect(0,0,100,500) 
+        }
     }  
     function getVideoCurrFrame(time){
         PLAYER.checkPlaying();

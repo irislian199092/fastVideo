@@ -117,7 +117,7 @@ $(function(){
 	var materialActive=false;
 
 
-	$('#js_thumbnail_box').delegate($('#js_thumbnail_box').children(),'dblclick',function(e){
+	$('#js_thumbnail_box').delegate($('#js_thumbnail_box').children(),'click',function(e){
 		if($(e.target).parent().hasClass('thumbnail')){
 			
 			var s=$(e.target).parent().parent('.col-md-3');
@@ -402,7 +402,6 @@ $(function(){
         	console.log('更新音量',PLAYER.jsonObj.rootBin.sequence[0])
 		});
 	}
-
 
 	/*----------------------右击菜单马赛克---------------------------------------------*/
 

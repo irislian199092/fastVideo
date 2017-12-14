@@ -1572,12 +1572,14 @@ var showSaveModal=function(type){
 	});
 	//点击确定按钮
 	$('#js_modal_savePro').off().click(function(){
+		var projStr = PLAYER.operateJson.translateFfpToMS(JSON.stringify(PLAYER.jsonObj));
+
 		$.ajax({
 	  		url:serverUrl+'proj/update',
 	  		data:{
 	  			projectid:PLAYER.jsonObj.id,
 	  			html:'',
-	  			content:JSON.stringify(PLAYER.jsonObj)
+	  			content:JSON.stringify(projStr)
 	  		},
 	  		success:function(msg){
 	  			if(msg.code===0&&msg.data!==null){
@@ -1749,8 +1751,8 @@ $('#js_exportProject').on('click',function(){
 				  		data:{
 				  			projectid:PLAYER.jsonObj.id,
 				  			name:nameValue,
-				  			trimin:triminValue,
-				  			trimout:trimoutValue,
+				  			trimin:triminValue*40,
+				  			trimout:trimoutValue*40,
 				  			packschema:schemaValue
 				  		},
 				  		success:function(msg){
@@ -2350,7 +2352,8 @@ var dragEffectModule=(function(){
 /*----------------------重新渲染轨道素材模块--------------------------------*/
 var drawClipModule=(function(){
 	PLAYER.observer.listen('projectData',function(data,freshList){
-		var data=JSON.parse(data);
+		var data=PLAYER.operateJson.translateMsToFfp(data);
+
 		if(!freshList){
 			for (var i = 0,track; track=data.rootBin.sequence[0].tracks[i++];) {
 				var type=track.type;
@@ -2358,12 +2361,9 @@ var drawClipModule=(function(){
 				if(track.subclip.length===0){
 					PLAYER.operateJson.emptyTrack(type,index);
 				}else{
+						
 					//如果工程已经有clip，则更新下工程
 					PLAYER.jsonObj=data;
-					PLAYER.operateJson.sortClipAttr();
-					//提交json,seek(0)
-					PLAYER.operateJson.sendJson();
-					
 					//获取当前轨道
 					var current_track=PLAYER.operateJson.getTrack(type,index);
 					$.each(track.subclip,function(i,n){
@@ -2430,6 +2430,8 @@ var drawClipModule=(function(){
 			        PLAYER.PTR.updateEvent(PLAYER.PTR.config);
 				}
 	        } 
+	        PLAYER.operateJson.sortClipAttr();
+			PLAYER.operateJson.sendJson();
 		}
 	});
 })();
