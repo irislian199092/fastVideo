@@ -358,7 +358,7 @@ PLAYER.playerFunction=function(){
                 PLAYER.PTR.currTime=s;
                 $('#js_time_ruler_title_nowTime').html(PLAYER.getDurationToString(PLAYER.TR.currTime));
             }
-        },10);
+        },40);
 
         /*setTimeout(function(){
             var s=PLAYER.OCX.getPosition();
@@ -396,13 +396,15 @@ PLAYER.playerFunction=function(){
                    setTimeout(arguments.callee,100); 
                 }else{
                     drawVoiceTable("",false)
-               }
-            } 
+               } 
+            }  
         },100); 
         function drawVoiceTable(arr,isDraw){  
             var c1 = document.getElementById("js_voCanvas"); 
             var _h=$("#js_time_ruler_voiceBox").height()-21;  
+
             if(c1.getContext('2d')){  
+
                 var ctx = c1.getContext("2d");  
                 ctx.clearRect(0,0,100,500)
                 if(isDraw){
@@ -412,7 +414,6 @@ PLAYER.playerFunction=function(){
                     for(var i=0;i<parseInt(arr[0]);i++){
                         var voice = parseFloat(arr[i+1]/100)+0.99;
                         canvasGradient=ctx.createLinearGradient(x,height,x,0);  
-                        
                         canvasGradient.addColorStop(0,'#33FF00'); 
                         canvasGradient.addColorStop(0.4,'#33FF00');
                         canvasGradient.addColorStop(1,'red');
@@ -611,7 +612,7 @@ PLAYER.ocxFunction=function(){
         },
         getVUMeterInfo:function(){
             try {
-                return form1.TestActiveX.GetVUMeterInfo();
+                return PLAYER.VUMeterInfo;
             } catch (e) {
                 //console.log('error');
                 return;
@@ -646,6 +647,22 @@ PLAYER.ocxFunction=function(){
                 console.log('error','获取画面失败');
                 return;
             }
+        },
+        sendProType:function(_type){
+            try {
+                var jsonObj = {
+                    command: "setProjectType",
+                    params: {
+                       type:_type
+                    }
+                };
+                var jsonStr = JSON.stringify(jsonObj);
+                webrtc.sendDataChannelMessageToPeer(targetId, jsonStr);
+                
+            } catch (e) {
+                console.log('播放失败！',e);
+                return false;
+            }
         }
         
     }
@@ -657,15 +674,14 @@ PLAYER.operateJson={
         //更新时间轴
         PLAYER.operateJson.updateRulerMaxTime();
         PLAYER.operateJson.pushCancelArray(PLAYER.jsonObj.rootBin.sequence[0]);
-        console.log('sendJson',PLAYER.jsonObj.rootBin.sequence[0]);
+        console.log('sendJson',PLAYER.jsonObj);
         PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
         PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
     },
     translateFfpToMS:function(json){
-        var json=JSON.parse(json);
-        
-        var pWidth;
         //转换帧到毫秒
+        var json=JSON.parse(json);
+        var pWidth;
         json.rootBin.sequence[0].maxDuration=40*json.rootBin.sequence[0].maxDuration;
 
         for (var i = 0,track; track=json.rootBin.sequence[0].tracks[i++];) {
@@ -698,6 +714,33 @@ PLAYER.operateJson={
         json.pWidth=pWidth;
         return json;
     },
+    translateMsToFfp:function(json){
+        //转毫秒到帧数
+        var json=JSON.parse(json);
+        json.rootBin.sequence[0].maxDuration=json.rootBin.sequence[0].maxDuration/40;
+
+        for (var i = 0,track; track=json.rootBin.sequence[0].tracks[i++];) {
+            $.each(track.subclip,function(i,n){
+                if(n){
+                    n.trimIn=n.trimIn/40;
+                    n.trimOut=n.trimOut/40;
+                    n.sequenceTrimIn=n.sequenceTrimIn/40;
+                    n.sequenceTrimOut=n.sequenceTrimOut/40;
+                    if(n.effect &&n.effect.length!==0){
+                        $.each(n.effect,function(index,item){
+                            item.trimIn=item.trimIn/40;
+                            item.trimOut=item.trimOut/40;
+                            item.duration=item.duration/40;
+                        });
+                    }
+                }
+            });  
+        }
+        for (var i = 0,mas; mas=json.reference.material[i++];) {
+            mas.duration=mas.duration/40;
+        }
+        return json;
+    },
     addVideoClipAttr:function(subClipAttr,_index){
         for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
             if(track.type==='v'&&track.index===_index){
@@ -711,6 +754,19 @@ PLAYER.operateJson={
                track.subclip.push(subClipAttr);
             }
         }
+    },
+    updateAudioClipVolume:function(time,value){
+        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+            $.each(track.subclip,function(index,elem){
+                if(elem){
+                    if(elem.createTime===time){
+                        $.extend(track.subclip[index],{
+                            volume:value
+                        });
+                    }
+                }
+            });   
+        } 
     },
     addSubtitleClipAttr:function(subClipAttr,_index){
         for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
@@ -803,6 +859,7 @@ PLAYER.operateJson={
         } 
         console.log('更新切片',PLAYER.jsonObj.rootBin.sequence[0].tracks);
     },
+
     changeIndexClipAttr:function(type,index,time){
         var obj=null;
         for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
@@ -833,6 +890,7 @@ PLAYER.operateJson={
                 
             });  
         } 
+        console.log('删除切片',PLAYER.jsonObj.rootBin.sequence[0])
     },
     checkCoverEvent:function(dragging,intid){
         var config=PLAYER.TR.config;
@@ -867,10 +925,9 @@ PLAYER.operateJson={
                     $(n).css('left',s0_out/config.framePerPixel);
                     $(n).width((sn_out-s0_out)/config.framePerPixel);
                     
-
-                    console.log('--------------',$(n).find('.effect_box_r'))
-                    if($(n).find('.effect_box_r')){
-                        $(n).find('.effect_box_r').remove();
+                    console.log('ff')
+                    if($(n).find('.effect_box_l')){
+                        $(n).find('.effect_box_l').remove();
                     }
                     subClipAttr={
                         sequenceTrimIn:s0_out,
@@ -878,9 +935,13 @@ PLAYER.operateJson={
                         trimIn: tn_out-sn_out+s0_out,
                         trimOut:tn_out,
                     }
-                    PLAYER.operateJson.updateClipAttr(subClipAttr,time);
+                    var e_attr2=PLAYER.operateJson.getCutOldEffectClip(time,tn_in,tn_in+s0_in-sn_in);
+                    PLAYER.operateJson.updateClipAttr(subClipAttr,time,e_attr2);
+
+                    //PLAYER.operateJson.updateClipAttr(subClipAttr,time);
                 }
                 else{
+                    console.log('rr')
                     var time=$(n).attr('data-time');
                     PLAYER.operateJson.deleteClipAttr(time);
                     $(n).remove();
@@ -900,10 +961,11 @@ PLAYER.operateJson={
                 var v_type=$(n).attr('data-type');
                 var v_index=parseInt($(n).parent('.time_ruler_bar').attr('data-index'));
 
-
+                console.log('gg')
                 if($(n).find('.effect_box_r')){
                     $(n).find('.effect_box_r').remove();
                 }
+
                 //原兄弟节点切片属性
                 subClipAttr={
                     trimIn: tn_in,
@@ -1099,8 +1161,11 @@ PLAYER.operateJson={
         });
         return _s;
     },
+
     showAdhere:function(dragging,dir){
-        dragging.find('.point').remove();
+        if(dragging.find('.point')){
+            dragging.find('.point').remove();
+        }  
         var _line=$('<div class="point"></div>');
         if(dir==='forward'){
             _line.css('left',-5);
@@ -1108,7 +1173,9 @@ PLAYER.operateJson={
         if(dir==='backward'){
            _line.css('left',(dragging.width()-5));
         }
+        
         _line.appendTo(dragging);
+        console.log('point',dragging.find('.point').length);
     },
     hideAdhere:function(dragging){
         if(dragging.find('.point')){
@@ -1124,7 +1191,7 @@ PLAYER.operateJson={
                element=$(n);
             }
         });
-        return $(element);
+        return element;
     },
     chooseGroupElem:function(dragging){
         var element=null;
@@ -1212,6 +1279,22 @@ PLAYER.operateJson={
                 PLAYER.operateJson.hideAdhere(n);
             });
         }*/
+    },
+    checkCorsorhasClip:function(currTime){
+        var hasClip=false;
+        //检查游标处是否有切片
+        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+            if(track.type==='a' && (track.subclip.length>0)){
+                $.each(track.subclip,function(index,elem){
+                    console.log('currTime',currTime)
+                    if(elem.sequenceTrimIn<currTime && elem.sequenceTrimOut>currTime){
+                       return  hasClip=true;
+                    }
+                    
+                });  
+            }
+        }
+        return hasClip;    
     },
     checkNoClip:function(){
         for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
@@ -1306,6 +1389,26 @@ PLAYER.operateJson={
             return e_attr;
         }
     },
+    getCoverOldEffectClip:function(v_dataTime,v0_trimIn,v0_trimOut){
+        var e_attr=JSON.parse(PLAYER.operateJson.getEffectClip(v_dataTime));
+        if(e_attr&&e_attr.length!==0){
+            var arr_footer=e_attr.filter(function(t){
+                return (t.pos!=='header' && t.pos!=='header-middle');
+            });
+
+            for (var i = 0; i < arr_header.length; i++) {
+                if(arr_header[i].pos==='all'){
+                    arr_header[i].trimIn=v0_trimIn;
+                    arr_header[i].trimOut=v0_trimOut;
+                    arr_header[i].duration=v0_trimOut-v0_trimIn;
+                }     
+            }
+            e_attr=arr_header;
+        }
+        if(e_attr){
+            return e_attr;
+        }
+    },
     updateEffectClip:function(time,attr){
         for (var  i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
             $.each(track.subclip,function(index,elem){
@@ -1322,8 +1425,7 @@ PLAYER.operateJson={
             });   
         }
         console.log('更新特技',PLAYER.jsonObj.rootBin.sequence[0].tracks);
-    },
-    
+    }, 
     removeOtherEffectClip:function(time,type,pos){
         for (var  i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
             $.each(track.subclip,function(index,elem){
@@ -1409,15 +1511,15 @@ PLAYER.operateJson={
     },
     updateRulerMaxTime:function(){
         //更新轨道最大时常
-        var n=Math.max(PLAYER.TR.config.maxTime,PLAYER.operateJson.getLastFrame()+15000);
+        var n=Math.max(PLAYER.TR.config.maxTime,PLAYER.operateJson.getLastFrame()+15000 || 1000);
         PLAYER.TR.updateEvent(n);
 
         PLAYER.TR.fixClipWidth();
         //更新json最大时常
         PLAYER.operateJson.updateMaxDuration(n);
         //更新轨道最大时常
-        PLAYER.PTR.config.maxTime=(PLAYER.operateJson.getLastFrame()||0);
-        $('#js_player_totalTime').html(PLAYER.getDurationToString(PLAYER.operateJson.getLastFrame()||0));
+        PLAYER.PTR.config.maxTime=(PLAYER.operateJson.getLastFrame()|| 1000);
+        $('#js_player_totalTime').html(PLAYER.getDurationToString(PLAYER.operateJson.getLastFrame()||1000));
         PLAYER.PTR.updateEvent(PLAYER.PTR.config);
     },
     getAudioIndex:function(time){
@@ -2349,7 +2451,6 @@ PLAYER.timeRuler = function() {
                             }
                             else if(v0_dir==='left' || v0_dir==='right'){
                                 var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
-
                                 if(dragging){
                                     vd_attr=getDragInfo(dragging,event);
                                     dragging.attr('data-clipdir',v0_dir);
@@ -2416,16 +2517,19 @@ PLAYER.timeRuler = function() {
                                 }else if(v0_dir==='left' || v0_dir==='right'){
                                     //缩放只能联动一起缩放
                                     var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
-                                    dragdrop.fire({
-                                        type:'clipDrag',
-                                        target:dragging,
-                                        x:event.clientX,
-                                        y:event.clientY,
-                                        min_left:min_left,
-                                        max_right:max_right,
-                                        min_in:min_in,
-                                        max_out:max_out
-                                    });
+                                    if(dragging){
+                                        dragdrop.fire({
+                                            type:'clipDrag',
+                                            target:dragging,
+                                            x:event.clientX,
+                                            y:event.clientY,
+                                            min_left:min_left,
+                                            max_right:max_right,
+                                            min_in:min_in,
+                                            max_out:max_out
+                                        });
+                                    }
+                                    
                                 }
                                 
                                 
@@ -2477,12 +2581,15 @@ PLAYER.timeRuler = function() {
                                         }
                                     }else if(v0_dir==='left' || v0_dir==='right'){
                                         var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
-                                        dragdrop.fire({
-                                            type:'clipDragend',
-                                            target:dragging,
-                                            x:event.clientX,
-                                            y:event.clientY
-                                        });
+                                        if(dragging){
+                                            dragdrop.fire({
+                                                type:'clipDragend',
+                                                target:dragging,
+                                                x:event.clientX,
+                                                y:event.clientY
+                                            });
+                                        }
+                                        
                                     }
                                     
                                     PLAYER.operateJson.sendJson();
@@ -2518,13 +2625,16 @@ PLAYER.timeRuler = function() {
                                 }
                                 else if(v0_dir==='left' || v0_dir==='right'){
                                     var dragging=PLAYER.operateJson.chooseInterleavedElem(v0_dragging);
-                                    dragdrop.fire({
-                                        type:'clipClick',
-                                        target:dragging,
-                                        x:event.clientX,
-                                        y:event.clientY,
-                                        intId:id
-                                    });
+                                    if(dragging){
+                                        dragdrop.fire({
+                                            type:'clipClick',
+                                            target:dragging,
+                                            x:event.clientX,
+                                            y:event.clientY,
+                                            intId:id
+                                        });
+                                    }
+                                    
                                         
                                 }
 
@@ -2536,8 +2646,14 @@ PLAYER.timeRuler = function() {
                             
                             v0_dragging=null; 
                             dragging=null;
-                            arr_sIn=[];
-                            arr_sOut=[];
+                            min_left=0;
+                            max_right=0;
+                            min_in=0;
+                            max_out=0;
+                            arr_left=[]; 
+                            arr_right=[];
+                            arr_in=[]; 
+                            arr_out=[];
                         break;
                     case 'click':
                         if(target.className.indexOf('effect_box_l')>-1 || target.className.indexOf('effect_box_r')>-1){
@@ -3015,6 +3131,7 @@ PLAYER.timeRuler = function() {
         PLAYER.checkPlaying();
         self.currTime=time;
         self.fixArrowCurrentTime(time);
+
         PLAYER.OCX.seek(time);   //必须seek在播放器轨道前，因为播放器最大时常不加15000帧
         
         if(time>=PLAYER.PTR.config.maxTime){
@@ -3022,6 +3139,14 @@ PLAYER.timeRuler = function() {
         }
         PLAYER.PTR.currTime=time;
         PLAYER.PTR.fixArrowCurrentTime(time);
+        
+        var s=PLAYER.operateJson.checkCorsorhasClip(self.currTime);
+        
+        if(!s){
+            var c1 = document.getElementById("js_voCanvas"); 
+            var ctx = c1.getContext("2d"); 
+            ctx.clearRect(0,0,100,500) 
+        }
     }  
     function getVideoCurrFrame(time){
         PLAYER.checkPlaying();
@@ -3035,6 +3160,8 @@ PLAYER.timeRuler = function() {
         attr.clipInitWidth=parseInt(target.outerWidth());
         attr.clipInitLeft=parseInt(target.position().left);
         attr.clipInitClientX=ev.x;
+
+
         attr.clipInitOffsetLeft=parseInt(target.parent().offset().left);
 
         attr.clipInitTop=parseInt(target.position().top);
@@ -3049,7 +3176,6 @@ PLAYER.timeRuler = function() {
         attr.clipInitSequenceTrimOut=parseInt(target.attr('data-sequencetrimout'));
         attr.clipMaxFrame=parseInt(target.attr('data-duration'))||0;
 
-        
         if(target.find('.effect_box_r').length>=1 && PLAYER.operateJson.checkNextSubClip(attr.clipInitSequenceTrimOut)){
             attr.nextClip=PLAYER.operateJson.checkNextSubClip(attr.clipInitSequenceTrimOut).attr('data-time');
         }
@@ -3089,7 +3215,7 @@ PLAYER.timeRuler = function() {
     //拖拽中clip
     function handleClipDragEvent(ev){
         var config=self.config;
-        var target=ev.target;
+        var target=$(ev.target);
         var parentWidth=config.$header.width();
         
         var id=target.attr('data-time');
@@ -3111,6 +3237,8 @@ PLAYER.timeRuler = function() {
         clipInitIndex=initAttr.clipInitIndex;
         clipInitType=initAttr.clipInitType;
 
+        console.log('clipInitOffsetTop',clipInitOffsetTop)
+
         clipInitTrimIn=initAttr.clipInitTrimIn;
         clipInitTrimOut=initAttr.clipInitTrimOut;
         clipInitSequenceTrimIn=initAttr.clipInitSequenceTrimIn;
@@ -3124,7 +3252,7 @@ PLAYER.timeRuler = function() {
         
         if(clipDir==='middle'){
             var move=(ev.x-clipInitClientX);
-            var moveFrame=(ev.x-clipInitClientX)*config.framePerPixel;
+            var moveFrame=Math.floor((ev.x-clipInitClientX)*config.framePerPixel);
 
             sequenceTrimIn=clipInitSequenceTrimIn+moveFrame;
             if(ev.min_in+moveFrame<=0){
@@ -3137,86 +3265,43 @@ PLAYER.timeRuler = function() {
            
             sequenceTrimOut=sequenceTrimIn+(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
             nowLeft=sequenceTrimIn/config.framePerPixel;
-
-            $.each(helpElem.siblings(),function(i,n){
-                if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
-                    if(move>0){
-                        //往右走
-                        var offsetFrameIn=parseInt($(n).attr('data-sequencetrimin'))-ev.max_out;
-                        var offsetPxIn=offsetFrameIn/config.framePerPixel-move;
-
-                        var offsetFrameOut=parseInt($(n).attr('data-sequencetrimout'))-ev.max_out;
-                        var offsetPxOut=offsetFrameOut/config.framePerPixel-move;
-                        
-                        var s=ev.max_out-clipInitSequenceTrimOut; //计算拖拽对象与联动对象之间最大sout的值
-                        console.log('offsetPxIn---',offsetPxIn)
-                        if(Math.abs(offsetPxIn)<=10){
-                            move=offsetFrameIn/config.framePerPixel;
-                            sequenceTrimOut=parseInt($(n).attr('data-sequencetrimin'))-s;
-                            sequenceTrimIn=sequenceTrimOut-(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
-                            nowLeft=sequenceTrimIn/config.framePerPixel;
-                            
-                            PLAYER.operateJson.showAdhere(helpElem,'backward');
-                        }else if(Math.abs(offsetPxOut)<=10){
-                            sequenceTrimOut=parseInt($(n).attr('data-sequencetrimout'))-s;
-                            sequenceTrimIn=sequenceTrimOut-(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
-                            nowLeft=sequenceTrimIn/config.framePerPixel;
-
-                            PLAYER.operateJson.showAdhere(helpElem,'backward');
-                        }
-                        else{
-                            console.log('hide')
-                            PLAYER.operateJson.showAdhere(helpElem,'backward');
-                            PLAYER.operateJson.hideAdhere(helpElem);
-                        }
-                    }else{
-                        //往左走
-                        var offset_f=parseInt($(n).attr('data-sequencetrimout'))-ev.min_in;
-                        var offset_px=offset_f/config.framePerPixel-move;
-                        
-                        if(Math.abs(offset_px)<=10){
-                            //move=(parseInt($(n).attr('data-sequencetrimout'))-ev.min_in)/config.framePerPixel;
-                            var s=clipInitSequenceTrimIn-ev.min_in;
-
-                            sequenceTrimIn=parseInt($(n).attr('data-sequencetrimout'))+s;
-                            sequenceTrimOut=sequenceTrimIn+(clipInitSequenceTrimOut-clipInitSequenceTrimIn);
-                            nowLeft=sequenceTrimIn/config.framePerPixel;
-                            PLAYER.operateJson.showAdhere(helpElem,'forward');
-                        }else{
-                            PLAYER.operateJson.hideAdhere(helpElem);
-                        }
-                    }
-                }
-            });
             
-            cal_index=getTrackIndex(clipInitType);
+            checkAdhereMiddle(helpElem,moveFrame);
+
+            //cal_index=getTrackIndex(clipInitType);
+            
+            if(clipInitType==='t' || clipInitType==='a'){
+                cal_index=getTrackIndexAOrT(clipInitType);
+            }
+            if(clipInitType==='v'){
+                cal_index=getTrackIndexV(clipInitType);
+            }
+
             if(PLAYER.help_index && PLAYER.help_index>=1){
                 addHelpObj(helpElem,clipInitType,PLAYER.help_index);  
             }
           
-            //chcekAdhereMiddle(helpElem,id);
+            
             helpElem.attr('data-sequencetrimin',sequenceTrimIn);
             helpElem.attr('data-sequencetrimout',sequenceTrimOut);
             helpElem.css('left',nowLeft);
-
-            console.log('helpElem',helpElem.attr('data-sequencetrimin'));
 
         }
         else if(clipDir==='left'){
             var nowWidth=clipInitWidth-(ev.x-clipInitClientX);
             var nowLeft=clipInitLeft+(ev.x-clipInitClientX);
             var _offset=(ev.x-clipInitClientX)*config.framePerPixel/config.framePerPixel;
-            var _moveIn=Math.round(_offset*config.framePerPixel);//求得移动的帧数
+            var moveFrame=Math.round(_offset*config.framePerPixel);//求得移动的帧数
 
-            trimIn=clipInitTrimIn+_moveIn;
+            trimIn=clipInitTrimIn+moveFrame;
             sequenceTrimIn=clipInitSequenceTrimOut-clipInitTrimOut+trimIn;
             
             if(target.attr('data-type')!=='subtitle'&&target.attr('data-type')!=='video'){
                 if(trimIn<=0){
                     trimIn=0;
                     sequenceTrimIn=clipInitSequenceTrimOut-clipInitTrimOut;
-                    _moveIn= trimIn-clipInitTrimIn;
-                    _offset= _moveIn/config.framePerPixel;
+                    moveFrame= trimIn-clipInitTrimIn;
+                    _offset= moveFrame/config.framePerPixel;
                     nowLeft=clipInitLeft+_offset;
                     nowWidth=clipInitWidth-_offset;
                 }
@@ -3225,8 +3310,8 @@ PLAYER.timeRuler = function() {
                 trimIn=clipInitTrimOut-1;
 
                 sequenceTrimIn=clipInitSequenceTrimOut-1;
-                _moveIn= trimIn-clipInitTrimIn;
-                _offset= _moveIn/config.framePerPixel;
+                moveFrame= trimIn-clipInitTrimIn;
+                _offset= moveFrame/config.framePerPixel;
                 nowLeft=clipInitLeft+_offset;
                 nowWidth=clipInitWidth-_offset;
             }
@@ -3236,7 +3321,7 @@ PLAYER.timeRuler = function() {
                 trimIn=clipInitTrimOut-clipInitSequenceTrimOut;
                 nowWidth=clipInitWidth+clipInitLeft;  
             }
-            chcekAdhereLeft(helpElem,id);  //这个有问题 需要再解决
+            checkAdhereLeft(helpElem,moveFrame);
 
             helpElem.attr('data-trimin',trimIn);
             helpElem.attr('data-sequencetrimin',sequenceTrimIn);
@@ -3246,9 +3331,9 @@ PLAYER.timeRuler = function() {
         else if(clipDir==='right'){
             var nowWidth=clipInitWidth+(ev.x-clipInitClientX);
             var _offset=(ev.x-clipInitClientX)*config.framePerPixel/config.framePerPixel;
-            var _moveOut=Math.round(_offset*config.framePerPixel);//求得移动的帧数
+            var moveFrame=Math.round(_offset*config.framePerPixel);//求得移动的帧数
 
-            trimOut=clipInitTrimOut+_moveOut;
+            trimOut=clipInitTrimOut+moveFrame;
             sequenceTrimOut=clipInitSequenceTrimIn+trimOut-clipInitTrimIn;
 
             if(target.attr('data-type')!=='subtitle'&&target.attr('data-type')!=='video'){
@@ -3256,100 +3341,133 @@ PLAYER.timeRuler = function() {
                     trimOut=clipMaxFrame;
 
                     sequenceTrimOut=clipInitSequenceTrimIn+trimOut-clipInitTrimIn;
-                    _moveOut=trimOut-clipInitTrimOut;
-                    _offset=_moveOut/config.framePerPixel;
+                    moveFrame=trimOut-clipInitTrimOut;
+                    _offset=moveFrame/config.framePerPixel;
                     nowWidth=clipInitWidth+_offset;
                 }
             }
             if(trimOut<=clipInitTrimIn+1){
                 trimOut=clipInitTrimIn+1;
                 sequenceTrimOut=clipInitSequenceTrimIn+trimOut-clipInitTrimIn;
-                _moveOut=trimOut-clipInitTrimOut;
-                _offset=_moveOut/config.framePerPixel;
+                moveFrame=trimOut-clipInitTrimOut;
+                _offset=moveFrame/config.framePerPixel;
                 nowWidth=clipInitWidth+_offset;
             }
             if(nowWidth+clipInitLeft>=config.$rulerWrap.width()){
                 nowWidth=config.$rulerWrap.width()-clipInitLeft;
                 _offset=nowWidth-clipInitWidth;
-                _moveOut=Math.round(_offset*config.framePerPixel);
-                trimOut=clipInitTrimOut+_moveOut;
+                moveFrame=Math.round(_offset*config.framePerPixel);
+                trimOut=clipInitTrimOut+moveFrame;
                 sequenceTrimOut=clipInitSequenceTrimIn+trimOut-clipInitTrimIn;
             }
-            chcekAdhereRight(helpElem,id);
+            checkAdhereRight(helpElem,moveFrame);
 
             helpElem.attr('data-trimout',trimOut);
             helpElem.attr('data-sequencetrimout',sequenceTrimOut);
             helpElem.css('width',nowWidth);
         } 
-
-        function getTrackIndex(clipInitType){
-            
-            var cal_index;
-            if(clipInitType==='t' || clipInitType==='a'){
-                if(clipInitIndex>=2&&ev.y-clipInitClientY<-10){
-                    cal_index=clipInitIndex-Math.ceil((clipInitOffsetTop-ev.y)/70);
-                }
-                else if(clipInitIndex>=1&&ev.y-clipInitClientY>10){
-                    cal_index=clipInitIndex-Math.ceil((ev.y-clipInitClientY)/70);
-                }else if(Math.abs(ev.y-clipInitClientY)<10){
-                    cal_index=clipInitIndex;
-                }
-            }
-            else if(clipInitType==='v'){
-                if(clipInitIndex>=1&&ev.y-clipInitClientY<-10){
-                    cal_index=clipInitIndex+Math.ceil((clipInitOffsetTop-ev.y)/70);
-                }
-                else if(clipInitIndex>=2&&ev.y-clipInitClientY>10){
-                    cal_index=clipInitIndex-Math.ceil((ev.y-clipInitClientY)/70);  
-                }else if(Math.abs(ev.y-clipInitClientY)<5){
-                    cal_index=clipInitIndex;
-                }
-            }
-            if(cal_index){
-                return PLAYER.help_index=cal_index;
-            }
-            
-        }
         
-        //判断吸附
-        function chcekAdhereMiddle(dragging,targetId){
-            if(dragging.siblings().length!==0){
-                if(ev.x-clipInitClientX>0){//->右
-                    var adhere_point=PLAYER.operateJson.getAllsequenceTrimOut(dragging,targetId);   //获取所有切片的吸附点
-                    
-                    var offset=Math.abs(sequenceTrimOut-adhere_point)/config.framePerPixel;
-                    
-                    if(offset<=5){
-                        //更具吸附点设置切片位置属性
-                        sequenceTrimOut=adhere_point;
-                        sequenceTrimIn=adhere_point-(dragging.attr('data-trimout')-dragging.attr('data-trimin'));
-                        nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
+        function getOut(max_out){
+            var _s;
+            $.each(helpElem.siblings(),function(i,n){
+                if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
 
-                        //显示吸附线
-                        PLAYER.operateJson.showAdhere(dragging,'backward');
-                    }else{
-                        //隐藏吸附线
-                        PLAYER.operateJson.hideAdhere(dragging);
+                    var offset1=Math.abs(max_out-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
+                    var offset2=Math.abs(max_out-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
+                    if(Math.abs(offset1)<=10){
+                        _s=parseInt($(this).attr('data-sequencetrimin'));
+                    }
+                    if(Math.abs(offset2)<=10){
+                        _s=parseInt($(this).attr('data-sequencetrimout'));
                     }
                 }
-                else if(ev.x-clipInitClientX<0){
-                    var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging,targetId);//获取所有切片的吸附点 
-                    var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
-                    if(offset<=5){
-                        nowLeft=adhere_point/config.framePerPixel;
-                        sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
-                        sequenceTrimOut=sequenceTrimIn+(dragging.attr('data-trimout')-dragging.attr('data-trimin'));
+            });
+            return _s;
+        }
+        function getIn(min_in){
+            var _s;
+            $.each(helpElem.siblings(),function(i,n){
+                if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
 
-                        PLAYER.operateJson.showAdhere(dragging,'forward');
-                    }else{
-                        PLAYER.operateJson.hideAdhere(dragging);
+                    var offset1=Math.abs(min_in-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
+                    var offset2=Math.abs(min_in-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
+                    if(Math.abs(offset1)<=10){
+                        _s=parseInt($(this).attr('data-sequencetrimin'));
+                    }
+                    if(Math.abs(offset2)<=10){
+                        _s=parseInt($(this).attr('data-sequencetrimout'));
                     }
                 }
+            });
+            return _s;
+        }
+       
+        function checkAdhereMiddle(helpElem,moveFrame){
+            if(move>0){
+                var max_sout=ev.max_out+moveFrame;
+                var adhere_point=getOut(max_sout);   //获取所有切片的吸附点
                 
+                var offset=Math.abs(max_sout-adhere_point)/config.framePerPixel;
+
+                if(Math.abs(offset)<=10){
+                    //更具吸附点设置切片位置属性
+                    max_sout=adhere_point;
+                    sequenceTrimOut=clipInitSequenceTrimOut+max_sout-ev.max_out;
+
+                    sequenceTrimIn=sequenceTrimOut-(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
+                    nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
+                    //显示吸附线
+                    PLAYER.operateJson.showAdhere(helpElem,'backward');
+                }else{
+                    //隐藏吸附线
+                    PLAYER.operateJson.hideAdhere(helpElem);
+                }
+            }else{
+                var min_sIn=ev.min_in+moveFrame;
+                var adhere_point=getIn(min_sIn);   //获取所有切片的吸附点
+                
+                var offset=Math.abs(min_sIn-adhere_point)/config.framePerPixel;
+
+                if(Math.abs(offset)<=10){
+                    //更具吸附点设置切片位置属性
+                    min_sIn=adhere_point;
+
+                    sequenceTrimIn=clipInitSequenceTrimIn+min_sIn-ev.min_in;
+                    sequenceTrimOut=sequenceTrimIn+(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
+                    nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
+                    //显示吸附线
+                    PLAYER.operateJson.showAdhere(helpElem,'forward');
+                }else{
+                    //隐藏吸附线
+                    PLAYER.operateJson.hideAdhere(helpElem);
+                }
             }
         }
-        function chcekAdhereLeft(dragging,targetId){
-            if(dragging.siblings().length!==0){
+        function checkAdhereLeft(helpElem,moveFrame){
+
+            var min_sIn=ev.min_in+moveFrame;
+            var adhere_point=getIn(min_sIn);   //获取所有切片的吸附点
+            
+            var offset=Math.abs(min_sIn-adhere_point)/config.framePerPixel;
+
+            if(Math.abs(offset)<=10){
+                //更具吸附点设置切片位置属性
+                min_sIn=adhere_point;
+
+                sequenceTrimIn=clipInitSequenceTrimIn+min_sIn-ev.min_in;
+                trimIn=clipInitTrimIn+min_sIn-ev.min_in;
+                nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
+                nowWidth=(clipInitSequenceTrimOut-sequenceTrimIn)/config.framePerPixel;
+
+                //显示吸附线
+                PLAYER.operateJson.showAdhere(helpElem,'forward');
+            }else{
+                //隐藏吸附线
+                PLAYER.operateJson.hideAdhere(helpElem);
+            }
+
+
+            /*if(dragging.siblings().length!==0){
                 
                 var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging,targetId);//获取所有切片的吸附点 
                 
@@ -3365,29 +3483,61 @@ PLAYER.timeRuler = function() {
                     PLAYER.operateJson.hideAdhere(dragging);
                 }
 
-            }
+            }*/
         }
-        function chcekAdhereRight(dragging,targetId){
-            if(dragging.siblings().length!==0){
+        function checkAdhereRight(helpElem,moveFrame){
+            var max_sout=ev.max_out+moveFrame;
+            var adhere_point=getOut(max_sout);   //获取所有切片的吸附点
+            var offset=(max_sout-adhere_point)/config.framePerPixel;
+            
+            if(Math.abs(offset)<=10){
+                //更具吸附点设置切片位置属性
+                max_sout=adhere_point;
                 
-                var adhere_point=PLAYER.operateJson.getAllsequenceTrimOut(dragging,targetId);   //获取所有切片的吸附点
-                var offset=Math.abs(sequenceTrimOut-adhere_point)/config.framePerPixel;
+                sequenceTrimOut=clipInitSequenceTrimOut+max_sout-ev.max_out;
                 
-                if(offset<=5){
-                    //更具吸附点设置切片位置属性
-                    sequenceTrimOut=adhere_point;
-                    trimOut=parseInt(dragging.attr('data-trimin'))+(sequenceTrimOut-parseInt(dragging.attr('data-sequencetrimin')));
-                    nowWidth=Math.round((sequenceTrimOut-parseInt(dragging.attr('data-sequencetrimin')))/config.framePerPixel);
-                    
-                    PLAYER.operateJson.showAdhere(dragging,'backward');
-                }else{
-                    PLAYER.operateJson.hideAdhere(dragging);
+                trimOut=clipInitTrimOut+(sequenceTrimOut-clipInitSequenceTrimOut);
+                nowWidth=Math.round((sequenceTrimOut-clipInitSequenceTrimIn)/config.framePerPixel);
+                //显示吸附线
+                PLAYER.operateJson.showAdhere(helpElem,'backward');
+            }else{
+                //隐藏吸附线
+                PLAYER.operateJson.hideAdhere(helpElem);
+            } 
+        }
+        function getTrackIndexV(clipInitType){
+            var cal_index;
+            if(clipInitType==='v'){
+                if(clipInitIndex>=1&&ev.y-clipInitClientY<-10){
+                    cal_index=clipInitIndex+Math.ceil((clipInitOffsetTop-ev.y)/70);
                 }
-                
-                
+                else if(clipInitIndex>=2&&ev.y-clipInitClientY>10){
+                    cal_index=clipInitIndex-Math.ceil((ev.y-clipInitClientY)/70);  
+                }else if(Math.abs(ev.y-clipInitClientY)<5){
+                    cal_index=clipInitIndex;
+                }
+            }
+            if(cal_index){
+                return PLAYER.help_index=cal_index;
             }
         }
-
+        function getTrackIndexAOrT(clipInitType){
+            var cal_index;
+            if(clipInitType==='t' || clipInitType==='a'){
+                if(clipInitIndex>=2&&ev.y-clipInitClientY>10){
+                    cal_index=clipInitIndex-Math.ceil((clipInitOffsetTop-ev.y)/70);  
+                }
+                else if(clipInitIndex>=1&&ev.y-clipInitClientY>10){
+                    cal_index=clipInitIndex+Math.ceil((ev.y-clipInitClientY)/70);
+                }else if(Math.abs(ev.y-clipInitClientY)<10){
+                    cal_index=clipInitIndex;
+                }
+            }
+            
+            if(cal_index){
+                return PLAYER.help_index=cal_index;
+            }
+        }
     }
     function addHelpObj(obj,clipInitType,cal_index){
         $.each($('.time_ruler_bar[data-type="'+clipInitType+'"]'),function(i,n){
@@ -3414,8 +3564,6 @@ PLAYER.timeRuler = function() {
         var left=helpElem.css('left');
         var width=helpElem.width();
         
-        
-
         var subClipAttr={
             sequenceTrimIn:sequenceTrimIn,
             sequenceTrimOut:sequenceTrimOut,
@@ -3429,7 +3577,6 @@ PLAYER.timeRuler = function() {
         target.css('left',left);
         target.css('width',width);
 
-        
         //判断对象是否有中间淡入淡出特技
         if(dir!=='left'&&initAttr.nextClip){
             
@@ -3492,11 +3639,8 @@ PLAYER.timeRuler = function() {
         var v_target=ev.target;
         var id=v_target.attr('data-time');
         var helpElem=PLAYER.operateJson.getDraggingHelp(id); //联动助手
-        
         PLAYER.operateJson.removeDraggingInfo(id);
         helpElem.remove();
-
-
         //click事件
         if(PLAYER.keyNum===85){//按下u后
 
@@ -3647,7 +3791,8 @@ PLAYER.timeRuler = function() {
             var e_attr2=PLAYER.operateJson.getCutOldEffectClip(v_dataTime,v0_trimIn,v0_trimOut);
 
             PLAYER.operateJson.updateClipAttr(v0_subClipAttr,v_dataTime,e_attr2);
-        }    
+        } 
+        //console.log($('.onselected').hasClass('.edit_box_a '))
     }
     /*关于clip移入函数开始*/
     function handleClipCheckDirEvent(ev){
@@ -3787,8 +3932,7 @@ PLAYER.timeRuler = function() {
             var nextClip=PLAYER.operateJson.checkPrevSubClip(sin);
             nextClip.children('.effect_box_r').toggleClass('onEffect');
         }
-    } 
-    
+    }  
     /*关于双击字幕事件开始*/
     function handleClipDblclickEvent(ev){
         PLAYER.hideSubititleEdit();
@@ -4091,6 +4235,7 @@ PLAYER.timeRuler = function() {
             $('#js_pageCover').hide();
         });
     }
+
     /*键盘+-快捷键*/
     function privateKeyDownEvent(e){
         var config=self.config;
@@ -4110,6 +4255,7 @@ PLAYER.timeRuler = function() {
         var time=0;             //每个切片的创建时间
         var subClipAttr=null;   //更新切片json
         var prevClipSequenceTrimOut=0;
+        
 
         if(key===189){//--
             //PLAYER.keyNum=189;
@@ -4256,15 +4402,17 @@ PLAYER.timeRuler = function() {
         else if(e.ctrl&&key===88){//ctrl+x
             PLAYER.checkPlaying();
             PLAYER.copyOrcut='cut'; 
-
+            var arr_sIn=[];
+            
             $.each($('.onselected'),function(i,n){
+                arr_sIn.push(parseInt($(this).attr('data-sequencetrimin')));
                 PLAYER.clipboard.push($(this));
                 PLAYER.clipboard.parent.push($(this).parent('.time_ruler_bar'))
                 $(n).remove();
                 var time=$(n).attr('data-time');
                 PLAYER.operateJson.deleteClipAttr(time);
             });
-
+            PLAYER.cut_min_sIn=Math.min.apply(null,arr_sIn);
             PLAYER.operateJson.pushCancelArray(PLAYER.jsonObj.rootBin.sequence[0]);
             PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
             PLAYER.OCX.seek(parseInt(self.currTime));
@@ -4279,10 +4427,15 @@ PLAYER.timeRuler = function() {
             var config = self.config;
             var targetObj = self.targetObj;
             var currFrame= self.currTime; //时码线帧数
-            var intId='interleaved_id_'+PLAYER.genNonDuplicateID(12);
             var checkId='check_interleaved_id_'+PLAYER.genNonDuplicateID(12);
+            var arr_sIn=[];
+            var min_sIn;
             $('.onselected').each(function(i,n){
-                addClipboardClip($(n),$(n).parent('.time_ruler_bar'),intId,checkId);
+                arr_sIn.push(parseInt($(n).attr('data-sequencetrimin')))
+            }); 
+            min_sIn=Math.min.apply(null,arr_sIn);
+            $('.onselected').each(function(i,n){
+                addClipboardClip($(n),$(n).parent('.time_ruler_bar'),checkId,min_sIn);
             });  
 
             PLAYER.operateJson.sendJson();
@@ -4292,15 +4445,17 @@ PLAYER.timeRuler = function() {
             var config = self.config;
             var targetObj = self.targetObj;
             var currFrame= self.currTime; //时码线帧数
-            var intId='interleaved_id_'+PLAYER.genNonDuplicateID(12);
             var checkId='check_interleaved_id_'+PLAYER.genNonDuplicateID(12);
+
             if(PLAYER.clipboard){
                 for (var i = 0; i < PLAYER.clipboard.length; i++) {
-                    addClipboardClip(PLAYER.clipboard[i],PLAYER.clipboard.parent[i],intId,checkId);
+                    addClipboardClip(PLAYER.clipboard[i],PLAYER.clipboard.parent[i],checkId,PLAYER.cut_min_sIn);
                 }
                 
                 PLAYER.operateJson.sendJson();
             }
+            PLAYER.clipboard=[];
+            PLAYER.clipboard.parent=[];
         } 
         else if(e.ctrl&&key===90){//ctrl+z撤销  
 
@@ -4379,6 +4534,8 @@ PLAYER.timeRuler = function() {
                                     effectBox.attr('data-duration',item.duration);
                                     effectBox.attr('data-trimin',item.trimIn);
                                     effectBox.attr('data-trimout',item.trimOut);
+                                    effectBox.attr('data-pos',item.pos);
+                                    effectBox.attr('data-type',item.type);
 
                                     _w=(item.trimOut-item.trimIn)/PLAYER.TR.config.framePerPixel;
                                     effectBox.width(_w);
@@ -4407,11 +4564,13 @@ PLAYER.timeRuler = function() {
                 PLAYER.goBackJson.pop();
                 //提交json
                 PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
+
+                console.log('PLAYER.jsonObj',PLAYER.jsonObj)
                 PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime));
             }
         }
 
-        function addClipboardClip(v_target,v_parent,intId,checkId){
+        function addClipboardClip(v_target,v_parent,checkId,min_sIn){
             var cloneBox;
             var add_subclip_attr,
                 v_dataId,
@@ -4427,7 +4586,8 @@ PLAYER.timeRuler = function() {
                 vcut_sequenceTrimOut,
                 vcut_trimIn,
                 vcut_trimOut;
-
+            v_initId=v_target.attr('data-intid');
+            intId=v_initId+1;
             v_dataId=v_target.attr('data-id');
             v_type=v_target.attr('data-type');
             v_interleaved=v_target.attr('data-interleaved');
@@ -4442,8 +4602,8 @@ PLAYER.timeRuler = function() {
             //复制后数据
             vcut_trimIn=v0_trimIn;
             vcut_trimOut=v0_trimOut;
-            vcut_sequenceTrimIn=currFrame;
-            vcut_sequenceTrimOut=currFrame+v0_trimOut-v0_trimIn;
+            vcut_sequenceTrimIn=v0_sequenceTrimIn-min_sIn+currFrame;
+            vcut_sequenceTrimOut=vcut_sequenceTrimIn+v0_trimOut-v0_trimIn;
 
             cloneBox=v_target.clone();
             cloneBox.css('left',vcut_sequenceTrimIn/config.framePerPixel);
@@ -4459,13 +4619,15 @@ PLAYER.timeRuler = function() {
             if(v_parent.hasClass('bar_v')){
                 var time=v_target.attr('data-time');
                 var e_attr=JSON.parse(PLAYER.operateJson.getEffectClip(time));
-                if(e_attr.length!==0){
+                if(e_attr&&e_attr.length!==0){
                     $.each(e_attr,function(i,n){
                         if($(this).pos==='all'){
                             $(this).trimIn=vcut_trimIn;
                             $(this).trimOut=vcut_trimOut;
                         }
                     });
+                }else{
+                    e_attr=[];
                 }
                 add_subclip_attr={
                     "assetID": v_dataId,

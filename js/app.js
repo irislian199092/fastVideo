@@ -467,7 +467,7 @@ $(function(){
 	        		contextElem.hide();
 	            	return false;
 	            }else{
-	            	PLAYER.operateJson.removeEffectClip(time,'mosaic','all');
+	            	PLAYER.operateJson.removeOtherEffectClip(time,'mosaic','all');
 	            	$('.edit_box_v.onselected').children('.effect_box_all').remove();
             		PLAYER.operateJson.sendJson();
 	            } 
