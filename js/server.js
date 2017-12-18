@@ -678,6 +678,7 @@
 $(document).ready(function() {
 
 document.onselectstart=function(e){
+	console.log('e',e.srcElement)
 	if(e.srcElement.tagName==='input'||e.srcElement.tagName==='INPUT'||e.srcElement.tagName==="textarea" || e.srcElement.tagName==="TEXTAREA"||e.srcElement.tagName==='span'||e.srcElement.tagName==='SPAN'){
 		return true;
 	}else{
@@ -1040,9 +1041,7 @@ $('#js_modal_initOpenNew').on('click',function(){
 		  					obj.rootBin.sequence[0].tracks.push(attr);
 		  				});
 					}
-					PLAYER.observer.trigger('projectData',JSON.stringify(obj)); //发布工程数据
 
-					
 					var proType;
 					if(obj.height==='576'){
 						proType='SD';
@@ -1050,6 +1049,8 @@ $('#js_modal_initOpenNew').on('click',function(){
 						proType='HD';
 					}
 					PLAYER.OCX.sendProType(proType);
+					PLAYER.observer.trigger('projectData',JSON.stringify(obj)); //发布工程数据
+					
 	  			}else{
 	  				console.log('error');
 	  			}
@@ -1089,16 +1090,14 @@ $('#js_modal_initNew').on('click',function(){
 	  					};
 	  					obj.rootBin.sequence[0].tracks.push(attr);
 	  				});
-	  				PLAYER.observer.trigger('projectData',JSON.stringify(obj)); //发布工程数据
-					
-
-					var proType=parseInt($('#js_create_pro_type .form-control').val());
+	  				var proType=parseInt($('#js_create_pro_type .form-control').val());
 					if(proType===1){
 						proType='SD';
 					}else if(proType===2){
 						proType='HD';
 					}
 					PLAYER.OCX.sendProType(proType);
+	  				PLAYER.observer.trigger('projectData',JSON.stringify(obj)); //发布工程数据
 	  			}else{
 	  				console.log('error');
 	  			}
@@ -1464,6 +1463,21 @@ var getEditProListModule=(function(){
 var getPackbagListModule=(function(){
 	PLAYER.observer.listen('packbagList',function(data){
 		getWorkList(data);
+		function checkState(flag){
+			var flag;
+			if(flag===0){
+				flag='待处理';
+			}else if(flag===1){
+				flag='处理中';
+			}
+			else if(flag===2){
+				flag='完成';
+			}
+			else if(flag===3){
+				flag='出错';
+			}
+			return flag;
+		}
 		function getWorkList(data){
 			$('#js_export_list').empty();
 			var oH=$('<li class="header">'
@@ -1475,13 +1489,14 @@ var getPackbagListModule=(function(){
 		        		+'</li>');
 			$('#js_export_list').append(oH);
 			$.each(data,function(i,n){
+				
 				var oLi=$('<li>');
 				var oA=$('<a href="javascript:;"  class="name"><span>'+n.title+'</span></a>'
 						+'<a href="javascript:;"  class="createTime"><span>'+PLAYER.getLocalTime(n.createtime)+'</span></a>'
 						+'<a href="javascript:;"  class="progressBox"><span><div class="progress progress-mini" title="当前进度'+n.progress+'%">'
 			                +'<div style="width:'+n.progress+'%;" class="progress-bar"></div>'
 			            +'</div></span></a>'
-			        +'<a href="javascript:;"  class="state"><span>'+n.flag+'</span></a>'
+			        +'<a href="javascript:;"  class="state"><span>'+checkState(n.flag)+'</span></a>'
 			        +'<a href="javascript:;" ><span>'+n.last_err+'</span></a>'
 					);
 				oLi.append(oA);
@@ -1718,6 +1733,7 @@ $('#js_exportProject').on('click',function(){
 					url:serverUrl+'task/schema',
 					success:function(msg){
 						if(msg.code===0&&msg.data!==null){
+							$('#js_export_form_schema').empty();
 							$.each(msg.data,function(i,n){
 								var _o=$('<option value="'+n.name+'">'+n.name+'</option>');
 								$('#js_export_form_schema').append(_o);
@@ -1806,6 +1822,25 @@ $('#js_exportProject').on('click',function(){
 		}
 	});
 });
+
+$('#js_status_select').on('change',function(){
+	$.ajax({
+		url:serverUrl+'task/list',
+		data:{
+			"status":parseInt($('#js_status_select').val()),
+			"currentPage":1,
+			"pageSize":20
+		},
+		success:function(msg){
+			if(msg.code===0&&msg.data!==null){
+				PLAYER.observer.trigger('packbagList',msg.data);
+			}else{
+				console.log('error');
+			}
+		}
+	});
+})
+
 //快捷键工程函数
 PLAYER.EventUtil.addHandler(document,'keydown',function(){
 	var e=PLAYER.EventUtil.getEvent(e);
@@ -1915,6 +1950,7 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 						url:serverUrl+'task/schema',
 						success:function(msg){
 							if(msg.code===0&&msg.data!==null){
+								$('#js_export_form_schema').empty();
 								$.each(msg.data,function(i,n){
 									var _o=$('<option value="'+n.name+'">'+n.name+'</option>');
 									$('#js_export_form_schema').append(_o);
@@ -1975,7 +2011,7 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 					  				$('#js_exportProjectModal').hide();
 									$('#js_pageCover').hide();
 									//打包任务列表
-								  	$.ajax({
+								  	/*$.ajax({
 								  		url:serverUrl+'task/list',
 								  		data:{
 								  			"status":parseInt($('#js_status_select').val()),
@@ -1989,7 +2025,7 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 								  				console.log('error');
 								  			}
 								  		}
-								  	});
+								  	});*/
 					  			}else{
 					  				console.log('error');
 					  			}
@@ -2009,7 +2045,6 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 var dragEffectModule=(function(){
 	PLAYER.observer.listen('projectData',function(data){
 		document.onselectstart=function(e){
-			
 			if(e.srcElement.tagName==='input'||e.srcElement.tagName==='INPUT'||e.srcElement.tagName==="textarea" || e.srcElement.tagName==="TEXTAREA"){
 				return true;
 			}else{
@@ -2376,7 +2411,7 @@ var drawClipModule=(function(){
 			}else{
 				var data=PLAYER.operateJson.translateMsToFfp(data);
 				PLAYER.jsonObj=data;
-
+				console.log('PLAYER.jsonObj',PLAYER.jsonObj)
 				for (var i = 0,track; track=data.rootBin.sequence[0].tracks[i++];) {
 					var type=track.type;
 					var index=track.index;

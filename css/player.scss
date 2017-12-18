@@ -1171,6 +1171,9 @@ h4{
                                     height: 60px;
                                     color:#fff;
                                     font-size: 12px;
+                                    overflow: hidden;
+                                    text-overflow:ellipsis;
+                                    white-space: nowrap;
                                 }
                             }
                             a.progressBox{
@@ -1290,7 +1293,7 @@ h4{
                 }
                 .list{
                     float: right;
-                    width: 320px;
+                    width: 140px;
                     list-style: none;
                     height: 46px;
                     li{

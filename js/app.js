@@ -752,12 +752,11 @@ $(function(){
 				PLAYER.OCX.adjustEffect(obj);
 				PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
 				PLAYER.operateJson.updateEffectClip(id,obj.attr);
-
 			}
 
 	        $('#js_effect_btn').on('click',function(){
 	            PLAYER.hideEffectEdit();
-	            $('.edit_box').removeClass('onselected');
+	            console.log('PLAYER',PLAYER.jsonObj)
 	        });
 		}
 		

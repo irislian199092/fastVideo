@@ -319,8 +319,25 @@ PLAYER.playerFunction=function(){
             if(s===0){
                 return false;
             }else{
+                var time=$('.edit_box_v.onselected').attr('data')
+                $('.edit_box_v.onselected').each(function(i,n){
+                    var time=$(n).attr('data-time');
+                    var attr={
+                        interleaved:true
+                    }
+                    PLAYER.operateJson.updateClipAttr(attr,time);
+                    $(n).attr('data-interleaved',true);
+
+
+                    var initId=$(n).attr('data-intid');
+                    var initIdElem=$(n).parent().siblings().children('.edit_box_a[data-intid="'+initId+'"]');
+                    var InitTime=initIdElem.attr('data-time');
+                    PLAYER.operateJson.updateClipAttr(attr,InitTime);
+                    initIdElem.attr('data-interleaved',true);
+                });
                 
-                $('#js_time_ruler_bar_box .onselected').each(function(i,n){
+                
+               /* $('#js_time_ruler_bar_box .onselected').each(function(i,n){
                     var time=$(n).attr('data-time');
                     var attr={
                         interleaved:true
@@ -328,7 +345,7 @@ PLAYER.playerFunction=function(){
                     PLAYER.operateJson.updateClipAttr(attr,time);
 
                     $(n).attr('data-interleaved',true);
-                });
+                });*/
             }
             console.log('编组',PLAYER.jsonObj.rootBin.sequence[0].tracks);
         }  
@@ -1156,7 +1173,6 @@ PLAYER.operateJson={
         
         return _s;
     },
-    
     getAllsiblingsWidth(dragging){
         var _s=[];
         $.each(dragging.siblings(),function(i,n){
@@ -1171,7 +1187,6 @@ PLAYER.operateJson={
         });
         return _s;
     },
-
     showAdhere:function(dragging,dir){
         if(dragging.find('.point')){
             dragging.find('.point').remove();
@@ -6310,12 +6325,6 @@ PLAYER.timeRuler2 = function() {
 }();
 /*------绑定事件开始------*/
 PLAYER.EventUtil = {
-    /**
-     * 兼容IE和其他浏览器的事件添加方法，
-     * @param {[object]} element [元素对象]
-     * @param {[string]} type    [事件类型 click等]
-     * @param {[function]} handler [操作函数]
-     */
     addHandler: function(element, type, handler) {
         // 标准方法
         if (element.addEventListener) {

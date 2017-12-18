@@ -1575,6 +1575,9 @@ h4 {
   height: 60px;
   color: #fff;
   font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .container-fluid .slider_context .notifications .tab_content #tab-1 #js_export_list li a.progressBox {
   width: 24%;
@@ -1686,7 +1689,7 @@ h4 {
 }
 .container-fluid .container-fluid-box .carve .carve_header .list {
   float: right;
-  width: 320px;
+  width: 140px;
   list-style: none;
   height: 46px;
 }
