@@ -678,7 +678,6 @@
 $(document).ready(function() {
 
 document.onselectstart=function(e){
-	console.log('e',e.srcElement)
 	if(e.srcElement.tagName==='input'||e.srcElement.tagName==='INPUT'||e.srcElement.tagName==="textarea" || e.srcElement.tagName==="TEXTAREA"||e.srcElement.tagName==='span'||e.srcElement.tagName==='SPAN'){
 		return true;
 	}else{
@@ -813,7 +812,7 @@ var createExportModal=PLAYER.singelton(function(){
 							+'</div>'
 							+'<div class="form-group">'
 								+'<label for="name" class="col-md-3 control-label">文件名称</label>'
-								+'<div class="col-md-9">'
+								+'<div class="col-md-9" id="js_export_form_box">'
 							    	+'<input type="text" class="form-control" name="name" placeholder="打包" id="js_export_form_name">'
 							    +'</div>'
 							+'</div>'
@@ -840,6 +839,10 @@ var createExportModal=PLAYER.singelton(function(){
 			+'</iframe>'
 		+'</div>');
 	s1.insertAfter($('.container-fluid'));
+
+	PLAYER.TR.DragDrop.disable();
+	PLAYER.PTR.DragDrop.disable();
+	PLAYER.documentEvent.enable();
 	return s1;
 });
 //创建网络素材工程
@@ -980,6 +983,24 @@ $.ajax({
 	success:function(msg){
 		if(msg.code===0&&msg.data!==null){
 			PLAYER.observer.trigger('getProgramList',msg.data);
+		}else{
+			console.log('error');
+		}
+	}
+});
+//初始化获获取打包素材列表	
+$.ajax({
+	url:serverUrl+'resource/listpage',
+	data:{
+		"currentPage":1,
+		"pageSize":36,
+		"name":'',
+		"from":'',
+		"to":''
+	},
+	success:function(msg){
+		if(msg.code===0&&msg.data!==null){
+			PLAYER.observer.trigger('getPageList',msg.data);
 		}else{
 			console.log('error');
 		}
@@ -1282,12 +1303,18 @@ var drawPlayerModule=(function(){
 	PLAYER.observer.listen('projectData',function(data){
 		var data=JSON.parse(data);
 		var playerWidth;
+
+		var elem = document.getElementById("ocx");
+		var oStyle = elem.currentStyle?elem.currentStyle:window.getComputedStyle(elem, null);
+		var height = parseFloat(oStyle.height);
+
 		if(data.height==='576'&&data.width==='720'){
-			playerWidth=parseFloat(1.25*$('#ocx').height());
+			playerWidth=parseFloat(1.25*height);
 		}else{
-			playerWidth=parseFloat((16*$('#ocx').height()/9));	
+			playerWidth=parseFloat((16*height/9));	
 		}
 		$('#ocx').width(playerWidth);
+
 		var _ml=($('.player').width()-playerWidth)/2;
 		if(_ml<0){
 			_ml=0;
@@ -1401,6 +1428,64 @@ var getProgramListModule=(function(){
 		});*/
 	});
 })();
+/*----------------------初始化获取全部打包列表模块----------------------*/
+var getPackageListModule=(function(){
+	PLAYER.observer.listen('getPageList',function(data){
+		drawList(data);
+		console.log('data',data);
+		function drawList(data){
+			$('#js_packageList_box').empty();
+			$.each(data.list,function(i,n){
+				var h=$('<div class="col-md-3 col-sm-3 col-lg-3" draggable="true" data-id="'+n.projid+'" data-test="m'+i+'"><a class="thumbnail"><img  alt=""  draggable="false"><span class="thumbnail_name" style="bottom:0px;">'+n.title+'</span></a></div>');
+				$('#js_packageList_box').append(h);
+			});
+		}
+
+		if(data.totalLines>8){
+			$('.packageList_thumbnail_box').show();
+			$('.packageList_thumbnail_track').show();
+			var s1=new Scrollbar({
+				dirSelector:'y',
+				contSelector:$('.packageList_thumbnail_box'),
+				barSelector:$('.packageList_thumbnail_track'),
+				sliderSelector:$('.packageList_thumbnail_scroll')
+			});
+		}
+		
+		$('#js_pager2').empty();
+
+
+		$('#js_pager2').Paging({
+			pagesize:36,
+			count:data.totalLines,
+			prevTpl:'&laquo;',
+			nextTpl:'&raquo;',
+			callback:function(page,size,count){
+				$.ajax({
+			  		url:serverUrl+'resource/listpage',
+			  		data:{
+			  			"currentPage":page,
+			  			"pageSize":36,
+			  			"name":'',
+						"from":'',
+						"to":''
+			  		},
+			  		success:function(msg){
+			  			if(msg.code===0&&msg.data!==null){
+			  				drawList(msg.data);
+			  				PLAYER.observer.trigger('projectData',PLAYER.json);
+			  			}else{
+			  				console.log('error');
+			  			}
+			  		}
+			  	});
+			}
+		});
+		
+		
+	});
+})();
+
 /*----------------------工程保存编辑模块--------------------------------*/
 var getEditProListModule=(function(){
 	PLAYER.observer.listen('proList',function(data){
@@ -1728,6 +1813,8 @@ $('#js_exportProject').on('click',function(){
 
 				//创建打包模态框
 				createExportModal();
+
+				
 				//获取打包任务模板
 				$.ajax({
 					url:serverUrl+'task/schema',
@@ -1754,6 +1841,7 @@ $('#js_exportProject').on('click',function(){
 					$('#js_exportProjectModal').hide();
 					$('#js_pageCover').hide();
 				});
+				
 				//点击打包
 				$('#js_modal_export').off().click(function(){
 					var schemaValue=$('#js_export_form_schema').val();
@@ -1824,6 +1912,7 @@ $('#js_exportProject').on('click',function(){
 });
 
 $('#js_status_select').on('change',function(){
+	console.log('ggg',$(e.target).val());
 	$.ajax({
 		url:serverUrl+'task/list',
 		data:{
@@ -1839,7 +1928,7 @@ $('#js_status_select').on('change',function(){
 			}
 		}
 	});
-})
+});
 
 //快捷键工程函数
 PLAYER.EventUtil.addHandler(document,'keydown',function(){
@@ -1945,6 +2034,8 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 
 					//创建打包模态框
 					createExportModal();
+
+					
 					//获取打包任务模板
 					$.ajax({
 						url:serverUrl+'task/schema',
@@ -1971,6 +2062,7 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 						$('#js_exportProjectModal').hide();
 						$('#js_pageCover').hide();
 					});
+
 					//点击打包
 					$('#js_modal_export').on('click',function(){
 						var schemaValue=$('#js_export_form_schema').val();
@@ -2011,7 +2103,7 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 					  				$('#js_exportProjectModal').hide();
 									$('#js_pageCover').hide();
 									//打包任务列表
-								  	/*$.ajax({
+								  	$.ajax({
 								  		url:serverUrl+'task/list',
 								  		data:{
 								  			"status":parseInt($('#js_status_select').val()),
@@ -2025,7 +2117,7 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 								  				console.log('error');
 								  			}
 								  		}
-								  	});*/
+								  	});
 					  			}else{
 					  				console.log('error');
 					  			}

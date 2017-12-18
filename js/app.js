@@ -211,6 +211,13 @@ $(function(){
 			$('#tab_5').show();
 			$('#tab_5').siblings('.js_tab').hide();
 		}
+		//音频库
+		if(e.target.id==='tab_packageList'){
+			$('#tab_packageList').parent('li').addClass('active');
+			$('#tab_packageList').parent('li').siblings().removeClass('active');
+			$('#tab_6').show();
+			$('#tab_6').siblings('.js_tab').hide();
+		}
 	});	
 	
 	/*----------------------点击播放器工具条---------------------------------------------*/
@@ -227,7 +234,6 @@ $(function(){
 		//点击播放暂停
 		if(e.target.id==='js_play'){
 			var lastFrame=PLAYER.operateJson.getLastFrame();
-
 
             if(PLAYER.TR.currTime>=lastFrame){//如果seek位置大于素材长度，则跳到0处开始播放
                 return false;

@@ -32,7 +32,7 @@ PLAYER.playerFunction=function(){
                 PLAYER.PTR.currTime=lastSeekTime;
                 PLAYER.PTR.fixArrowCurrentTime(lastSeekTime);
             }
-        }, 50); 
+        }, 10); 
         setInterval(function() {
             var s=PLAYER.PTR.config.seekComandTimesMonitor.length;
             if(s!== 0){
@@ -50,7 +50,7 @@ PLAYER.playerFunction=function(){
                 PLAYER.PTR.currTime=lastSeekTime;
                 PLAYER.PTR.fixArrowCurrentTime(lastSeekTime);
             }
-        }, 50);
+        }, 10);
     }    
     constructor.prototype={
         play:function(){//点击播放暂停
@@ -693,7 +693,7 @@ PLAYER.operateJson={
         //更新时间轴
         PLAYER.operateJson.updateRulerMaxTime();
         PLAYER.operateJson.pushCancelArray(PLAYER.jsonObj.rootBin.sequence[0]);
-        console.log('sendJson',PLAYER.jsonObj);
+        
         PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
         PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
     },
@@ -724,13 +724,19 @@ PLAYER.operateJson={
             mas.duration=40*mas.duration;
         }
         //添加播放器宽高
+
+        var elem = document.getElementById("ocx");
+        var oStyle = elem.currentStyle?elem.currentStyle:window.getComputedStyle(elem, null);
+        var height = parseFloat(oStyle.height);
+
         if(json.height==='576'&&json.width==='720'){
-            pWidth=parseFloat(1.25*$('#ocx').height());
+            pWidth=parseFloat(1.25*height);
         }else{
-            pWidth=parseFloat((16*$('#ocx').height()/9));  
+            pWidth=parseFloat((16*height/9));  
         }
-        json.pHeight=$('#ocx').height();
+        json.pHeight=height;
         json.pWidth=pWidth;
+
         return json;
     },
     translateMsToFfp:function(json){
@@ -3065,6 +3071,7 @@ PLAYER.timeRuler = function() {
         config.$rulerWrap.addEventListener = function(type, callback) {
             if (type == "mousedown") {
                 config.$rulerWrap.mousedown(function(e) {
+
                     e.stopPropagation();
                     fixArrowPosition(e.clientX, e.clientY, callback);
                     document.onmousemove = e_move;
@@ -3078,6 +3085,7 @@ PLAYER.timeRuler = function() {
                     }
                 });
             } else if (type == "click") {
+
                 e.stopPropagation();
                 if ($(this) != config.$ruler) {
                     return;
