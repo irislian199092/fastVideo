@@ -447,68 +447,71 @@ PLAYER.playerFunction=function(){
     //键盘快捷键
     function publicKeyDownEvent(e){
         var key=e.code;
-        if(key===16&&e.shift){ //shift(按下)
-            PLAYER.keyNum=1600; 
-        }
-        else if(key===86&&!e.shift){//v
-            PLAYER.player.toolbar_choose();
-        }
-        else if(key===71&&!e.shift){  //g
-            PLAYER.player.toolbar_preSelect();
-        }
-        else if(key===71&&e.shift){//shift+g
-            PLAYER.player.toolbar_nextSelect();
-        }
-        else if(key===85&&!e.shift){ //u
-            PLAYER.player.toolbar_cut();
-        }
-        else if(key===85&&e.shift){ //shift+u
-            PLAYER.player.toolbar_uCut();
-        } 
-        else if(key===73&&e.shift){//shift+i
-            PLAYER.player.moveTrimIn();
-        }
-        else if(key===79&&e.shift){//shift+o
-           PLAYER.player.moveTrimOut(); 
-        }
-        else if(key===32&&!e.shift){    //space
-            var lastFrame=PLAYER.operateJson.getLastFrame();
-            if(PLAYER.TR.currTime>=lastFrame){//如果seek位置大于素材长度，则跳到0处开始播放
-                return false;
-            }
-            else{
-                PLAYER.player.play();
-            }
-        }
-        else if(key===36&&!e.shift){//home
-            PLAYER.player.toFirstFrame();
-        }
-        else if(key===35&&!e.shift){//end
-            PLAYER.player.toLastFrame();
-        }
-        else if(key===39&&!e.shift){//-->
-            PLAYER.player.nextFrame();
-        }
-        else if(key===37&&!e.shift){//<--
-            PLAYER.player.prevFrame();
-        }
-        else if(key===73&&!e.shift){//i
-            PLAYER.keyNum=73;
-            PLAYER.player.setTrimIn();
-        }
-        else if(key===79&&!e.shift){//o
-            PLAYER.keyNum=79;
-            PLAYER.player.setTrimOut();
-        }
-        else if(key===49&&e.shift){//shift+1 //编组
-            PLAYER.keyNum=4900;
-            PLAYER.player.toolbar_group();
-        }
-        else if(key===50&&e.shift){//shift+2 //解组
-            PLAYER.keyNum=5000;
-            PLAYER.player.toolbar_ungroup();
-        }
+        var target=e.target;
         
+        if(target.nodeName!=='INPUT' && target.nodeName!=='input' && target.nodeName!=='TEXTAREA' && target.nodeName!=='textarea'){
+            if(key===16&&e.shift){ //shift(按下)
+                PLAYER.keyNum=1600; 
+            }
+            else if(key===86&&!e.shift){//v
+                PLAYER.player.toolbar_choose();
+            }
+            else if(key===71&&!e.shift){  //g
+                PLAYER.player.toolbar_preSelect();
+            }
+            else if(key===71&&e.shift){//shift+g
+                PLAYER.player.toolbar_nextSelect();
+            }
+            else if(key===85&&!e.shift){ //u
+                PLAYER.player.toolbar_cut();
+            }
+            else if(key===85&&e.shift){ //shift+u
+                PLAYER.player.toolbar_uCut();
+            } 
+            else if(key===73&&e.shift){//shift+i
+                PLAYER.player.moveTrimIn();
+            }
+            else if(key===79&&e.shift){//shift+o
+               PLAYER.player.moveTrimOut(); 
+            }
+            else if(key===32&&!e.shift){    //space
+                var lastFrame=PLAYER.operateJson.getLastFrame();
+                if(PLAYER.TR.currTime>=lastFrame){//如果seek位置大于素材长度，则跳到0处开始播放
+                    return false;
+                }
+                else{
+                    PLAYER.player.play();
+                }
+            }
+            else if(key===36&&!e.shift){//home
+                PLAYER.player.toFirstFrame();
+            }
+            else if(key===35&&!e.shift){//end
+                PLAYER.player.toLastFrame();
+            }
+            else if(key===39&&!e.shift){//-->
+                PLAYER.player.nextFrame();
+            }
+            else if(key===37&&!e.shift){//<--
+                PLAYER.player.prevFrame();
+            }
+            else if(key===73&&!e.shift){//i
+                PLAYER.keyNum=73;
+                PLAYER.player.setTrimIn();
+            }
+            else if(key===79&&!e.shift){//o
+                PLAYER.keyNum=79;
+                PLAYER.player.setTrimOut();
+            }
+            else if(key===49&&e.shift){//shift+1 //编组
+                PLAYER.keyNum=4900;
+                PLAYER.player.toolbar_group();
+            }
+            else if(key===50&&e.shift){//shift+2 //解组
+                PLAYER.keyNum=5000;
+                PLAYER.player.toolbar_ungroup();
+            }   
+        }
     }
     return constructor;
 }();
@@ -728,7 +731,7 @@ PLAYER.operateJson={
         var elem = document.getElementById("ocx");
         var oStyle = elem.currentStyle?elem.currentStyle:window.getComputedStyle(elem, null);
         var height = parseFloat(oStyle.height);
-
+        
         if(json.height==='576'&&json.width==='720'){
             pWidth=parseFloat(1.25*height);
         }else{
@@ -736,7 +739,7 @@ PLAYER.operateJson={
         }
         json.pHeight=height;
         json.pWidth=pWidth;
-
+        
         return json;
     },
     translateMsToFfp:function(json){
@@ -6481,18 +6484,14 @@ PLAYER.documentEvent=function(){
         var target=PLAYER.EventUtil.getTarget(event);
         switch(event.type){
             case 'keydown':
-                keyElem=$(target);
-                if(target.nodeName==='INPUT' || target.nodeName==='input' || target.nodeName==='TEXTAREA' || target.nodeName==='textarea'){
-                    return false;
-                }else{
-                    keyTarget.fire({
-                        type:'keydown',
-                        target:keyElem,
-                        code:event.keyCode,
-                        shift:event.shiftKey,
-                        ctrl:event.ctrlKey
-                    });  
-                }
+                keyElem=target;
+                keyTarget.fire({
+                    type:'keydown',
+                    target:keyElem,
+                    code:event.keyCode,
+                    shift:event.shiftKey,
+                    ctrl:event.ctrlKey
+                });  
             break;
         }  
     }

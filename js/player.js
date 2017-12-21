@@ -1,6 +1,5 @@
 var bPlaying = false;
 var timer;
-//var PLAYER.currentTime = 0;
 
 var videoEl = null;
 var queryDict = {};
@@ -10,8 +9,8 @@ var signalingServer;
 var registerServer;
 
 if(location.search===''){
-    signalingServer = "http://10.7.3.77:8888";
-    registerServer = "http://10.7.3.77:8889";
+    signalingServer = webrtcServer+":8888";
+    registerServer = webrtcServer+":8889";
 }else{
     signalingServer = "http://127.0.0.1:8888";
     registerServer = "http://127.0.0.1:8889"; 
@@ -76,7 +75,7 @@ $.ajax({
                     videoEl.addEventListener('loadedmetadata', initCanvas, false);
                     videoEl.addEventListener('timeupdate', drawFrame, false);
                     videoEl.addEventListener('ended', onend, false);
-    
+            
                     container.appendChild(video);
                     webrtc.stopLocalVideo();
                 }
@@ -121,6 +120,7 @@ function initCanvas(e) {
 }
 
 function drawFrame(e) {
+    //console.log('ffds',this.videoWidth)
     canvas.width = this.videoWidth;
     canvas.height = this.videoHeight;
 

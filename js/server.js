@@ -840,9 +840,7 @@ var createExportModal=PLAYER.singelton(function(){
 		+'</div>');
 	s1.insertAfter($('.container-fluid'));
 
-	PLAYER.TR.DragDrop.disable();
-	PLAYER.PTR.DragDrop.disable();
-	PLAYER.documentEvent.enable();
+	
 	return s1;
 });
 //创建网络素材工程
@@ -1813,7 +1811,9 @@ $('#js_exportProject').on('click',function(){
 
 				//创建打包模态框
 				createExportModal();
-
+				PLAYER.TR.DragDrop.disable();
+				PLAYER.PTR.DragDrop.disable();
+				PLAYER.documentEvent.enable();
 				
 				//获取打包任务模板
 				$.ajax({
@@ -1835,11 +1835,17 @@ $('#js_exportProject').on('click',function(){
 				$('#js_exportProjectModal .icojam_delete').off().click(function(){
 					$('#js_exportProjectModal').hide();
 					$('#js_pageCover').hide();
+					PLAYER.TR.DragDrop.enable();
+					PLAYER.PTR.DragDrop.enable();
+					PLAYER.documentEvent.enable();
 				});
 				//点击取消	
 				$('#js_export_modal_cancelPro').off().click(function(){
 					$('#js_exportProjectModal').hide();
 					$('#js_pageCover').hide();
+					PLAYER.TR.DragDrop.enable();
+					PLAYER.PTR.DragDrop.enable();
+					PLAYER.documentEvent.enable();
 				});
 				
 				//点击打包
@@ -2034,7 +2040,9 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 
 					//创建打包模态框
 					createExportModal();
-
+					PLAYER.TR.DragDrop.disable();
+					PLAYER.PTR.DragDrop.disable();
+					PLAYER.documentEvent.enable();
 					
 					//获取打包任务模板
 					$.ajax({
@@ -2056,11 +2064,18 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 					$('#js_exportProjectModal .icojam_delete').on('click',function(){
 						$('#js_exportProjectModal').hide();
 						$('#js_pageCover').hide();
+
+						PLAYER.TR.DragDrop.enable();
+						PLAYER.PTR.DragDrop.enable();
+						PLAYER.documentEvent.enable();
 					});
 					//点击取消	
 					$('#js_export_modal_cancelPro').on('click',function(){
 						$('#js_exportProjectModal').hide();
 						$('#js_pageCover').hide();
+						PLAYER.TR.DragDrop.enable();
+						PLAYER.PTR.DragDrop.enable();
+						PLAYER.documentEvent.enable();
 					});
 
 					//点击打包
