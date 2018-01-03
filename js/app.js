@@ -3,9 +3,7 @@ $(function(){
 	PLAYER.player= new PLAYER.playerFunction();
 	PLAYER.documentEvent.enable();
 
-	/*-----------初始化工程对话框插件-----------*/
-	$('#js_initProjectModal').show();
-	$('#js_pageCover').show();
+	
 
 	/*-----------登出-----------*/
 	$('#js_loginout').on('click',function(){
@@ -21,7 +19,8 @@ $(function(){
 
 	/*----------------------切换侧边栏的left值----------------------*/
 	$('#js_logo_toggle').on('click',function(){
-		$('.slider_context').animate({left: '-1080px'}, "slow"); 
+		$('.slider_context').animate({left: '-1080px'}, "slow");
+		clearInterval(PLAYER.timer);
 	});
 	$('#js_notifications .header_box li').on('click',function(){
 		$(this).addClass('active');
@@ -154,8 +153,11 @@ $(function(){
 
 		//侧边栏
 		if(e.target.id==='js_logo'){
-			$('.slider_context').animate({left: '0'}, "slow"); 
+			$('.slider_context').animate({left: '0'}, "slow");
+			PLAYER.timer= setInterval(checkPackbagProgress,2000);
 		}
+
+
 		//素材列表形式
 		if(e.target.id==='js_style_list'){
 			$('.meterial_list_box').show();
@@ -218,6 +220,37 @@ $(function(){
 			$('#tab_6').show();
 			$('#tab_6').siblings('.js_tab').hide();
 		}
+
+
+		//打包状态轮询
+		function checkPackbagProgress(){
+			$.ajax({
+				url:serverUrl+'task/list',
+				data:{
+					"status":parseInt($('#js_status_select').val()),
+					"currentPage":1,
+					"pageSize":20
+				},
+				success:function(msg){
+					if(msg.code===0&&msg.data!==null){
+						PLAYER.observer.trigger('packbagList',msg.data);
+						var allProgress = [];
+						for(var i=0;i<msg.data.length;i++){
+							allProgress.push(msg.data[i].progress);
+						}
+						if(allProgress.every(checkProgress)){
+							clearInterval(PLAYER.timer);
+						}
+					}else{
+						console.log('error');
+					}
+				}
+			});
+		}
+
+		function checkProgress(allPro){
+			return allPro >= 100;
+		};
 	});	
 	
 	/*----------------------点击播放器工具条---------------------------------------------*/
@@ -395,7 +428,6 @@ $(function(){
 			isVolShow=false;
 		}
 	});
-
 	$('#js_toolbar_icon_volume_track')[0].onchange=function(e){
 		$.each($('.onselected.edit_box_a'),function(i,n){
 			var id=$(n).attr('data-time');
@@ -408,7 +440,6 @@ $(function(){
         	console.log('更新音量',PLAYER.jsonObj.rootBin.sequence[0])
 		});
 	}
-
 	/*----------------------右击菜单马赛克---------------------------------------------*/
 
 	var contextOperate=(function(){
@@ -483,7 +514,6 @@ $(function(){
 	        contextElem.hide();
 	    });
 	})();
-	
 	/*----------------------右击菜单---------------------------------------------*/
 	
 	$('#js_zoom').on('click',function(){
@@ -548,7 +578,6 @@ $(function(){
 			effectEditShow(JSON.stringify(effectAttr.attr),time,index,type,'2D');
 		}
 	});
-
 
 	function initEditDom(){
 		$('#js_effect_h_form').empty();
@@ -635,11 +664,9 @@ $(function(){
 
 		if($('#ocx').find('#move_box').length>0){
 			$('#move_box').remove();
-		}else{
-			var effectBox=$('<div id="move_box"></div>');
-			$('#ocx').append(effectBox);
 		}
-		
+		var effectBox=$('<div id="move_box"></div>');
+		$('#ocx').append(effectBox);
 	}
 	function effectEditShow(effectAttr,id,index,type,effectType){
 		
@@ -679,12 +706,7 @@ $(function(){
         	$('#js_effect_top,#js_effect_top_value').val(attr.y1);
         	$('#js_effect_width,#js_effect_width_value').val(attr.width);
         	$('#js_effect_height,#js_effect_height_value').val(attr.height);
-			/*
-			$('#js_effect_sizex,#js_effect_sizex').attr('max',1000);
-			$('#js_effect_sizex,#js_effect_sizex_value').val(attr.sizex);
-			$('#js_effect_sizey,#js_effect_sizey_value').val(attr.sizey);
-			*/
-        	
+
         }
 		
 		function initEffectOperate(effectAttr){
@@ -700,8 +722,7 @@ $(function(){
 			
 			obj.attr.x2=obj.attr.x1+parseFloat($('#js_effect_width').val());
 			obj.attr.y2=obj.attr.y1+parseFloat($('#js_effect_height').val());
-			//obj.attr.sizex=parseFloat($('#js_effect_sizex').val());
-			//obj.attr.sizey=parseFloat($('#js_effect_sizey').val());
+
 			
 			
 			$('#js_effect_left')[0].oninput=function(e){

@@ -36,16 +36,18 @@
 	PLAYER.storeDraggingInfo=[];	//存储拖拽时候的切片info
 	PLAYER.cutIndex=0;              //存储游标处切割的index+ID
 	PLAYER.help_index=null;			//存储上下拖拽时的助手index
+	PLAYER.timer=null;				//存储打包任务的定时器
 
+	
+	PLAYER.jobId="";
 </script>
-
 </head>
 <body id="body">
 <div class="container-fluid">
 	<!-- 侧边栏后续开发开始 -->
 	<div class="slider_context">
 		<div class="logo" >
-	 		<a href="#" class="icojam_honey" id="js_logo_toggle"></a>
+	 		<a href="javaScript:;" class="icojam_honey" id="js_logo_toggle"></a>
 	 	</div>
 
 		<div class="notifications" id="js_notifications">
@@ -110,7 +112,7 @@
 		<div class="col-md-6  carve" id="js_carve">
 			<div class="row carve_header">
 			 	<div class="logo" title="任务详情">
-			 		<a href="#" class="icojam_honey" id="js_logo"></a>
+			 		<a href="javaScript:;" class="icojam_honey" id="js_logo"></a>
 			 	</div>
 	          	<div class="user"> 
 	          		<!-- <span class="user-avatar"><img src="images/14.jpg"></span>  -->
@@ -132,11 +134,11 @@
 							<div class="form-group" id="js_programForm_name">
 							    <input type="text" class="form-control" name="name" placeholder="名称" value="">
 							</div>
-							<div class="form-group program_cpspcode" id="js_programForm_cpspcode">
+							<!-- <div class="form-group program_cpspcode" id="js_programForm_cpspcode">
 							</div>
 							<div class="form-group program_type" id="js_programForm_type">
 							</div>
-							<br/>
+							<br/> -->
 							<div class="form-group" id="js_programForm_stime">
 							    <input type="text" class="form-control date_picker" name="startTime" placeholder="开始(yyyy-MM-dd)" value="">
 							</div>
@@ -416,10 +418,12 @@
 <script src="js/jquery.minicolors.js"></script><!-- 颜色取色插件 -->
 <script src="js/simplewebrtc.bundle.js"></script>
 
+<script src="js/player.js"></script>
+
 <script src="js/server.js"></script><!-- 服务 -->
 <script src="js/app.js"></script><!-- 首选项 -->
 <script src="js/time-ruler.js"></script><!-- 时间线 -->
-<script src="js/player.js"></script>
+
 </html>
 
 

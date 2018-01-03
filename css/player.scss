@@ -1136,7 +1136,7 @@ h4{
                             width: 100%;
                             border-top: none;
                             span{
-                                width: 18%;
+                                width: 16%;
                                 float: left;
                                 text-align: center;
                                 color:#fff;
@@ -1145,10 +1145,10 @@ h4{
                                 font-size: 14px;
                                 border-right: 1px solid #000;
                             }
-                            span:nth-child(3){
-                                width: 24%;
+                            span:nth-child(4){
+                                width: 20%;
                             }
-                            span:nth-child(5){
+                            span:nth-child(6){
                                 border-right: none;  
                             }
                         }
@@ -1159,7 +1159,7 @@ h4{
 
                             a{
                                 float: left;
-                                width: 18%;
+                                width: 16%;
                                 height: 60px;
 
                                 span{
@@ -1177,7 +1177,7 @@ h4{
                                 }
                             }
                             a.progressBox{
-                                width: 24%;
+                                width: 20%;
                                 text-align: center;
 
                                 .progress{
@@ -1339,7 +1339,7 @@ h4{
                 .carve_body_chooseBox{
                     border-bottom: 1px solid #000;
                     padding-bottom: 10px;
-                    height: 94px;
+                    height: 54px;
                     /* overflow:hidden; */
                     .carve_body_form{
                         position: relative;
@@ -1394,7 +1394,7 @@ h4{
                 }
                 .carve_body_meterialBox{
                     border-bottom: 1px solid #000;
-                    height:calc(100% - 125px);
+                    height:calc(100% - 85px);
                     position: relative;
                     overflow: hidden;
                     //原来的

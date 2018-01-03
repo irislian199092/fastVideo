@@ -5,11 +5,9 @@
 	
 	var serverUrl='http://112.126.71.150:8090/fastcarve/api/';	//快编数据服务地址
 	var faceUrl='http://123.57.12.42:8070/athena';			//人脸识别地址
-	var webrtcServer = "http://47.93.132.17";		 //底层服务
+	var webrtcServer = "http://10.7.3.77";		 //底层服务
 
 	
-
-
 	window.serverUrl=serverUrl;
 	window.loginUrl=loginUrl;
 	window.enterUrl=enterUrl;

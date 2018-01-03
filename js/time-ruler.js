@@ -353,6 +353,9 @@ PLAYER.playerFunction=function(){
     //设置播放暂停
     function setPlayer(){ 
         var timer=setInterval(function(){
+
+
+
             var lastFrame=PLAYER.operateJson.getLastFrame();//拖拽素材时候的最后一帧
             
             if(PLAYER.loadState&&PLAYER.isPlaying){
@@ -611,7 +614,7 @@ PLAYER.ocxFunction=function(){
         },
         getPosition:function() {//return 0;
             try {
-                return PLAYER.nmToFf(PLAYER.currentTime);
+               return PLAYER.nmToFf(PLAYER.currentTime);
             } catch (e) {
                 console.log('获取当前时码时出错！');
             }
@@ -678,6 +681,7 @@ PLAYER.ocxFunction=function(){
                        type:_type
                     }
                 };
+                console.log('--------')
                 var jsonStr = JSON.stringify(jsonObj);
                 webrtc.sendDataChannelMessageToPeer(targetId, jsonStr);
                 
@@ -692,11 +696,13 @@ PLAYER.ocxFunction=function(){
 }();
 PLAYER.operateJson={
     sendJson:function(){
+
         PLAYER.operateJson.sortClipAttr();
         //更新时间轴
         PLAYER.operateJson.updateRulerMaxTime();
         PLAYER.operateJson.pushCancelArray(PLAYER.jsonObj.rootBin.sequence[0]);
         
+
         PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
         PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
     },
@@ -1499,7 +1505,7 @@ PLAYER.operateJson={
             async:false,
             success:function(msg){
                 if(msg.code===0&&msg.data!==null){
-                    callback(msg.data.data);
+                    callback(msg.data);
                 }else{
                     console.log('error');
                 }
@@ -1529,6 +1535,7 @@ PLAYER.operateJson={
     },
     getLastFrame:function(){
         var arr=[];
+        
         for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
             if(track.subclip.length!==0){
                 $.each(track.subclip,function(i,n){
@@ -1609,6 +1616,33 @@ PLAYER.operateJson={
             }
         }
         console.log('删除help',PLAYER.storeDraggingInfo)
+    },
+    checkNewWindow:function(data,new_height,new_width){
+        var data=JSON.parse(data);
+        var old_height=data.pHeight;
+        var old_width=data.pWidth;
+
+        var scale_y=new_height/old_height;
+        var scale_x=new_width/old_width;
+
+        for (var  i = 0,track; track=data.rootBin.sequence[0].tracks[i++];) {
+            $.each(track.subclip,function(index,elem){
+                if(elem && elem.effect){
+
+                    $.each(elem.effect,function(i,n){
+                        if(n.type==='mosaic'){
+                            n.attr.x1*=scale_x;
+                            n.attr.y1*=scale_y;
+                            n.attr.width*=scale_x;
+                            n.attr.height*=scale_x;
+                        }
+                    });
+                    
+                }
+            });   
+        }
+        
+        return data;
     },
     getSubtitleTemp:function(id){
         var player_w=$('#ocx').width();
