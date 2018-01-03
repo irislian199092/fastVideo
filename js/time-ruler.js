@@ -681,7 +681,7 @@ PLAYER.ocxFunction=function(){
                        type:_type
                     }
                 };
-                console.log('--------')
+                console.log('--------',JSON.stringify(jsonObj))
                 var jsonStr = JSON.stringify(jsonObj);
                 webrtc.sendDataChannelMessageToPeer(targetId, jsonStr);
                 

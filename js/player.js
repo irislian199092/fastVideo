@@ -58,7 +58,10 @@ $.ajax({
                 webrtc.setInfo('', webrtc.connection.connection.id, ''); // Store strongId
     
                 if (room) {
+
                     webrtc.joinRoom(room);
+                    
+                    
                 }
             });
     
@@ -78,6 +81,7 @@ $.ajax({
             
                     container.appendChild(video);
                     webrtc.stopLocalVideo();
+                    PLAYER.observer.trigger('webrtcPlayer',true); //发布工程数据
                 }
             });
     
@@ -189,3 +193,52 @@ function drawFrame(e) {
 
 function onend(e) {
 }
+
+//发布订阅设计模式
+PLAYER.observer=(function(){
+    var clientList={},
+        listen,
+        remove,
+        trigger;
+
+    listen=function(key,fn){
+        if(!clientList[key]){
+            clientList[key]=[];
+        }
+        clientList[key].push(fn);
+    };
+    trigger=function(){
+        var key=Array.prototype.shift.call(arguments);
+        var fns=clientList[key];
+        if(!fns || fns.length===0){
+            return false;
+        }else{
+            for(var i=0,fn;fn=fns[i++];){
+                fn.apply(this,arguments);
+            }
+        }
+    };
+    remove=function(key,fn){
+        var fns=clientList[key];
+        if(!fns){
+            return false;
+        }
+        if(!fn){
+            fns && (fns.length=0);
+        }else{
+            for(var l=fns.length-1;l>=0;l--) {
+                
+                var _fn=fns[l];
+                if(_fn===fn){
+                    fns.splice(l,1);
+                }
+            }
+        }
+    };
+
+    return {
+        listen:listen,
+        remove:remove,
+        trigger:trigger
+    }
+})();
