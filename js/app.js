@@ -3,8 +3,6 @@ $(function(){
 	PLAYER.player= new PLAYER.playerFunction();
 	PLAYER.documentEvent.enable();
 
-	
-
 	/*-----------登出-----------*/
 	$('#js_loginout').on('click',function(){
 		PLAYER.checkPlaying();

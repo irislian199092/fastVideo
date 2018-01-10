@@ -935,9 +935,11 @@ createVolumeModal();
 
 
 PLAYER.observer.listen('webrtcPlayer',function(){
-	var location='tools&5c8d573c-17af-45f1-b773-a5a59f9dac59';
-	PLAYER.jobId=location.substring(6);
-
+	
+	if(window.location.search.length>0 &&window.location.search.indexOf('tools')>-1){
+		PLAYER.jobId=window.location.search.substring(7);
+	}
+	
 	if(PLAYER.jobId!==''){
 		$('#js_pageCover').hide();
 		$('#tab_1 .carve_body_chooseBox').hide();
@@ -1125,10 +1127,7 @@ PLAYER.observer.listen('webrtcPlayer',function(){
 			}
 		});
 	}
-
 }); 
-
-
 
 
 /*----------------------发布数据----------------------*/
@@ -2598,7 +2597,8 @@ var drawClipModule=(function(){
 				PLAYER.TR.config.maxTime=PLAYER.jsonObj.rootBin.sequence[0].maxDuration;
 			    PLAYER.TR.updateEvent(PLAYER.jsonObj.rootBin.sequence[0].maxDuration,true);
 
-				for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+				for (var i = 0; i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+					var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
 					var type=track.type;
 					var index=track.index;
 						
@@ -2612,6 +2612,7 @@ var drawClipModule=(function(){
 							var duration;
 							var name;
 							var _id=n.assetID||n.id;
+
 					        PLAYER.operateJson.getMaterialDuration(_id,function(msg){
 					        	duration=parseInt(msg.duration);
 					        	name=msg.name;
@@ -3295,18 +3296,6 @@ var chooseClipModule=(function(){
 		                        hide(dragging);
 		                    }
 
-		                    /*
-		                    	var adhere_point2=PLAYER.operateJson.getAllsequenceTrimOut(dragging);
-		                    	var offset2=Math.abs(sequenceTrimOut-adhere_point2)/config.framePerPixel;
-		                    	if(offset2<=5){
-			                        sequenceTrimOut=adhere_point2;
-			                        sequenceTrimIn=adhere_point2-(dragging.attr('data-trimout')-dragging.attr('data-trimin'));
-			                        nowLeft=Math.round(sequenceTrimIn/config.framePerPixel);
-			                        show(dragging,'backward'); 
-			                    }else{
-			                        hide(dragging);
-		                    	}
-		                    */
                         }
                         
                         that.children('.draghelper').css('left',nowLeft);

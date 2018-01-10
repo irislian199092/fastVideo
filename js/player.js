@@ -4,25 +4,12 @@ var timer;
 var videoEl = null;
 var queryDict = {};
 
-
-var signalingServer;
-var registerServer;
-
-if(location.search===''){
-    signalingServer = webrtcServer+":8888";
-    registerServer = webrtcServer+":8889";
-}else{
-    signalingServer = "http://127.0.0.1:8888";
-    registerServer = "http://127.0.0.1:8889"; 
-}
-
 var room;
 var targetId;
-
 var canvas;
 var ctx;
 var webrtc;
-
+var timer;
 $.ajax({
     type: "get",
     url: registerServer + "/get_service_id",
@@ -43,7 +30,10 @@ $.ajax({
             webrtc = new SimpleWebRTC({
                 target: targetId,
                 url: signalingServer,
-                stunServer: 'stun:stun.l.google.com:19302',
+                stunServer: 'stun:47.93.132.17:3478',
+                turnServer: 'turn:47.93.132.17:3478',
+                username: 'demo',
+                credential: 'secret',
                 localVideoEl: '',
                 remoteVideosEl: '',
                 autoRequestMedia: false,
@@ -54,17 +44,11 @@ $.ajax({
             
             // when it's ready, join if we got a room from the URL
             webrtc.on('readyToCall', function () {
-    
                 webrtc.setInfo('', webrtc.connection.connection.id, ''); // Store strongId
-    
                 if (room) {
-
-                    webrtc.joinRoom(room);
-                    
-                    
+                    webrtc.joinRoom(room);  
                 }
             });
-    
             //Handle incoming video from target peer
             webrtc.on('videoAdded', function (video, peer) {
                 //console.log('video added', peer);
@@ -76,12 +60,19 @@ $.ajax({
                         container.removeChild(container.lastChild);
     
                     videoEl.addEventListener('loadedmetadata', initCanvas, false);
-                    videoEl.addEventListener('timeupdate', drawFrame, false);
+                    
+                    
+                    timer=setInterval(function(){
+                        if(PLAYER.isPlaying){
+                            drawFrame();
+                        }
+                    },40);
+                    
+                    //videoEl.addEventListener('timeupdate', drawFrame, false);
                     videoEl.addEventListener('ended', onend, false);
-            
                     container.appendChild(video);
                     webrtc.stopLocalVideo();
-                    PLAYER.observer.trigger('webrtcPlayer',true); //发布工程数据
+                    PLAYER.observer.trigger('webrtcPlayer',true); 
                 }
             });
     
@@ -97,18 +88,17 @@ $.ajax({
     
                     var videoStub = document.createElement('video');
                     container.appendChild(videoStub);
+
+                    clearInterval(timer);
                 }
             });
     
             //Handle message from target peer
             webrtc.on('channelMessage', function (peer, label, data) {
                 if (data.type == 'custommessage') {
-                    
                     PLAYER.VUMeterInfo=JSON.parse(data.payload).params.value;
-                    //console.log(PLAYER.VUMeterInfo);
                 }
             });
-            //////////////////////////////////
         } else {
             alert("没有可用的服务器");
         }
@@ -124,14 +114,13 @@ function initCanvas(e) {
 }
 
 function drawFrame(e) {
-    //console.log('ffds',this.videoWidth)
-    canvas.width = this.videoWidth;
-    canvas.height = this.videoHeight;
+    canvas.width = videoEl.videoWidth;
+    canvas.height = videoEl.videoHeight;
 
     //Draw image to canvas
-    ctx.drawImage(this, 0, 0, this.videoWidth, this.videoHeight);
+    ctx.drawImage(videoEl, 0, 0, videoEl.videoWidth, videoEl.videoHeight);
 
-    var idata = ctx.getImageData(0, 0, this.videoWidth, this.videoHeight);
+    var idata = ctx.getImageData(0, 0, videoEl.videoWidth, videoEl.videoHeight);
     var data = idata.data;
 
     //We have an rgba bufer with bitdepth=32 (4 b/px)
@@ -184,8 +173,9 @@ function drawFrame(e) {
         currentPos = Math.round(firstChunkPos + i * chunkLength);
     }
     $('#timecode').val(("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2) + "." + ("0" + frames).slice(-2));
-   
+    
     PLAYER.currentTime = (parseInt(hours)*3600000 + parseInt(minutes)*60000 + parseInt(seconds)*1000) + parseInt(frames)*40;
+    
     if(bPlaying) {
         $( "#seekbar" ).slider( "value" , PLAYER.currentTime);
     }

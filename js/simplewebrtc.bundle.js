@@ -14628,8 +14628,11 @@ function WebRTC(opts) {
 		config.peerConnectionConfig.iceServers = [{'url': options.stunServer}];
 	}
 	
+	// if (options.turnServer) {
+		// config.peerConnectionConfig.iceServers = config.peerConnectionConfig.iceServers.concat({'url': options.turnServer});
+	// }
 	if (options.turnServer) {
-		config.peerConnectionConfig.iceServers = config.peerConnectionConfig.iceServers.concat({'url': options.turnServer});
+		config.peerConnectionConfig.iceServers = config.peerConnectionConfig.iceServers.concat({'url': options.turnServer, 'username': options.username, 'credential': options.credential});
 	}
 	
     // expose screensharing check

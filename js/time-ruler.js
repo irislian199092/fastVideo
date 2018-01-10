@@ -352,15 +352,11 @@ PLAYER.playerFunction=function(){
     } 
     //设置播放暂停
     function setPlayer(){ 
+        
         var timer=setInterval(function(){
-
-
-
             var lastFrame=PLAYER.operateJson.getLastFrame();//拖拽素材时候的最后一帧
-            
             if(PLAYER.loadState&&PLAYER.isPlaying){
                 var s=PLAYER.OCX.getPosition();
-                
                 if(s>lastFrame){
                     s=0;
                 }
@@ -712,7 +708,8 @@ PLAYER.operateJson={
         var pWidth;
         json.rootBin.sequence[0].maxDuration=40*json.rootBin.sequence[0].maxDuration;
 
-        for (var i = 0,track; track=json.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<json.rootBin.sequence[0].tracks.length;i++) {
+            var track=json.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(i,n){
                 if(n){
                     n.trimIn=40*n.trimIn;
@@ -729,7 +726,8 @@ PLAYER.operateJson={
                 }
             });  
         }
-        for (var i = 0,mas; mas=json.reference.material[i++];) {
+        for (var i = 0; i<json.reference.material.length;i++) {
+            var mas=json.reference.material[i];
             mas.duration=40*mas.duration;
         }
         //添加播放器宽高
@@ -753,7 +751,9 @@ PLAYER.operateJson={
         var json=JSON.parse(json);
         json.rootBin.sequence[0].maxDuration=json.rootBin.sequence[0].maxDuration/40;
 
-        for (var i = 0,track; track=json.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<json.rootBin.sequence[0].tracks.length;i++) {
+            var track=json.rootBin.sequence[0].tracks[i];
+
             $.each(track.subclip,function(i,n){
                 if(n){
                     n.trimIn=n.trimIn/40;
@@ -770,27 +770,46 @@ PLAYER.operateJson={
                 }
             });  
         }
-        for (var i = 0,mas; mas=json.reference.material[i++];) {
+        for (var i = 0; i<json.reference.material.length;i++) {
+            var mas=json.reference.material[i];
             mas.duration=mas.duration/40;
         }
         return json;
     },
     addVideoClipAttr:function(subClipAttr,_index){
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='v'&&track.index===_index){
                track.subclip.push(subClipAttr);
             }
         }
     },
     addAudioClipAttr:function(subClipAttr,_index){
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='a'&&track.index===_index){
                track.subclip.push(subClipAttr);
             }
         }
     },
+    getdAudioClipAttr:function(time,_index){
+        var arr=null;
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
+            if(track.type==='a'&&track.index===_index){
+                $.each(track.subclip,function(i,n){
+                    if(n && n.createTime===time){
+                        arr=n;
+                    }
+                }); 
+            }
+        }
+        console.log('arr---',arr)
+        return JSON.stringify(arr);
+    },
     updateAudioClipVolume:function(time,value){
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
                 if(elem){
                     if(elem.createTime===time){
@@ -803,7 +822,8 @@ PLAYER.operateJson={
         } 
     },
     addSubtitleClipAttr:function(subClipAttr,_index){
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='t'&&track.index===_index){
                 track.subclip.push(subClipAttr);
             }
@@ -811,7 +831,8 @@ PLAYER.operateJson={
     },
     getSubtitleClip:function(time,_index){
         var arr=null;
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='t'&&track.index===_index){
                 $.each(track.subclip,function(i,n){
                     if(n && n.createTime===time){
@@ -825,7 +846,8 @@ PLAYER.operateJson={
     updateSubtitleClip:function(jsonObj,moveX,moveY){
         var _index=jsonObj.trackIndex;
         var time=jsonObj.subClipId;
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='t'&&track.index===_index){
                 $.each(track.subclip,function(i,n){
                     if(n && n.createTime===time){
@@ -856,7 +878,8 @@ PLAYER.operateJson={
                 }
             }
         }
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             track.subclip.sort(comparison('sequenceTrimIn'));
         } 
     },
@@ -878,7 +901,8 @@ PLAYER.operateJson={
         PLAYER.goBackJson.push(str);
     },
     updateClipAttr:function(subClipAttr,time,effectAttr){
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
                 if(elem){
                     if(elem.createTime===time){
@@ -896,7 +920,8 @@ PLAYER.operateJson={
 
     changeIndexClipAttr:function(type,index,time){
         var obj=null;
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(i,n){
                 if(n){
                     if(n.createTime===time){
@@ -906,14 +931,16 @@ PLAYER.operateJson={
                 }
             });   
         }
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type===type&&track.index===index){
                 track.subclip.push(JSON.parse(obj));
             } 
         }  
     },
     deleteClipAttr:function(time){
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             
             $.each(track.subclip,function(index,elem){
                 if(elem){
@@ -1156,52 +1183,6 @@ PLAYER.operateJson={
         
         return _s;
     },
-    getAllsequenceTrimOut:function(dragging,time,sout){
-        //获取要吸附的素材
-        var _s;
-        var s_point;
-        if(sout){
-            s_point=sout;
-        }else{
-            s_point=parseInt(dragging.attr('data-sequencetrimout'));
-        }
-        
-        var arr=dragging.siblings();
-        if(time){
-            $.each(arr,function(i,n){
-                if($(n).attr('data-time')===time){
-                    arr.splice(i,1);
-                }
-            });
-        }
-
-        arr.each(function(){
-            var offset1=Math.abs(s_point-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
-            var offset2=Math.abs(s_point-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
-            if(offset1<=10){
-                _s=parseInt($(this).attr('data-sequencetrimin'));
-            }
-            if(offset2<=10){
-                _s=parseInt($(this).attr('data-sequencetrimout'));
-            }
-        });
-        
-        return _s;
-    },
-    getAllsiblingsWidth(dragging){
-        var _s=[];
-        $.each(dragging.siblings(),function(i,n){
-            _s.push(parseInt($(n).css('left'))+parseInt($(n).css('width')));
-        });
-        return _s;
-    },
-    getAllsiblingsLeft(dragging){
-        var _s=[];
-        $.each(dragging.siblings(),function(i,n){
-            _s.push(parseInt($(n).css('left')));
-        });
-        return _s;
-    },
     showAdhere:function(dragging,dir){
         if(dragging.find('.point')){
             dragging.find('.point').remove();
@@ -1269,15 +1250,32 @@ PLAYER.operateJson={
         return arr;
     },
     mouseDownState:function(dragging){
-        console.log('PLAYER.keyNum',PLAYER.keyNum)
+        
         if(PLAYER.keyNum!==17 && PLAYER.keyNum!==71 && PLAYER.keyNum!==7100){
             $('#js_time_ruler_bar_box .draggable').removeClass('onselected');
         }
-
         dragging.addClass('onselected');
+        
         if(dragging.attr('data-interleaved')==="true"){
             PLAYER.operateJson.chooseInterleavedElem(dragging).addClass('onselected');
         }
+        
+        if(dragging.hasClass('edit_box_a')){
+            var time=dragging.attr('data-time');
+            var index=parseInt(dragging.parent().attr('data-index'));
+            var audioAttr=JSON.parse(PLAYER.operateJson.getdAudioClipAttr(time,index));
+            var volume=audioAttr.volume;
+            $('#js_toolbar_icon_volume_track').val(volume);
+            $('#js_toolbar_icon_volume_track').attr('title',volume);
+            
+        }else if(PLAYER.operateJson.chooseInterleavedElem(dragging).hasClass('edit_box_a')){
+            var time=PLAYER.operateJson.chooseInterleavedElem(dragging).attr('data-time');
+            var index=parseInt(dragging.parent().attr('data-index'));
+            var audioAttr=JSON.parse(PLAYER.operateJson.getdAudioClipAttr(time,index));
+            var volume=audioAttr.volume;
+            $('#js_toolbar_icon_volume_track').val(volume);
+            $('#js_toolbar_icon_volume_track').attr('title',volume);
+        }   
     },
     mouseMoveState:function(dragging,clipDir){//mousemove事件状态
         dragging.css('z-index',50);
@@ -1294,36 +1292,11 @@ PLAYER.operateJson={
             dragging.addClass('zoomRight');
         }
     },
-    mouseUpState:function(dragging){//点击或者mouseup事件状态
-
-        
-
-        /*if(PLAYER.keyNum!==17){
-            $('#js_time_ruler_bar_box .draggable').removeClass('onselected');
-            $('#js_time_ruler_bar_box .draggable').removeClass('zoomRight');
-            $('#js_time_ruler_bar_box .draggable').removeClass('zoomLeft');
-        }
-        dragging.addClass('onselected');
-        dragging.css('opacity','1');
-        dragging.css('boxShadow','none');
-        dragging.css('z-index',10);
-        dragging.css('cursor','default');
-        PLAYER.operateJson.hideAdhere(dragging);
-        if(dragging.attr('data-interleaved')==="true"){
-            $.each(PLAYER.operateJson.chooseInterleavedElem(dragging),function(i,n){
-                n.addClass('onselected');
-                n.css('opacity','1');
-                n.css('z-index',10);
-                n.css('boxShadow','none');
-                n.css('cursor','default');
-                PLAYER.operateJson.hideAdhere(n);
-            });
-        }*/
-    },
     checkCorsorhasClip:function(currTime){
         var hasClip=false;
         //检查游标处是否有切片
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='a' && (track.subclip.length>0)){
                 $.each(track.subclip,function(index,elem){
                     console.log('currTime',currTime)
@@ -1337,7 +1310,8 @@ PLAYER.operateJson={
         return hasClip;    
     },
     checkNoClip:function(){
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.subclip.length===0){
                 return true; 
            }else{
@@ -1365,7 +1339,8 @@ PLAYER.operateJson={
         return obj;
     },
     addEffectClip:function(time,obj){
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
 
             if(track.type==='v'){
                 $.each(track.subclip,function(index,elem){
@@ -1380,7 +1355,8 @@ PLAYER.operateJson={
     },
     getEffectClip:function(time){
         var arr=null;
-        for (var  i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
                 if(elem && elem.createTime===time && elem.effect){
                     arr=JSON.stringify(elem.effect);
@@ -1450,7 +1426,8 @@ PLAYER.operateJson={
         }
     },
     updateEffectClip:function(time,attr){
-        for (var  i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
                 if(elem && elem.createTime===time && elem.effect){
                     $.each(elem.effect,function(i,n){
@@ -1467,7 +1444,8 @@ PLAYER.operateJson={
         console.log('更新特技',PLAYER.jsonObj.rootBin.sequence[0].tracks);
     }, 
     removeOtherEffectClip:function(time,type,pos){
-        for (var  i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
                 if(elem && elem.createTime===time && elem.effect){
                     elem.effect.forEach(function(n,i){
@@ -1497,10 +1475,12 @@ PLAYER.operateJson={
         return s;
     },
     getMaterialDuration:function(id,callback){
+        
         $.ajax({
             url:serverUrl+'program/info',
             data:{
-                assetId:id
+                assetId:id,
+                jobId:PLAYER.jobId
             },
             async:false,
             success:function(msg){
@@ -1519,7 +1499,8 @@ PLAYER.operateJson={
     },
     getFirstFrame:function(){
         var arr=[];
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
                 if(elem){
                     arr.push(track.subclip[index].sequenceTrimIn);
@@ -1536,7 +1517,8 @@ PLAYER.operateJson={
     getLastFrame:function(){
         var arr=[];
         
-        for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
+            var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.subclip.length!==0){
                 $.each(track.subclip,function(i,n){
                     arr.push(n.sequenceTrimOut);
@@ -1625,7 +1607,8 @@ PLAYER.operateJson={
         var scale_y=new_height/old_height;
         var scale_x=new_width/old_width;
 
-        for (var  i = 0,track; track=data.rootBin.sequence[0].tracks[i++];) {
+        for (var i = 0;i<data.rootBin.sequence[0].tracks.length;i++) {
+            var track=data.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
                 if(elem && elem.effect){
 
@@ -2528,7 +2511,8 @@ PLAYER.timeRuler = function() {
                             if(v0_dir==='middle'){
                                 var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
                                 if(seleElem.length!==0){
-                                    for (let  i = 0,dragging; dragging=seleElem[i++];) {
+                                    for (var  i = 0; i<seleElem.length;i++) {
+                                        var dragging=seleElem[i];
                                         vd_attr=getDragInfo(dragging,event);
                                         dragging.attr('data-clipdir',v0_dir);
 
@@ -2600,7 +2584,8 @@ PLAYER.timeRuler = function() {
                                     //移动可以全体移动
                                     var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
                                     if(seleElem.length!==0){
-                                        for (let  i = 0,dragging; dragging=seleElem[i++];) {
+                                        for (var i = 0; i<seleElem.length;i++) {
+                                        var dragging=seleElem[i];
                                             dragdrop.fire({
                                                 type:'clipDrag',
                                                 target:dragging,
@@ -2669,7 +2654,8 @@ PLAYER.timeRuler = function() {
                                     if(v0_dir==='middle'){
                                         var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
                                         if(seleElem.length!==0){
-                                            for (let  i = 0,dragging; dragging=seleElem[i++];) {
+                                            for (var  i = 0; i<seleElem.length;i++) {
+                                                var dragging=seleElem[i];
                                                 dragdrop.fire({
                                                     type:'clipDragend',
                                                     target:dragging,
@@ -2711,7 +2697,8 @@ PLAYER.timeRuler = function() {
                                 if(v0_dir==='middle'){
                                     var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
                                     if(seleElem.length!==0){
-                                        for (let  i = 0,dragging; dragging=seleElem[i++];) {
+                                        for (var  i = 0; i<seleElem.length;i++) {
+                                        var dragging=seleElem[i];
                                             dragdrop.fire({
                                                 type:'clipClick',
                                                 target:dragging,
@@ -3609,24 +3596,6 @@ PLAYER.timeRuler = function() {
                 PLAYER.operateJson.hideAdhere(helpElem);
             }
 
-
-            /*if(dragging.siblings().length!==0){
-                
-                var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging,targetId);//获取所有切片的吸附点 
-                
-                var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
-                if(offset<=5){
-                    sequenceTrimIn=adhere_point;
-                    trimIn=clipInitTrimOut-clipInitSequenceTrimOut+sequenceTrimIn;
-                    
-                    nowLeft=sequenceTrimIn/config.framePerPixel;
-                    nowWidth=(clipInitSequenceTrimOut-sequenceTrimIn)/config.framePerPixel;
-                    PLAYER.operateJson.showAdhere(dragging,'forward'); 
-                }else{
-                    PLAYER.operateJson.hideAdhere(dragging);
-                }
-
-            }*/
         }
         function checkAdhereRight(helpElem,moveFrame){
             var max_sout=ev.max_out+moveFrame;
@@ -4595,7 +4564,8 @@ PLAYER.timeRuler = function() {
                 //渲染视频
                 $('.time_ruler_bar').empty();
                 
-                for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+                for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++ ) {
+                    var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i]; 
                     var type=track.type;
                     var index=track.index;
                     if(track.subclip.length===0){
@@ -6635,51 +6605,3 @@ PLAYER.singelton=function(fn){
         return result || (result=fn.apply(this,arguments));
     }
 };
-//发布订阅设计模式
-PLAYER.observer=(function(){
-    var clientList={},
-        listen,
-        remove,
-        trigger;
-
-    listen=function(key,fn){
-        if(!clientList[key]){
-            clientList[key]=[];
-        }
-        clientList[key].push(fn);
-    };
-    trigger=function(){
-        var key=Array.prototype.shift.call(arguments);
-        var fns=clientList[key];
-        if(!fns || fns.length===0){
-            return false;
-        }else{
-            for(var i=0,fn;fn=fns[i++];){
-                fn.apply(this,arguments);
-            }
-        }
-    };
-    remove=function(key,fn){
-        var fns=clientList[key];
-        if(!fns){
-            return false;
-        }
-        if(!fn){
-            fns && (fns.length=0);
-        }else{
-            for(var l=fns.length-1;l>=0;l--) {
-                
-                var _fn=fns[l];
-                if(_fn===fn){
-                    fns.splice(l,1);
-                }
-            }
-        }
-    };
-
-    return {
-        listen:listen,
-        remove:remove,
-        trigger:trigger
-    }
-})();
