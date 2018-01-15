@@ -121,7 +121,7 @@
 	          	</div>
 	          	<ul class="list clearfix">
 	            	<li class="active"><a id="tab_material">视频库</a></li>
-	            	<!-- <li><a id="tab_subtitle">字幕</a></li> -->
+	            	<li><a id="tab_subtitle">字幕</a></li>
 	            	<li><a id="tab_effect">特技</a></li>
 	            	<!-- <li><a id="tab_images">图片库</a></li>
 	            	<li><a id="tab_audio">音频库</a></li> -->
@@ -187,15 +187,16 @@
 
 			<div id="tab_2" class="js_tab">
 				<ul class="subtitle_wrap" id="js_subtitle_wrap">
+					
 					<li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Name" data-temid="subtitle_01"></span>
-						<span class="subtitle_text">Name</span>
-					</li>
-					<li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Special" data-temid="subtitle_02"></span>
+						<span class="subtitle_list" data-subtitle="Special" data-temid="subtitle_01"></span>
 						<span class="subtitle_text">Special</span>
 					</li>
-					<li class="subtitle">
+					<!-- <li class="subtitle">
+						<span class="subtitle_list" data-subtitle="Name" data-temid="subtitle_02"></span>
+						<span class="subtitle_text">Name</span>
+					</li> -->
+					<!-- <li class="subtitle">
 						<span class="subtitle_list" data-subtitle="Line" data-temid="subtitle_03"></span>
 						<span class="subtitle_text">Line</span>
 					</li>
@@ -222,7 +223,7 @@
 					<li class="subtitle">
 						<span class="subtitle_list" data-subtitle="End" data-temid="subtitle_09"></span>
 						<span class="subtitle_text">End</span>
-					</li>
+					</li> -->
 				</ul>
 				<!-- <h4>
 					<span class="subtitle_title">字体模板</span>
@@ -423,8 +424,36 @@
 
 <script src="js/server.js"></script><!-- 服务 -->
 <script src="js/app.js"></script><!-- 首选项 -->
-<!-- <script src="js/time-ruler.js"></script> -->
-<script src="js/time-ruler.min.js"></script>
+<script src="js/time-ruler.js"></script>
+<!-- <script src="js/time-ruler.min.js"></script> -->
+<!-- <script>
+$(function(){
+	var count = 0;
+    var outTime=0.5;
+    window.setInterval(go, 1000);
+    function go() {
+        count++;
+        if (count == outTime*60) {
+           	alert("您因长时间未进行操作导致页面过期");
+           	window.location
+        }
+    }
+  	var x ;
+    var y ;
+    document.onmousemove = function (event) {
+        var x1 = event.clientX;
+        var y1 = event.clientY;
+        if (x != x1 || y != y1) {
+            count = 0;
+        }
+        x = x1;
+        y = y1;
+    };
+    document.onkeydown = function () {
+        count = 0;
+    };
+});
+</script> -->
 
 </html>
 

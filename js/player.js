@@ -100,7 +100,7 @@ $.ajax({
                 }
             });
         } else {
-            alert("没有可用的服务器");
+            alert("目前已达使用最大人数，无可用license!");
         }
         
     },
@@ -175,7 +175,6 @@ function drawFrame(e) {
     $('#timecode').val(("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2) + "." + ("0" + frames).slice(-2));
     
     PLAYER.currentTime = (parseInt(hours)*3600000 + parseInt(minutes)*60000 + parseInt(seconds)*1000) + parseInt(frames)*40;
-    
     if(bPlaying) {
         $( "#seekbar" ).slider( "value" , PLAYER.currentTime);
     }

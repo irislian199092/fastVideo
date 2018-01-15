@@ -80,7 +80,7 @@ $(function(){
 	var initIndex=2;
 	$('#js_add_audio_track').on('click',function(){
 		initIndex++;
-		if(initIndex===9){
+		if(initIndex>8){
 			alert('您最多能添加8轨道');
 			return false;
 		}
@@ -237,6 +237,7 @@ $(function(){
 							allProgress.push(msg.data[i].progress);
 						}
 						if(allProgress.every(checkProgress)){
+							console.log()
 							clearInterval(PLAYER.timer);
 						}
 					}else{

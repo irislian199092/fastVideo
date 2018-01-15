@@ -356,7 +356,10 @@ PLAYER.playerFunction=function(){
         var timer=setInterval(function(){
             var lastFrame=PLAYER.operateJson.getLastFrame();//拖拽素材时候的最后一帧
             if(PLAYER.loadState&&PLAYER.isPlaying){
+
                 var s=PLAYER.OCX.getPosition();
+
+                //console.log('-----------',s)
                 if(s>lastFrame){
                     s=0;
                 }
@@ -851,11 +854,6 @@ PLAYER.operateJson={
             if(track.type==='t'&&track.index===_index){
                 $.each(track.subclip,function(i,n){
                     if(n && n.createTime===time){
-                        
-                        n.abs.left_value=moveX;
-                        n.abs.top_value=moveY;
-
-                        $.extend(n.pixel,jsonObj.attr);
                         $.extend(n.pixel,jsonObj.attr);
                     }
                 }); 
@@ -1255,27 +1253,30 @@ PLAYER.operateJson={
             $('#js_time_ruler_bar_box .draggable').removeClass('onselected');
         }
         dragging.addClass('onselected');
-        
-        if(dragging.attr('data-interleaved')==="true"){
-            PLAYER.operateJson.chooseInterleavedElem(dragging).addClass('onselected');
-        }
-        
+
         if(dragging.hasClass('edit_box_a')){
             var time=dragging.attr('data-time');
             var index=parseInt(dragging.parent().attr('data-index'));
             var audioAttr=JSON.parse(PLAYER.operateJson.getdAudioClipAttr(time,index));
             var volume=audioAttr.volume;
             $('#js_toolbar_icon_volume_track').val(volume);
-            $('#js_toolbar_icon_volume_track').attr('title',volume);
-            
-        }else if(PLAYER.operateJson.chooseInterleavedElem(dragging).hasClass('edit_box_a')){
-            var time=PLAYER.operateJson.chooseInterleavedElem(dragging).attr('data-time');
-            var index=parseInt(dragging.parent().attr('data-index'));
-            var audioAttr=JSON.parse(PLAYER.operateJson.getdAudioClipAttr(time,index));
-            var volume=audioAttr.volume;
-            $('#js_toolbar_icon_volume_track').val(volume);
-            $('#js_toolbar_icon_volume_track').attr('title',volume);
-        }   
+            $('#js_toolbar_icon_volume_track').attr('title',volume); 
+        }
+        
+        if(dragging.attr('data-interleaved')==="true"){
+            PLAYER.operateJson.chooseInterleavedElem(dragging).addClass('onselected');
+
+            if(PLAYER.operateJson.chooseInterleavedElem(dragging).hasClass('edit_box_a')){
+                var time=PLAYER.operateJson.chooseInterleavedElem(dragging).attr('data-time');
+                var index=parseInt(dragging.parent().attr('data-index'));
+                var audioAttr=JSON.parse(PLAYER.operateJson.getdAudioClipAttr(time,index));
+                var volume=audioAttr.volume;
+                $('#js_toolbar_icon_volume_track').val(volume);
+                $('#js_toolbar_icon_volume_track').attr('title',volume);
+            }
+        }
+        
+        
     },
     mouseMoveState:function(dragging,clipDir){//mousemove事件状态
         dragging.css('z-index',50);
@@ -1475,22 +1476,28 @@ PLAYER.operateJson={
         return s;
     },
     getMaterialDuration:function(id,callback){
-        
-        $.ajax({
-            url:serverUrl+'program/info',
-            data:{
-                assetId:id,
-                jobId:PLAYER.jobId
-            },
-            async:false,
-            success:function(msg){
-                if(msg.code===0&&msg.data!==null){
-                    callback(msg.data);
-                }else{
-                    console.log('error');
+        console.log('id',id);
+        if(id==='subtitle_01'){
+            var attr=JSON.parse(PLAYER.operateJson.getSubtitleTemp(id));
+            callback(attr);
+        }else{
+            $.ajax({
+                url:serverUrl+'program/info',
+                data:{
+                    assetId:id,
+                    jobId:PLAYER.jobId
+                },
+                async:false,
+                success:function(msg){
+                    if(msg.code===0&&msg.data!==null){
+                        callback(msg.data);
+                    }else{
+                        console.log('error');
+                    }
                 }
-            }
-        }); 
+            }); 
+        }
+        
     },
     getSubtitleDuration:function(id,callback){
         //获取字幕
@@ -1609,20 +1616,29 @@ PLAYER.operateJson={
 
         for (var i = 0;i<data.rootBin.sequence[0].tracks.length;i++) {
             var track=data.rootBin.sequence[0].tracks[i];
-            $.each(track.subclip,function(index,elem){
-                if(elem && elem.effect){
-
-                    $.each(elem.effect,function(i,n){
-                        if(n.type==='mosaic'){
-                            n.attr.x1*=scale_x;
-                            n.attr.y1*=scale_y;
-                            n.attr.width*=scale_x;
-                            n.attr.height*=scale_x;
-                        }
-                    });
-                    
-                }
-            });   
+            
+            if(track.type==='v'){
+                $.each(track.subclip,function(index,elem){
+                    if(elem && elem.effect){
+                        $.each(elem.effect,function(i,n){
+                            if(n.type==='mosaic'){
+                                n.attr.x1*=scale_x;
+                                n.attr.y1*=scale_y;
+                                n.attr.width*=scale_x;
+                                n.attr.height*=scale_x;
+                            }
+                        });  
+                    }
+                });   
+            }
+            if(track.type==='t'){
+                $.each(track.subclip,function(index,elem){
+                   elem.pixel[0].x1*=scale_x;
+                   elem.pixel[0].y1*=scale_y;
+                   elem.pixel[0].attr.fontSize*=scale_y;
+                });   
+            }
+            
         }
         
         return data;
@@ -1639,48 +1655,19 @@ PLAYER.operateJson={
                 "name":'subtitle_01', 
                 "duration":2000,               
                 "trimIn":0,                         
-                "trimOut":2000,
-                "abs":{
-                    left_value:parseInt(1400/project_w*player_w),
-                    top_value:parseInt(40/project_h*player_h)
-                },                                       
+                "trimOut":2000,                                   
                 "pixel":[
                     {
                         "x1": parseInt(1400/project_w*player_w),                      
-                        "y1": parseInt(40/project_h*player_h),                       
-                        "width": parseInt(300/project_w*player_w),                       
-                        "height": parseInt(285/project_h*player_h),                       
-                        "attr":{
-                            "type":'images',
-                            "url":'http://112.126.71.150:82/FastCarve/s1_01.png'
-                        },
-                        "attrID":'attrID_'+PLAYER.genNonDuplicateID(12)
-                    },
-                    {
-                        "x1": parseInt(1400/project_w*player_w),                      
-                        "y1": parseInt(360/project_h*player_h),                                       
+                        "y1": parseInt(340/project_h*player_h),                                       
                         "attr":{
                             "type":"fade",
-                            "text":'NAME',
+                            "text":'FAST CARVE',
                             "fontFamily": 'PingFang Heavy',       
-                            "fontSize":parseInt(54/project_h*player_h),                
+                            "fontSize":parseInt(70/project_h*player_h),                
                             "fillStyle":'#ffffff',    
                             "textAlign":'left',
-                            "fadeInTime":1000,
-                            "fadeOutTime":1000
-                        },
-                        "attrID":'attrID_'+PLAYER.genNonDuplicateID(12)
-                    },
-                    {
-                        "x1": parseInt(1400/project_w*player_w),                      
-                        "y1": parseInt(410/project_h*player_h),                                       
-                        "attr":{
-                            "type":"fade",
-                            "text":'hellp',
-                            "fontFamily":'PingFang Regular',       
-                            "fontSize":parseInt(40/project_h*player_h),          
-                            "fillStyle":'#ffffff',    
-                            "textAlign":'left',
+                            "fontWeight":'bold',
                             "fadeInTime":1000,
                             "fadeOutTime":1000
                         },
@@ -1688,93 +1675,6 @@ PLAYER.operateJson={
                     }
                 ]    
             }
-            /*,"subtitle_02":{
-                "id":"subtitle_02",
-                "name":'subtitle_02', 
-                "duration":2000,               
-                "trimIn":0,                         
-                "trimOut":2000, 
-                "top":0,                                         
-                "pixel":[
-                    {
-                        "x1": parseFloat(550/project_w*player_w),                      
-                        "y1": parseFloat(415/project_h*player_h),                                       
-                        "attr":{
-                            "type":"fade",
-                            "text":'NAME',
-                            "fontFamily": 'PingFang Medium',       
-                            "fontSize":parseFloat(74/project_h*player_h),                
-                            "fillStyle":'#ffffff',    
-                            "textAlign":'left',
-                            "fadeInTime":1000,
-                            "fadeOutTime":1000
-                        } 
-                    },
-                    {
-                        "x1": parseFloat(550/project_w*player_w),                      
-                        "y1": parseFloat(515/project_h*player_h),                                       
-                        "attr":{
-                            "type":"fade",
-                            "text":'hellp',
-                            "fontFamily":'造字工房力黑(非商用)常规体',       
-                            "fontSize":parseFloat(112/project_h*player_h),                
-                            "fillStyle":'#ffffff',    
-                            "textAlign":'left',
-                            "fadeInTime":1000,
-                            "fadeOutTime":1000
-                        } 
-                    }
-                ]    
-            },
-            "subtitle_03":{
-                "id":"subtitle_03",
-                "name":'subtitle_03', 
-                "duration":2000,               
-                "trimIn":0,                         
-                "trimOut":2000,
-                "top":0,                                            
-                "pixel":[
-                    {
-                        "x1": parseFloat(75/project_w*player_w),                      
-                        "y1": parseFloat(818/project_h*player_h),                       
-                        "width": parseFloat(710/project_w*player_w),                       
-                        "height": parseFloat(150/project_h*player_h),                       
-                        "attr":{
-                            "type":'images',
-                            "url":'http://112.126.71.150:82/FastCarve/s3_01.png'
-                        }
-                    },
-                    {
-                        "x1": parseFloat(94/project_w*player_w),                      
-                        "y1": parseFloat(745/project_h*player_h),                                       
-                        "attr":{
-                            "type":"fade",
-                            "text":'NAME',
-                            "fontFamily": 'PingFang Heavy',       
-                            "fontSize":parseFloat(102/project_h*player_h),               
-                            "fillStyle":'#ffffff',    
-                            "textAlign":'left',
-                            "fadeInTime":1000,
-                            "fadeOutTime":1000
-                        } 
-                    },
-                    {
-                        "x1": parseFloat(94/project_w*player_w),                      
-                        "y1": parseFloat(875/project_h*player_h),                                       
-                        "attr":{
-                            "type":"fade",
-                            "text":'hellp',
-                            "fontFamily":'PingFang Regular',       
-                            "fontSize":parseFloat(102/project_h*player_h),          
-                            "fillStyle":'#ffffff',    
-                            "textAlign":'left',
-                            "fadeInTime":1000,
-                            "fadeOutTime":1000
-                        } 
-                    }
-                ]    
-            },*/
-
         };
         return JSON.stringify(PLAYER.subJsonTem[id]);
     } 
@@ -4031,10 +3931,6 @@ PLAYER.timeRuler = function() {
         _initSubtitleStyle(subtitleAttr,subtitleAttr.id,type);
         _initSubtitleOperate(subtitleAttr,time,index,type,'subtitle');
 
-        
-        if(target.hasClass&&target.hasClass('draggable')){
-            PLAYER.operateJson.mouseUpState(target);
-        }
     }
     /*字幕右侧编辑框*/
     function _addSubtitleDom(subtitleAttr){
@@ -4132,16 +4028,14 @@ PLAYER.timeRuler = function() {
             $('#js_subtitle_top').attr('min',0);
 
 
-            $('#js_subtitle_left,#js_subtitle_left_value').val(obj.abs.left_value);
-            $('#js_subtitle_top,#js_subtitle_top_value').val(obj.abs.top_value);
+            $('#js_subtitle_left,#js_subtitle_left_value').val(arr[0].x1);
+            $('#js_subtitle_top,#js_subtitle_top_value').val(arr[0].y1);
 
             $('#js_subtitle_text1').val(arr[0].attr.text);
-            $('#js_subtitle_text2').val(arr[1].attr.text);
-            $('#js_subtitle_fontsize1').val(arr[0].attr.fontSize);
-            $('#js_subtitle_fontsize2').val(arr[1].attr.fontSize);
-            $('#js_subtitle_color1').val(arr[0].attr.fillStyle);
-            $('#js_subtitle_color2').val(arr[1].attr.fillStyle); 
 
+            $('#js_subtitle_fontsize1').val(arr[0].attr.fontSize);
+
+            $('#js_subtitle_color1').val(arr[0].attr.fillStyle);
 
             $('#js_subtitle_color1').minicolors({
                 control: $(this).attr('data-control') || 'hue',
@@ -4163,41 +4057,13 @@ PLAYER.timeRuler = function() {
                 },
                 theme: 'bootstrap'
             });
-            $('#js_subtitle_color2').minicolors({
-                control: $(this).attr('data-control') || 'hue',
-                defaultValue: $(this).attr('data-defaultValue') || '',
-                inline: $(this).attr('data-inline') === 'true',
-                letterCase: $(this).attr('data-letterCase') || 'lowercase',
-                opacity: $(this).attr('data-opacity'),
-                position: $(this).attr('data-position') || 'bottom left',
-                change: function(hex, opacity) {
-                    if (!hex)
-                        return;
-                    if (opacity)
-                        hex += ', ' + opacity;
-                    try {
-                        $('#js_subtitle_color2').val(hex)
-                    } catch (e) {
-                        console.log(e);
-                    }
-                },
-                theme: 'bootstrap'
-            });
         }
     }
     function _initSubtitleOperate(obj,time,index,type,effectType){
         
         var s_arr=JSON.stringify(obj.pixel);
         var initArr=JSON.parse(JSON.stringify(obj.pixel));
-        var initArr_x=[];
-        var initArr_y=[];
-        for (var i = 0; i < initArr.length; i++) {
-            initArr_x[i]=initArr[i].x1-JSON.parse(JSON.stringify(obj.abs.left_value))
-        }
-        for (var i = 0; i < initArr.length; i++) {
-            initArr_y[i]=initArr[i].y1-JSON.parse(JSON.stringify(obj.abs.top_value))
-        }
-
+        
         var jsonObj={
             trackType:type,
             trackIndex:index,
@@ -4212,7 +4078,7 @@ PLAYER.timeRuler = function() {
             $('#js_subtitle_left_value').val($(e.target).val());
 
             for (var i = 0; i < jsonObj.attr.length; i++) {
-                jsonObj.attr[i].x1=initArr_x[i]+parseInt($(e.target).val());
+                jsonObj.attr[i].x1=parseInt($(e.target).val());
             }
             
             updateJson(jsonObj);
@@ -4221,16 +4087,10 @@ PLAYER.timeRuler = function() {
         $('#js_subtitle_top')[0].oninput=function(e){
             $('#js_subtitle_top_value').val($(e.target).val());
             for (var i = 0; i < jsonObj.attr.length; i++) {
-                jsonObj.attr[i].y1=initArr_y[i]+parseInt($(e.target).val());
+                jsonObj.attr[i].y1=parseInt($(e.target).val());
             }
             updateJson(jsonObj);
         };
-        
-        function changeLeft(value){
-            for (var i = 0; i < jsonObj.attr.length; i++) {
-                jsonObj.attr[i].x1+=parseInt($(e.target).val())-initL;
-            }
-        }
         
         $('#js_subtitle_h_form .subtitle_text').on('change',function(e){
             var id=$(e.target).attr('data-id');
@@ -4251,13 +4111,12 @@ PLAYER.timeRuler = function() {
         $('#js_subtitle_h_form .subtitle_fontsize').on('change',function(e){
             var id=$(e.target).attr('data-id');
             var newObj={
-                fontSize:$(e.target).val()
+                fontSize:parseInt($(e.target).val())
             }
             changeJson(jsonObj,id,newObj);
             updateJson(jsonObj);
         });
 
-        
         $('#js_subtitle_btn').on('click',function(e){
             PLAYER.hideSubititleEdit();
         });
@@ -4274,47 +4133,9 @@ PLAYER.timeRuler = function() {
 
             PLAYER.OCX.adjustEffect(jsonObj);
             PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
-
-            var x1=parseInt($('#js_subtitle_left_value').val());
-            var y1=parseInt($('#js_subtitle_top_value').val());
-
-            PLAYER.operateJson.updateSubtitleClip(jsonObj,x1,y1);
+            
+            PLAYER.operateJson.updateSubtitleClip(jsonObj);
         }      
-    }
-    /*右击切片弹出声音模态框*/
-    function handleClipContextmenuEvent(ev){
-        //console.log('右击菜单',ev);
-    }
-    /*点击确定提交声音*/
-    function __operateClipContextmenuEvent(clicking){
-        $('#js_volume_form_name').val('200');
-        $('#js_volume_form_range').mouseup(function(event) {
-            $('#js_volume_form_name').val($('#js_volume_form_range').val());
-        });
-        $('#js_volume_save').on('click',function(){
-            var _val=parseInt($('#js_volume_form_name').val());
-            var _index=PLAYER.operateJson.getAudioIndex(parseInt(clicking.attr('data-time')));
-            var volumeAttr={
-                "type": 1,
-                "trackIndex": 1,
-                "subClipIndex": _index,
-                "volume": _val
-            }
-            var _re=PLAYER.OCX.coverStationLogo(volumeAttr);
-            if(_re===0){
-                console.log('声音成功');
-                $('#js_createVolumeModal').hide();
-                $('#js_pageCover').hide();
-            }
-        });
-        $('#js_volume_cancel').on('click',function(){
-            $('#js_createVolumeModal').hide();
-            $('#js_pageCover').hide();
-        });
-        $('#js_createVolumeModal .icojam_delete').on('click',function(){
-            $('#js_createVolumeModal').hide();
-            $('#js_pageCover').hide();
-        });
     }
 
     /*键盘+-快捷键*/
@@ -6580,7 +6401,10 @@ PLAYER.getDurationToString=function(duration){
     return hourstr + ":" + minitestr + ":" + secondstr + ":" + framestr;
 };
 //时间戳换算成日期
-PLAYER.getLocalTime=function(nows) {  
+PLAYER.getLocalTime=function(nows) {
+    if(!nows){
+        return '';
+    }
     function add0(m){return m<10?'0'+m:m };
     var time = new Date(nows);
     var y = time.getFullYear();

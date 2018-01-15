@@ -1132,7 +1132,6 @@ PLAYER.observer.listen('webrtcPlayer',function(){
 
 /*----------------------发布数据----------------------*/
 
-
 //初始化获获取打包素材列表	
 $.ajax({
 	url:serverUrl+'resource/listpage',
@@ -1619,8 +1618,8 @@ var getPackbagListModule=(function(){
 		        			+'<span>备注</span>'
 		        		+'</li>');
 			$('#js_export_list').append(oH);
+
 			$.each(data,function(i,n){
-				
 				var oLi=$('<li>');
 				var oA=$('<a href="javascript:;"  class="name"><span>'+n.title+'</span></a>'
 						+'<a href="javascript:;"  class="createTime"><span>'+PLAYER.getLocalTime(n.createtime)+'</span></a>'
@@ -2622,7 +2621,7 @@ var drawClipModule=(function(){
 				        	var _left=n.sequenceTrimIn/PLAYER.TR.config.framePerPixel;
 
 				        	var subclipBox=$('<div class="edit_box draggable" data-trimin="'+n.trimIn+'" data-trimout="'+n.trimOut+'" data-sequencetrimin="'+n.sequenceTrimIn+'" data-sequencetrimout="'+n.sequenceTrimOut+'">'+name+'</div>');
-				        	subclipBox.attr('data-duration',duration ||2000);
+				        	subclipBox.attr('data-duration',duration || 2000);
 				        	subclipBox.attr('data-name',name);
 				        	subclipBox.attr('data-id',n.assetID || n.id);
 				        	subclipBox.attr('data-type',n.type);
