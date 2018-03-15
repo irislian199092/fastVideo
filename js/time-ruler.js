@@ -13,26 +13,26 @@ PLAYER.playerFunction=function(){
         PLAYER.TR = new PLAYER.timeRuler(this.config);
         PLAYER.PTR = new PLAYER.timeRuler2(this.playerConfig);
         PLAYER.OCX=new PLAYER.ocxFunction();
-        PLAYER.documentEvent.addHandler('keydown',publicKeyDownEvent);  //公共键盘事件 
+        PLAYER.documentEvent.addHandler('keydown',publicKeyDownEvent);  //公共键盘事件
 
         setInterval(function() {
             var s=PLAYER.TR.config.seekComandTimesMonitor.length;
             if(s!== 0){
                 var lastSeekTime = PLAYER.TR.config.seekComandTimesMonitor[s - 1];
                 PLAYER.TR.config.seekComandTimesMonitor = [];
-            
+
                 PLAYER.TR.currTime=lastSeekTime;
 
                 PLAYER.TR.fixArrowCurrentTime(lastSeekTime);
-                PLAYER.OCX.seek(lastSeekTime);   
-                
+                PLAYER.OCX.seek(lastSeekTime);
+
                 if(lastSeekTime>=PLAYER.PTR.config.maxTime){
                     lastSeekTime=PLAYER.PTR.config.maxTime;
                 }
                 PLAYER.PTR.currTime=lastSeekTime;
                 PLAYER.PTR.fixArrowCurrentTime(lastSeekTime);
             }
-        }, 10); 
+        }, 10);
         setInterval(function() {
             var s=PLAYER.PTR.config.seekComandTimesMonitor.length;
             if(s!== 0){
@@ -46,25 +46,26 @@ PLAYER.playerFunction=function(){
                         lastSeekTime=PLAYER.PTR.config.maxTime;
                     }
                 }
-                PLAYER.OCX.seek(lastSeekTime);  
+                PLAYER.OCX.seek(lastSeekTime);
                 PLAYER.PTR.currTime=lastSeekTime;
                 PLAYER.PTR.fixArrowCurrentTime(lastSeekTime);
             }
         }, 10);
-    }    
+    }
     constructor.prototype={
         play:function(){//点击播放暂停
             if(PLAYER.isPlaying){
                 PLAYER.OCX.doPause();
                 $("#js_play").removeClass("stop")
                 $("#js_play").attr("title", "播放");
-                PLAYER.isPlaying=false; 
+                PLAYER.isPlaying=false;
+
             }else{
-                
-                PLAYER.OCX.doPlay(40*parseInt(PLAYER.PTR.currTime), 100000000000);
+                PLAYER.isPlaying=true;
+                PLAYER.OCX.doPlay(40*parseInt(PLAYER.TR.currTime), 100000000000);
                 $("#js_play").addClass("stop")
                 $("#js_play").attr("title", "停止");
-                PLAYER.isPlaying=true;
+
                 setPlayer();
                 setVuInfo();
             }
@@ -73,12 +74,12 @@ PLAYER.playerFunction=function(){
             var triminFrame=parseInt(PLAYER.TR.trimInCurrTime);
             var trimoutFrame=parseInt(PLAYER.TR.trimOutCurrTime);
             var interOrNo=$('#js_setInterval').parent('li').hasClass('active');
-            
+
             if(PLAYER.isPlaying){
                 PLAYER.OCX.doPause();
                 $("#js_play").removeClass("stop")
                 $("#js_play").attr("title", "播放");
-                PLAYER.isPlaying=false; 
+                PLAYER.isPlaying=false;
             }else{
                 PLAYER.OCX.seek(triminFrame);
                 PLAYER.OCX.doPlay();
@@ -103,24 +104,24 @@ PLAYER.playerFunction=function(){
                             console.log('到出点',triminFrame);
                             PLAYER.OCX.doPause();
                             //PLAYER.isPlaying=false;
-                            
+
                             PLAYER.OCX.seek(triminFrame);
                             PLAYER.OCX.doPlay();
-                            PLAYER.isPlaying=true; 
+                            PLAYER.isPlaying=true;
                             $("#js_play").addClass("stop")
                             $("#js_play").attr("title", "停止");
                             setTimeout(arguments.callee,40);
                         }
                     }
                 },40);
-            } 
+            }
         },
         setTrimIn:function(){//点击设置入点
             if(PLAYER.isPlaying){
                 PLAYER.OCX.doPause();
-                PLAYER.isPlaying=false; 
+                PLAYER.isPlaying=false;
                 $("#js_play").removeClass("stop")
-                $("#js_play").attr("title", "播放");       
+                $("#js_play").attr("title", "播放");
             }
             if(!PLAYER.dbClick){
                 PLAYER.TR.fixTrimInByCurrentTime(parseInt(PLAYER.TR.currTime));
@@ -130,9 +131,9 @@ PLAYER.playerFunction=function(){
         setTrimOut:function(){//点击设置出点
             if(PLAYER.isPlaying){
                 PLAYER.OCX.doPause();
-                PLAYER.isPlaying=false; 
+                PLAYER.isPlaying=false;
                 $("#js_play").removeClass("stop")
-                $("#js_play").attr("title", "播放");       
+                $("#js_play").attr("title", "播放");
             }
             if(!PLAYER.dbClick){
                 PLAYER.TR.fixTrimOutByCurrentTime(parseInt(PLAYER.TR.currTime));
@@ -142,16 +143,16 @@ PLAYER.playerFunction=function(){
         moveTrimIn:function(){//点击移动到入点
             if(PLAYER.isPlaying){
                 PLAYER.OCX.doPause();
-                PLAYER.isPlaying=false; 
+                PLAYER.isPlaying=false;
                 $("#js_play").removeClass("stop")
-                $("#js_play").attr("title", "播放");       
-            } 
+                $("#js_play").attr("title", "播放");
+            }
             if($('.time_ruler_trimInOut').width()){
                 if(!PLAYER.dbClick){
                     PLAYER.TR.fixArrowCurrentTime(parseInt(PLAYER.TR.trimInCurrTime));
                 }
                 PLAYER.PTR.fixArrowCurrentTime(parseInt(PLAYER.PTR.trimInCurrTime));
-                PLAYER.OCX.seek(parseInt(PLAYER.PTR.trimInCurrTime));  
+                PLAYER.OCX.seek(parseInt(PLAYER.PTR.trimInCurrTime));
             }else{
                 return false;
             }
@@ -159,16 +160,16 @@ PLAYER.playerFunction=function(){
         moveTrimOut:function(){//点击移动到出点
             if(PLAYER.isPlaying){
                 PLAYER.OCX.doPause();
-                PLAYER.isPlaying=false; 
+                PLAYER.isPlaying=false;
                 $("#js_play").removeClass("stop")
-                $("#js_play").attr("title", "播放");       
+                $("#js_play").attr("title", "播放");
             }
             if($('.time_ruler_trimInOut').width()){
                 if(!PLAYER.dbClick){
                     PLAYER.TR.fixArrowCurrentTime(parseInt(PLAYER.TR.trimOutCurrTime));
                 }
                 PLAYER.PTR.fixArrowCurrentTime(parseInt(PLAYER.PTR.trimOutCurrTime));
-                PLAYER.OCX.seek(parseInt(PLAYER.PTR.trimOutCurrTime)); 
+                PLAYER.OCX.seek(parseInt(PLAYER.PTR.trimOutCurrTime));
             }else{
                 return false;
             }
@@ -176,64 +177,64 @@ PLAYER.playerFunction=function(){
         prevFrame:function(){//点击前一帧
             if(PLAYER.isPlaying){
                 PLAYER.OCX.doPause();
-                PLAYER.isPlaying=false; 
+                PLAYER.isPlaying=false;
                 $("#js_play").removeClass("stop")
-                $("#js_play").attr("title", "播放");       
+                $("#js_play").attr("title", "播放");
             }
             if(!PLAYER.dbClick){
                 PLAYER.TR.moveToPrevFrame();
-            } 
+            }
             PLAYER.PTR.moveToPrevFrame();
-            PLAYER.OCX.seek(parseInt(PLAYER.PTR.currTime)); 
+            PLAYER.OCX.seek(parseInt(PLAYER.PTR.currTime));
         },
         nextFrame:function(){//点击后一帧
             if(PLAYER.isPlaying){
                 PLAYER.OCX.doPause();
-                PLAYER.isPlaying=false; 
+                PLAYER.isPlaying=false;
                 $("#js_play").removeClass("stop")
-                $("#js_play").attr("title", "播放");       
+                $("#js_play").attr("title", "播放");
             }
             if(!PLAYER.dbClick){
                 PLAYER.TR.moveToNextFrame();
-            }  
+            }
             PLAYER.PTR.moveToNextFrame();
-            PLAYER.OCX.seek(parseInt(PLAYER.PTR.currTime)); 
+            PLAYER.OCX.seek(parseInt(PLAYER.PTR.currTime));
         },
-        toFirstFrame:function(){//点击到序列头  
+        toFirstFrame:function(){//点击到序列头
             if(!PLAYER.dbClick){
                 if(PLAYER.isPlaying){
                     PLAYER.OCX.doPause();
-                    PLAYER.isPlaying=false; 
+                    PLAYER.isPlaying=false;
                     $("#js_play").removeClass("stop")
-                    $("#js_play").attr("title", "播放");       
+                    $("#js_play").attr("title", "播放");
                 }
                 var time=PLAYER.operateJson.getFirstFrame();
                 console.log('time',time)
 
                 PLAYER.TR.fixArrowCurrentTime(time);
                 PLAYER.PTR.fixArrowCurrentTime(time);
-                PLAYER.OCX.seek(parseInt(time)); 
+                PLAYER.OCX.seek(parseInt(time));
             }else{
                 return false;
-            } 
+            }
         },
         toLastFrame:function(){//点击到序列尾
             if(!PLAYER.dbClick){
                 if(PLAYER.isPlaying){
                     PLAYER.OCX.doPause();
-                    PLAYER.isPlaying=false; 
+                    PLAYER.isPlaying=false;
                     $("#js_play").removeClass("stop")
-                    $("#js_play").attr("title", "播放");       
+                    $("#js_play").attr("title", "播放");
                 }
                 if($('.time_ruler_bar').children().length){
                     var time=PLAYER.operateJson.getLastFrame();
                     PLAYER.TR.fixArrowCurrentTime(time);
                     PLAYER.PTR.fixArrowCurrentTime(time);
-                    PLAYER.OCX.seek(time); 
+                    PLAYER.OCX.seek(time);
                 }
             }else{
                 return false;
-            }  
+            }
         },
         toolbar_choose:function(){//工具条(v)
             if(!PLAYER.dbClick){
@@ -259,7 +260,7 @@ PLAYER.playerFunction=function(){
                 $('.time_ruler_toolbar').children('span').removeClass('active');
                 $('#js_toolbar_select_back').addClass('active');
                 PLAYER.TR.config.$clipTrackBar.css({cursor:"url(images/cur/select_pre.cur),default"});
-            }    
+            }
         },
         toolbar_cut:function(){//工具条cut(u)
             if(!PLAYER.dbClick){
@@ -267,19 +268,19 @@ PLAYER.playerFunction=function(){
                 $('.time_ruler_toolbar').children('span').removeClass('active');
                 $('#js_toolbar_cut').addClass('active');
                 PLAYER.TR.config.$clipTrackBar.css({cursor:"url(images/cur/cut_disable.cur),default"});
-                PLAYER.TR.config.$clipTrackBar.find('.edit_box').css({cursor:"url(images/cur/cut.cur),default"});  
-            }  
+                PLAYER.TR.config.$clipTrackBar.find('.edit_box').css({cursor:"url(images/cur/cut.cur),default"});
+            }
         },
         toolbar_uCut:function(){//时码线cut(shift+u)
             if(!PLAYER.dbClick){
                 PLAYER.keyNum=8500;
                 $('.time_ruler_toolbar').children('span').removeClass('active');
-                $('#js_toolbar_uCut').addClass('active'); 
+                $('#js_toolbar_uCut').addClass('active');
                 if(PLAYER.TR.currTime===0){
                     return;
                 }
                 PLAYER.TR.cutArrowCurrentTime();
-            } 
+            }
         },
         toolbar_zoom_plus:function(){//工具条放大(++)
             if(!PLAYER.dbClick){
@@ -302,7 +303,7 @@ PLAYER.playerFunction=function(){
             if(s===0){
                 return false;
             }else{
-                
+
                 $('#js_time_ruler_bar_box .onselected').each(function(i,n){
                     $(n).attr('data-interleaved',false);
                     var time=$(n).attr('data-time');
@@ -335,8 +336,8 @@ PLAYER.playerFunction=function(){
                     PLAYER.operateJson.updateClipAttr(attr,InitTime);
                     initIdElem.attr('data-interleaved',true);
                 });
-                
-                
+
+
                /* $('#js_time_ruler_bar_box .onselected').each(function(i,n){
                     var time=$(n).attr('data-time');
                     var attr={
@@ -348,172 +349,145 @@ PLAYER.playerFunction=function(){
                 });*/
             }
             console.log('编组',PLAYER.jsonObj.rootBin.sequence[0].tracks);
-        }  
-    } 
+        }
+    }
     //设置播放暂停
-    function setPlayer(){ 
-        
+
+    function setPlayer(){
         var timer=setInterval(function(){
             var lastFrame=PLAYER.operateJson.getLastFrame();//拖拽素材时候的最后一帧
+
             if(PLAYER.loadState&&PLAYER.isPlaying){
-
                 var s=PLAYER.OCX.getPosition();
-
-                //console.log('-----------',s)
                 if(s>lastFrame){
                     s=0;
                 }
                 if(s===lastFrame){
                     PLAYER.OCX.doPause();
-                    PLAYER.isPlaying=false; 
+                    PLAYER.isPlaying=false;
                     $("#js_play").removeClass("stop")
-                    $("#js_play").attr("title", "播放"); 
-                    clearInterval(timer);    
+                    $("#js_play").attr("title", "播放");
+                    clearInterval(timer);
                 }
                 PLAYER.TR.fixArrowCurrentTime(s);
-                PLAYER.TR.currTime=s; 
-                
+                PLAYER.TR.currTime=s;
                 PLAYER.PTR.fixArrowCurrentTime(s);
                 PLAYER.PTR.currTime=s;
                 $('#js_time_ruler_title_nowTime').html(PLAYER.getDurationToString(PLAYER.TR.currTime));
             }
         },40);
-
-        /*setTimeout(function(){
-            var s=PLAYER.OCX.getPosition();
-           
-            if(PLAYER.dbClick){
-                PLAYER.PTR.fixArrowCurrentTime(s);
-                PLAYER.PTR.currTime=s;
-            }else{
-                PLAYER.PTR.fixArrowCurrentTime(s);
-                PLAYER.PTR.currTime=s;
-                PLAYER.TR.fixArrowCurrentTime(s);
-                PLAYER.TR.currTime=s; 
-                $('#js_time_ruler_title_nowTime').html(PLAYER.getDurationToString(PLAYER.TR.currTime));
-            }
-            
-            if(PLAYER.loadState&&PLAYER.isPlaying&&s!==lastFrame){
-                setTimeout(arguments.callee,40);
-            }else{
-                PLAYER.OCX.doPause();
-                $("#js_play").removeClass("stop")
-                $("#js_play").attr("title", "播放");
-                PLAYER.isPlaying=false; 
-            }
-        },40);*/    
     }
     //设置vu表
     function setVuInfo(){
         setTimeout(function(){
             var str = PLAYER.OCX.getVUMeterInfo();
+            var voiceTest = parseFloat(str.split(",")[1]/100)+0.99;
             if(str){
                 drawVoiceTable(str.split(","),true);
             }
             if(PLAYER.loadState&&PLAYER.isPlaying){
                 if(str!=""){
-                   setTimeout(arguments.callee,100); 
-                }else{
+                   setTimeout(arguments.callee,100);
+                }
+                if(voiceTest<0){
                     drawVoiceTable("",false)
-               } 
-            }  
-        },100); 
-        function drawVoiceTable(arr,isDraw){  
-            var c1 = document.getElementById("js_voCanvas"); 
-            var _h=$("#js_time_ruler_voiceBox").height()-21;  
+                }
+            }
+        },100);
+        function drawVoiceTable(arr,isDraw){
+            var c1 = document.getElementById("js_voCanvas");
+            var _h=$("#js_time_ruler_voiceBox").height()-21;
 
-            if(c1.getContext('2d')){  
+            if(c1.getContext('2d')){
 
-                var ctx = c1.getContext("2d");  
-                ctx.clearRect(0,0,100,500)
+                var ctx = c1.getContext("2d");
+                ctx.clearRect(0,0,100,500);
                 if(isDraw){
                     var i=0;
                     var height = _h;
-                    var x=3; 
+                    var x=3;
                     for(var i=0;i<parseInt(arr[0]);i++){
                         var voice = parseFloat(arr[i+1]/100)+0.99;
-                        canvasGradient=ctx.createLinearGradient(x,height,x,0);  
-                        canvasGradient.addColorStop(0,'#33FF00'); 
+                        canvasGradient=ctx.createLinearGradient(x,height,x,0);
+                        canvasGradient.addColorStop(0,'#33FF00');
                         canvasGradient.addColorStop(0.4,'#33FF00');
                         canvasGradient.addColorStop(1,'red');
 
-                        ctx.fillStyle = canvasGradient;  
-                        ctx.fillRect(x,height*(1-voice),30,height*voice); 
-                        ctx.fillRect(x,height*(1-voice),30,height*voice); 
+                        ctx.fillStyle = canvasGradient;
+                        ctx.fillRect(x,height*(1-voice),30,height*voice);
+                        ctx.fillRect(x,height*(1-voice),30,height*voice);
                         x=x+35;
                     }
                 }
-            }  
-        }   
+            }
+        }
     }
     //键盘快捷键
     function publicKeyDownEvent(e){
         var key=e.code;
         var target=e.target;
-        
-        if(target.nodeName!=='INPUT' && target.nodeName!=='input' && target.nodeName!=='TEXTAREA' && target.nodeName!=='textarea'){
-            if(key===16&&e.shift){ //shift(按下)
-                PLAYER.keyNum=1600; 
-            }
-            else if(key===86&&!e.shift){//v
-                PLAYER.player.toolbar_choose();
-            }
-            else if(key===71&&!e.shift){  //g
-                PLAYER.player.toolbar_preSelect();
-            }
-            else if(key===71&&e.shift){//shift+g
-                PLAYER.player.toolbar_nextSelect();
-            }
-            else if(key===85&&!e.shift){ //u
-                PLAYER.player.toolbar_cut();
-            }
-            else if(key===85&&e.shift){ //shift+u
-                PLAYER.player.toolbar_uCut();
-            } 
-            else if(key===73&&e.shift){//shift+i
-                PLAYER.player.moveTrimIn();
-            }
-            else if(key===79&&e.shift){//shift+o
-               PLAYER.player.moveTrimOut(); 
-            }
-            else if(key===32&&!e.shift){    //space
-                var lastFrame=PLAYER.operateJson.getLastFrame();
-                if(PLAYER.TR.currTime>=lastFrame){//如果seek位置大于素材长度，则跳到0处开始播放
-                    return false;
-                }
-                else{
-                    PLAYER.player.play();
-                }
-            }
-            else if(key===36&&!e.shift){//home
-                PLAYER.player.toFirstFrame();
-            }
-            else if(key===35&&!e.shift){//end
-                PLAYER.player.toLastFrame();
-            }
-            else if(key===39&&!e.shift){//-->
-                PLAYER.player.nextFrame();
-            }
-            else if(key===37&&!e.shift){//<--
-                PLAYER.player.prevFrame();
-            }
-            else if(key===73&&!e.shift){//i
-                PLAYER.keyNum=73;
-                PLAYER.player.setTrimIn();
-            }
-            else if(key===79&&!e.shift){//o
-                PLAYER.keyNum=79;
-                PLAYER.player.setTrimOut();
-            }
-            else if(key===49&&e.shift){//shift+1 //编组
-                PLAYER.keyNum=4900;
-                PLAYER.player.toolbar_group();
-            }
-            else if(key===50&&e.shift){//shift+2 //解组
-                PLAYER.keyNum=5000;
-                PLAYER.player.toolbar_ungroup();
-            }   
+        if(key===16&&e.shift){ //shift(按下)
+            PLAYER.keyNum=1600;
         }
+        else if(key===86&&!e.shift){//v
+            PLAYER.player.toolbar_choose();
+        }
+        else if(key===71&&!e.shift){  //g
+            PLAYER.player.toolbar_preSelect();
+        }
+        else if(key===71&&e.shift){//shift+g
+            PLAYER.player.toolbar_nextSelect();
+        }
+        else if(key===85&&!e.shift){ //u
+            PLAYER.player.toolbar_cut();
+        }
+        else if(key===85&&e.shift){ //shift+u
+            PLAYER.player.toolbar_uCut();
+        }
+        else if(key===73&&e.shift){//shift+i
+            PLAYER.player.moveTrimIn();
+        }
+        else if(key===79&&e.shift){//shift+o
+            PLAYER.player.moveTrimOut();
+        }
+        else if(key===32&&!e.shift){    //space
+            var lastFrame=PLAYER.operateJson.getLastFrame();
+            if(PLAYER.TR.currTime>=lastFrame){//如果seek位置大于素材长度，则跳到0处开始播放
+                return false;
+            }
+            else{
+                PLAYER.player.play();
+            }
+        }
+        else if(key===36&&!e.shift){//home
+            PLAYER.player.toFirstFrame();
+        }
+        else if(key===35&&!e.shift){//end
+            PLAYER.player.toLastFrame();
+        }
+        else if(key===39&&!e.shift){//-->
+            PLAYER.player.nextFrame();
+        }
+        else if(key===37&&!e.shift){//<--
+            PLAYER.player.prevFrame();
+        }
+        else if(key===73&&!e.shift){//i
+            PLAYER.keyNum=73;
+            PLAYER.player.setTrimIn();
+        }
+        else if(key===79&&!e.shift){//o
+            PLAYER.keyNum=79;
+            PLAYER.player.setTrimOut();
+        }
+        else if(key===49&&e.shift){//shift+1 //编组
+            PLAYER.keyNum=4900;
+            PLAYER.player.toolbar_group();
+        }
+        else if(key===50&&e.shift){//shift+2 //解组
+            PLAYER.keyNum=5000;
+            PLAYER.player.toolbar_ungroup();
+        }
+
     }
     return constructor;
 }();
@@ -550,7 +524,7 @@ PLAYER.ocxFunction=function(){
         },
         updateFileJson:function(projStr){
             var projStr1 = JSON.stringify(projStr);
-            try {  
+            try {
                 form1.TestActiveX.UpdateFileJson(projStr1);
                 PLAYER.loadState=true;
                 console.log('双击素材更新json文件成功',projStr);
@@ -559,7 +533,7 @@ PLAYER.ocxFunction=function(){
                 return false;
             }
         },
-        unloadPlayer:function(){    
+        unloadPlayer:function(){
             try {
                 var str = form1.TestActiveX.Close();
             } catch (e) {
@@ -579,7 +553,7 @@ PLAYER.ocxFunction=function(){
                 };
                 var jsonStr = JSON.stringify(jsonObj);
                 webrtc.sendDataChannelMessageToPeer(targetId, jsonStr);
-                
+
             } catch (e) {
                 console.log('播放失败！',e);
                 return false;
@@ -609,18 +583,17 @@ PLAYER.ocxFunction=function(){
             } catch (e) {
                 console.log('停止失败！');
                 return;
-            } 
+            }
         },
         getPosition:function() {//return 0;
             try {
-               return PLAYER.nmToFf(PLAYER.currentTime);
+               return PLAYER.nmToFf(PLAYER.postTime);
             } catch (e) {
                 console.log('获取当前时码时出错！');
             }
         },
         seek:function(point){
             try {
-                console.log('seek-point',point)
                 var point=PLAYER.ffToNm(point);
                 var jsonObj = {
                     command: "seek",
@@ -666,7 +639,7 @@ PLAYER.ocxFunction=function(){
             try {
                 var res=form1.TestActiveX.GetImageBase64(4);
                 console.log('获取画面成功！',res);
-                return res;  
+                return res;
             } catch (e) {
                 console.log('error','获取画面失败');
                 return;
@@ -680,37 +653,32 @@ PLAYER.ocxFunction=function(){
                        type:_type
                     }
                 };
-                console.log('--------',JSON.stringify(jsonObj))
                 var jsonStr = JSON.stringify(jsonObj);
                 webrtc.sendDataChannelMessageToPeer(targetId, jsonStr);
-                
             } catch (e) {
                 console.log('播放失败！',e);
                 return false;
             }
         }
-        
     }
     return constructor;
 }();
 PLAYER.operateJson={
     sendJson:function(){
-
         PLAYER.operateJson.sortClipAttr();
         //更新时间轴
         PLAYER.operateJson.updateRulerMaxTime();
         PLAYER.operateJson.pushCancelArray(PLAYER.jsonObj.rootBin.sequence[0]);
-        
 
+        console.log('PLAYER.jsonObj',PLAYER.jsonObj)
         PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
-        PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
+        PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime));
     },
     translateFfpToMS:function(json){
         //转换帧到毫秒
         var json=JSON.parse(json);
         var pWidth;
         json.rootBin.sequence[0].maxDuration=40*json.rootBin.sequence[0].maxDuration;
-
         for (var i = 0;i<json.rootBin.sequence[0].tracks.length;i++) {
             var track=json.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(i,n){
@@ -726,27 +694,27 @@ PLAYER.operateJson={
                             item.duration=40*item.duration;
                         });
                     }
+                    if(n.frame){
+                        n.duration=40*n.duration;
+                    }
                 }
-            });  
+            });
         }
         for (var i = 0; i<json.reference.material.length;i++) {
             var mas=json.reference.material[i];
             mas.duration=40*mas.duration;
         }
-        //添加播放器宽高
-
         var elem = document.getElementById("ocx");
         var oStyle = elem.currentStyle?elem.currentStyle:window.getComputedStyle(elem, null);
         var height = parseFloat(oStyle.height);
-        
+
         if(json.height==='576'&&json.width==='720'){
             pWidth=parseFloat(1.25*height);
         }else{
-            pWidth=parseFloat((16*height/9));  
+            pWidth=parseFloat((16*height/9));
         }
         json.pHeight=height;
         json.pWidth=pWidth;
-        
         return json;
     },
     translateMsToFfp:function(json){
@@ -771,13 +739,51 @@ PLAYER.operateJson={
                         });
                     }
                 }
-            });  
+            });
         }
         for (var i = 0; i<json.reference.material.length;i++) {
             var mas=json.reference.material[i];
             mas.duration=mas.duration/40;
         }
         return json;
+    },
+    clearMaterial:function(json){
+        var materialIdArray=[]; //存储切片中有的资源ID
+        for (var i = 0;i<json.rootBin.sequence[0].tracks.length;i++) {
+            var track=json.rootBin.sequence[0].tracks[i];
+            $.each(track.subclip,function(i,n){
+                if(n){
+                    materialIdArray.push(n.assetid);
+                }
+            });
+        }
+        if(materialIdArray.length===0){
+            json.reference.material=[];
+        }else{
+            //清理下material
+            materialIdArray=Array.from(new Set(materialIdArray));
+            console.log('materialIdArray',materialIdArray)
+            //去重
+            var hash={};
+            var newMaterial=json.reference.material.reduce(function(item, next) {
+                hash[next.assetid] ? '' : hash[next.assetid] = true && item.push(next);
+                return item;
+            }, []);
+            //判断切片中有没有这个素材，没有删除
+            newMaterial.forEach(function(item,index){
+                var id=item.assetid;
+                newMaterial.forEach(function(n,i){
+                    console.log('n---',n)
+                    if(n.assetid!==id){
+                        newMaterial.slice(i,1);
+                    }
+                })
+
+            });
+            json.reference.material=newMaterial;
+            PLAYER.jsonObj=json;
+        }
+
     },
     addVideoClipAttr:function(subClipAttr,_index){
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
@@ -801,13 +807,12 @@ PLAYER.operateJson={
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='a'&&track.index===_index){
                 $.each(track.subclip,function(i,n){
-                    if(n && n.createTime===time){
+                    if(n && n.subclipId===time){
                         arr=n;
                     }
-                }); 
+                });
             }
         }
-        console.log('arr---',arr)
         return JSON.stringify(arr);
     },
     updateAudioClipVolume:function(time,value){
@@ -815,14 +820,14 @@ PLAYER.operateJson={
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
                 if(elem){
-                    if(elem.createTime===time){
+                    if(elem.subclipId===time){
                         $.extend(track.subclip[index],{
                             volume:value
                         });
                     }
                 }
-            });   
-        } 
+            });
+        }
     },
     addSubtitleClipAttr:function(subClipAttr,_index){
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
@@ -838,10 +843,10 @@ PLAYER.operateJson={
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='t'&&track.index===_index){
                 $.each(track.subclip,function(i,n){
-                    if(n && n.createTime===time){
+                    if(n && n.subclipId===time){
                         arr=n;
                     }
-                }); 
+                });
             }
         }
         return JSON.stringify(arr);
@@ -853,14 +858,31 @@ PLAYER.operateJson={
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='t'&&track.index===_index){
                 $.each(track.subclip,function(i,n){
-                    if(n && n.createTime===time){
-                        $.extend(n.pixel,jsonObj.attr);
+                    if(n && n.subclipId===time){
+                        if(jsonObj.params.frame){
+                            $.extend(n.frame,jsonObj.params.frame);
+                        }
+                        if(jsonObj.params.object){
+                            n.object=jsonObj.params.object;
+                        }
+
+                        /* if(jsonObj.params.object){
+                            $.extend(n.object,jsonObj.params.object);
+                        } */
                     }
-                }); 
+                });
             }
         }
-
-        console.log('更新字幕',PLAYER.jsonObj.rootBin.sequence[0].tracks);
+        //console.log('更新字幕',PLAYER.jsonObj.rootBin.sequence[0].tracks);
+    },
+    updateSubtitleObject:function(old_object,targetId,params){
+        let res;
+        old_object.map((item,index)=>{
+            if(targetId===item.objectId){
+                $.extend(item.attr,params);
+            }
+        });
+        return old_object;
     },
     sortClipAttr:function(){
         function comparison(propertyName){
@@ -879,18 +901,18 @@ PLAYER.operateJson={
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             track.subclip.sort(comparison('sequenceTrimIn'));
-        } 
+        }
     },
     addProjectMaterial:function(materialAttr){
         if(PLAYER.jsonObj.reference.material.length===0){
             PLAYER.jsonObj.reference.material.push(materialAttr);
         }else{
             $.each(PLAYER.jsonObj.reference.material,function(i,n){
-                if(materialAttr.assetId===n.assetId){
+                if(materialAttr.assetid===n.assetid){
                     return;
                 }else{
                     PLAYER.jsonObj.reference.material.push(materialAttr);
-                }   
+                }
             });
         }
     },
@@ -903,7 +925,7 @@ PLAYER.operateJson={
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
                 if(elem){
-                    if(elem.createTime===time){
+                    if(elem.subclipId===time){
                         $.extend(track.subclip[index],subClipAttr||{});
 
                         if(effectAttr){
@@ -911,45 +933,43 @@ PLAYER.operateJson={
                         }
                     }
                 }
-            });   
-        } 
+            });
+        }
         console.log('更新切片',PLAYER.jsonObj.rootBin.sequence[0].tracks);
     },
-
     changeIndexClipAttr:function(type,index,time){
         var obj=null;
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(i,n){
                 if(n){
-                    if(n.createTime===time){
+                    if(n.subclipId===time){
                         obj=JSON.stringify(track.subclip[i]);
                         track.subclip.splice(i,1);
                     }
                 }
-            });   
+            });
         }
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type===type&&track.index===index){
                 track.subclip.push(JSON.parse(obj));
-            } 
-        }  
+            }
+        }
     },
     deleteClipAttr:function(time){
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
-            
+            var materials=PLAYER.jsonObj.reference.material;
             $.each(track.subclip,function(index,elem){
                 if(elem){
-                    if(elem.createTime===time){
+                    if(elem.subclipId===time){
                         track.subclip.splice(index,1);
                     }
                 }
-                
-            });  
-        } 
-        console.log('删除切片',PLAYER.jsonObj.rootBin.sequence[0])
+            });
+        }
+        console.log('删除切片',PLAYER.jsonObj.rootBin.sequence[0]);
     },
     checkCoverEvent:function(dragging,intid){
         var config=PLAYER.TR.config;
@@ -968,7 +988,7 @@ PLAYER.operateJson={
                 arr.push($(n));
             }
         });
-        
+
         $.each(arr,function(i,n){
             var sn_in=parseInt($(n).attr('data-sequencetrimin'));
             var sn_out= parseInt($(n).attr('data-sequencetrimout'));
@@ -977,14 +997,14 @@ PLAYER.operateJson={
             if(s0_in<=sn_in&&s0_out>sn_in){
                 if(s0_out<sn_out){
                     var time=$(n).attr('data-time');
-                    $(n).attr('data-sequencetrimin',s0_out); 
-                    $(n).attr('data-sequencetrimout',sn_out); 
+                    $(n).attr('data-sequencetrimin',s0_out);
+                    $(n).attr('data-sequencetrimout',sn_out);
                     $(n).attr('data-trimout',tn_out);
                     $(n).attr('data-trimin',tn_out-sn_out+s0_out);
                     $(n).css('left',s0_out/config.framePerPixel);
                     $(n).width((sn_out-s0_out)/config.framePerPixel);
-                    
-                    
+
+
                     if($(n).find('.effect_box_l')){
                         $(n).find('.effect_box_l').remove();
                     }
@@ -1008,12 +1028,12 @@ PLAYER.operateJson={
                 PLAYER.operateJson.sortClipAttr();
             }
             else if(s0_in>=sn_in&&sn_out>s0_in){
-                $(n).attr('data-sequencetrimin',sn_in); 
-                $(n).attr('data-sequencetrimout',s0_in); 
+                $(n).attr('data-sequencetrimin',sn_in);
+                $(n).attr('data-sequencetrimout',s0_in);
                 $(n).attr('data-trimout',tn_in+s0_in-sn_in);
                 $(n).attr('data-trimin',tn_in);
                 $(n).width((s0_in-sn_in)/config.framePerPixel);
-                
+
                 var v_dataId=$(n).attr('data-id');
                 var v_dataTime=$(n).attr('data-time');
                 var v_interleaved=$(n).attr('data-interleaved');
@@ -1041,13 +1061,13 @@ PLAYER.operateJson={
                 PLAYER.operateJson.updateClipAttr(subClipAttr,v_dataTime,e_attr2);
 
                 if(s0_out<sn_out){
-                    var _createTime=v_type+'_'+PLAYER.genNonDuplicateID(12);
+                    var subclipId=v_type+'_'+PLAYER.genNonDuplicateID(12);
 
                     vcut_sequenceTrimIn=s0_out;
                     vcut_sequenceTrimOut=sn_out;
                     vcut_trimIn=tn_out-sn_out+s0_out;
                     vcut_trimOut=tn_out;
-                    
+
                     vcut_width=(sn_out-s0_out)/config.framePerPixel;
                     vcut_left=s0_out/config.framePerPixel;
 
@@ -1061,13 +1081,13 @@ PLAYER.operateJson={
                         add_subclip.find('.effect_box_all').attr('data-trimout',vcut_trimOut);
                         add_subclip.find('.effect_box_all').attr('data-duration',vcut_trimOut-vcut_trimIn);
                     }
-                
+
                     add_subclip.removeClass('onselected');
                     add_subclip.attr('data-trimin',vcut_trimIn);
                     add_subclip.attr('data-trimout',vcut_trimOut);
                     add_subclip.attr('data-sequencetrimin',vcut_sequenceTrimIn);
                     add_subclip.attr('data-sequencetrimout',vcut_sequenceTrimOut);
-                    add_subclip.attr('data-time',_createTime);
+                    add_subclip.attr('data-time',subclipId);
                     add_subclip.attr('data-intid',intid);
                     add_subclip.attr('width',vcut_width);
                     add_subclip.attr('left',vcut_left);
@@ -1075,7 +1095,7 @@ PLAYER.operateJson={
 
                     if($(n).parent('.time_ruler_bar').hasClass('bar_v')){
                         var e_attr=PLAYER.operateJson.getCutNewEffectClip(v_dataTime,vcut_trimIn,vcut_trimOut);
-                        
+
                         if(e_attr.length!==0){
                             $.each(e_attr,function(i,n){
                                 if($(n).type==='mosaic'){
@@ -1086,14 +1106,14 @@ PLAYER.operateJson={
                         }
 
                         add_subclip_attr={
-                            "assetID": v_dataId,
+                            "assetid": v_dataId,
                             "trimIn": vcut_trimIn,
                             "trimOut":vcut_trimOut,
                             "sequenceTrimIn": vcut_sequenceTrimIn,
                             "sequenceTrimOut":vcut_sequenceTrimOut,
                             "effect":e_attr,
                             "type":v_type,
-                            "createTime":_createTime,
+                            "subclipId":subclipId,
                             "interleaved_id":intid
                         }
                         if(dragging.attr('data-interleaved')==='true'&&v_interleaved==='true'){
@@ -1102,19 +1122,19 @@ PLAYER.operateJson={
                             add_subclip_attr.interleaved=false;
                         }
 
-                        
+
                         PLAYER.operateJson.addVideoClipAttr(add_subclip_attr,v_index);
-                        
+
                     }else if($(n).parent('.time_ruler_bar').hasClass('bar_a')){
                         add_subclip_attr={
-                            "assetID": v_dataId,
+                            "assetid": v_dataId,
                             "trimIn": vcut_trimIn,
                             "trimOut":vcut_trimOut,
                             "sequenceTrimIn": vcut_sequenceTrimIn,
                             "sequenceTrimOut":vcut_sequenceTrimOut,
                             "volume":100,
                             "type":v_type,
-                            "createTime":_createTime,
+                            "subclipId":subclipId,
                             "interleaved_id":intid
                         }
                         if(dragging.attr('data-interleaved')==='true'&&v_interleaved==='true'){
@@ -1122,7 +1142,7 @@ PLAYER.operateJson={
                         }else{
                             add_subclip_attr.interleaved=false;
                         }
-                        
+
                         PLAYER.operateJson.addAudioClipAttr(add_subclip_attr,v_index);
 
                     }else if($(n).parent('.time_ruler_bar').hasClass('bar_t')){
@@ -1134,7 +1154,7 @@ PLAYER.operateJson={
                             "sequenceTrimIn":vcut_sequenceTrimIn,
                             "sequenceTrimOut":vcut_sequenceTrimOut,
                             "type":v_type,
-                            "createTime":_createTime,
+                            "subclipId":subclipId,
                             "interleaved":false,
                             "interleaved_id":intid
                         }
@@ -1146,7 +1166,7 @@ PLAYER.operateJson={
             else{
                 console.log('不重合');
             }
-        });   
+        });
     },
     getAllsequenceTrimIn:function(dragging,time,sin){
         //获取要吸附的素材
@@ -1157,7 +1177,7 @@ PLAYER.operateJson={
         }else{
             s_point=parseInt(dragging.attr('data-sequencetrimin'));
         }
-        
+
         var arr=dragging.siblings();
         if(time){
             $.each(arr,function(i,n){
@@ -1166,7 +1186,7 @@ PLAYER.operateJson={
                 }
             });
         }
-        
+
         arr.each(function(){
             var offset1=Math.abs(s_point-parseInt($(this).attr('data-sequencetrimin')))/PLAYER.TR.config.framePerPixel;
             var offset2=Math.abs(s_point-parseInt($(this).attr('data-sequencetrimout')))/PLAYER.TR.config.framePerPixel;
@@ -1178,13 +1198,13 @@ PLAYER.operateJson={
                 _s=parseInt($(this).attr('data-sequencetrimout'));
             }
         });
-        
+
         return _s;
     },
     showAdhere:function(dragging,dir){
         if(dragging.find('.point')){
             dragging.find('.point').remove();
-        }  
+        }
         var _line=$('<div class="point"></div>');
         if(dir==='forward'){
             _line.css('left',-5);
@@ -1192,14 +1212,14 @@ PLAYER.operateJson={
         if(dir==='backward'){
            _line.css('left',(dragging.width()-5));
         }
-        
+
         _line.appendTo(dragging);
         console.log('point',dragging.find('.point').length);
     },
     hideAdhere:function(dragging){
         if(dragging.find('.point')){
             dragging.find('.point').remove();
-        }  
+        }
     },
     chooseInterleavedElem:function(dragging){
         var element=null;
@@ -1217,7 +1237,7 @@ PLAYER.operateJson={
         var arr=[];
         var time=dragging.attr('data-time');
         var groupId=dragging.attr('data-group');
-        
+
         $.each($('.edit_box'),function(i,n){
             if($(this).attr('data-group')===groupId){
                element=$(this);
@@ -1248,21 +1268,20 @@ PLAYER.operateJson={
         return arr;
     },
     mouseDownState:function(dragging){
-        
+
         if(PLAYER.keyNum!==17 && PLAYER.keyNum!==71 && PLAYER.keyNum!==7100){
             $('#js_time_ruler_bar_box .draggable').removeClass('onselected');
         }
         dragging.addClass('onselected');
-
         if(dragging.hasClass('edit_box_a')){
             var time=dragging.attr('data-time');
             var index=parseInt(dragging.parent().attr('data-index'));
             var audioAttr=JSON.parse(PLAYER.operateJson.getdAudioClipAttr(time,index));
             var volume=audioAttr.volume;
             $('#js_toolbar_icon_volume_track').val(volume);
-            $('#js_toolbar_icon_volume_track').attr('title',volume); 
+            $('#js_toolbar_icon_volume_track').attr('title',volume);
         }
-        
+
         if(dragging.attr('data-interleaved')==="true"){
             PLAYER.operateJson.chooseInterleavedElem(dragging).addClass('onselected');
 
@@ -1275,8 +1294,6 @@ PLAYER.operateJson={
                 $('#js_toolbar_icon_volume_track').attr('title',volume);
             }
         }
-        
-        
     },
     mouseMoveState:function(dragging,clipDir){//mousemove事件状态
         dragging.css('z-index',50);
@@ -1284,7 +1301,7 @@ PLAYER.operateJson={
             dragging.css('cursor','url(images/cur/resize.cur),default');
             dragging.css('boxShadow','4px 4px 2px #888888');
             dragging.removeClass('onselected');
-            dragging.css('opacity','0.6'); 
+            dragging.css('opacity','0.6');
         }
         else if(clipDir==='left'){
             dragging.addClass('zoomLeft');
@@ -1300,25 +1317,24 @@ PLAYER.operateJson={
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.type==='a' && (track.subclip.length>0)){
                 $.each(track.subclip,function(index,elem){
-                    console.log('currTime',currTime)
                     if(elem.sequenceTrimIn<currTime && elem.sequenceTrimOut>currTime){
                        return  hasClip=true;
                     }
-                    
-                });  
+
+                });
             }
         }
-        return hasClip;    
+        return hasClip;
     },
     checkNoClip:function(){
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.subclip.length===0){
-                return true; 
+                return true;
            }else{
                 return false;
            }
-        } 
+        }
     },
     checkPrevSubClip:function(s_in){
         var obj=null;
@@ -1327,7 +1343,7 @@ PLAYER.operateJson={
                 obj=$(n);
             }
         });
-        
+
         return obj;
     },
     checkNextSubClip:function(s_out){
@@ -1346,26 +1362,26 @@ PLAYER.operateJson={
             if(track.type==='v'){
                 $.each(track.subclip,function(index,elem){
                     if(elem){
-                        if(elem.createTime===time){
+                        if(elem.subclipId===time){
                             track.subclip[index].effect.push(obj);
                         }
                     }
-                }); 
+                });
             }
-        } 
+        }
     },
     getEffectClip:function(time){
         var arr=null;
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
-                if(elem && elem.createTime===time && elem.effect){
+                if(elem && elem.subclipId===time && elem.effect){
                     arr=JSON.stringify(elem.effect);
                 }
-            });   
+            });
         }
-        
-        return arr; 
+
+        return arr;
     },
     getCutNewEffectClip:function(v_dataTime,vcut_trimIn,vcut_trimOut){
         var e_attr=JSON.parse(PLAYER.operateJson.getEffectClip(v_dataTime));
@@ -1379,9 +1395,9 @@ PLAYER.operateJson={
                     arr_footer[i].trimIn=vcut_trimIn;
                     arr_footer[i].trimOut=vcut_trimOut;
                     arr_footer[i].duration=vcut_trimOut-vcut_trimIn;
-                }     
+                }
             }
-            e_attr=arr_footer;  
+            e_attr=arr_footer;
         }
         console.log('cut后新加切片特技',e_attr)
         return e_attr;
@@ -1398,7 +1414,7 @@ PLAYER.operateJson={
                     arr_header[i].trimIn=v0_trimIn;
                     arr_header[i].trimOut=v0_trimOut;
                     arr_header[i].duration=v0_trimOut-v0_trimIn;
-                }     
+                }
             }
             e_attr=arr_header;
         }
@@ -1418,7 +1434,7 @@ PLAYER.operateJson={
                     arr_header[i].trimIn=v0_trimIn;
                     arr_header[i].trimOut=v0_trimOut;
                     arr_header[i].duration=v0_trimOut-v0_trimIn;
-                }     
+                }
             }
             e_attr=arr_header;
         }
@@ -1430,7 +1446,7 @@ PLAYER.operateJson={
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
-                if(elem && elem.createTime===time && elem.effect){
+                if(elem && elem.subclipId===time && elem.effect){
                     $.each(elem.effect,function(i,n){
                         if(n.type==='mosaic'){
                             $.extend(n.attr,attr);
@@ -1438,24 +1454,24 @@ PLAYER.operateJson={
                             $.extend(n.attr,attr);
                         }
                     });
-                    
+
                 }
-            });   
+            });
         }
         console.log('更新特技',PLAYER.jsonObj.rootBin.sequence[0].tracks);
-    }, 
+    },
     removeOtherEffectClip:function(time,type,pos){
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             $.each(track.subclip,function(index,elem){
-                if(elem && elem.createTime===time && elem.effect){
+                if(elem && elem.subclipId===time && elem.effect){
                     elem.effect.forEach(function(n,i){
                         if(n.type===type&&n.pos===pos){
                             elem.effect.splice(i,1);
                         }
                     });
                 }
-            });   
+            });
         }
         console.log("删除淡入淡出等的切片",PLAYER.jsonObj.rootBin.sequence[0].tracks)
     },
@@ -1475,29 +1491,19 @@ PLAYER.operateJson={
         });
         return s;
     },
-    getMaterialDuration:function(id,callback){
-        console.log('id',id);
+    getMaterialInfo:function(id,callback){
         if(id==='subtitle_01'){
             var attr=JSON.parse(PLAYER.operateJson.getSubtitleTemp(id));
             callback(attr);
         }else{
-            $.ajax({
-                url:serverUrl+'program/info',
-                data:{
-                    assetId:id,
-                    jobId:PLAYER.jobId
-                },
-                async:false,
-                success:function(msg){
-                    if(msg.code===0&&msg.data!==null){
-                        callback(msg.data);
-                    }else{
-                        console.log('error');
-                    }
+            PLAYER.jsonObj.reference.material.forEach(function(item,index){
+                if(id===item.assetid){
+                    callback(item);
                 }
-            }); 
+            })
+
         }
-        
+
     },
     getSubtitleDuration:function(id,callback){
         //获取字幕
@@ -1512,18 +1518,17 @@ PLAYER.operateJson={
                 if(elem){
                     arr.push(track.subclip[index].sequenceTrimIn);
                 }
-            });   
+            });
         }
         if(arr.length===0){
             return 0;
         }else{
             var s=Math.min.apply(null,arr);
-            return s; 
+            return s;
         }
     },
     getLastFrame:function(){
         var arr=[];
-        
         for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
             var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
             if(track.subclip.length!==0){
@@ -1555,7 +1560,7 @@ PLAYER.operateJson={
     getAudioIndex:function(time){
         var _index=0;
         $.each(PLAYER.jsonObj.rootBin.sequence[0].track[1].subclip,function(index,elem){
-            if(elem.createTime===time){
+            if(elem.subclipId===time){
                 _index=index;
             }
         });
@@ -1563,11 +1568,11 @@ PLAYER.operateJson={
     },
     addDraggingInfo:function(dragging,initAttr){
         var id=dragging.attr('data-time');
-        var createTime='helpElem_'+PLAYER.genNonDuplicateID(12);
+        var subclipId='helpElem_'+PLAYER.genNonDuplicateID(12);
         var helpElem=dragging.clone().addClass('changeHelp');
-        
+
         helpElem.removeClass('onselected');
-        helpElem.attr('data-time',createTime);
+        helpElem.attr('data-time',subclipId);
         dragging.parent().append(helpElem);
         helpElem.hide();
 
@@ -1604,7 +1609,6 @@ PLAYER.operateJson={
                 PLAYER.storeDraggingInfo.splice(i,1);
             }
         }
-        console.log('删除help',PLAYER.storeDraggingInfo)
     },
     checkNewWindow:function(data,new_height,new_width){
         var data=JSON.parse(data);
@@ -1616,7 +1620,7 @@ PLAYER.operateJson={
 
         for (var i = 0;i<data.rootBin.sequence[0].tracks.length;i++) {
             var track=data.rootBin.sequence[0].tracks[i];
-            
+
             if(track.type==='v'){
                 $.each(track.subclip,function(index,elem){
                     if(elem && elem.effect){
@@ -1627,20 +1631,19 @@ PLAYER.operateJson={
                                 n.attr.width*=scale_x;
                                 n.attr.height*=scale_x;
                             }
-                        });  
+                        });
                     }
-                });   
+                });
             }
             if(track.type==='t'){
                 $.each(track.subclip,function(index,elem){
-                   elem.pixel[0].x1*=scale_x;
-                   elem.pixel[0].y1*=scale_y;
-                   elem.pixel[0].attr.fontSize*=scale_y;
-                });   
+                   elem.frame.x*=scale_x;
+                   elem.frame.y*=scale_y;
+                   elem.frame.width*=scale_x;
+                   elem.frame.height*=scale_y;
+                });
             }
-            
         }
-        
         return data;
     },
     getSubtitleTemp:function(id){
@@ -1648,36 +1651,478 @@ PLAYER.operateJson={
         var player_h=$('#ocx').height();
         var project_w=PLAYER.jsonObj.width;
         var project_h=PLAYER.jsonObj.height;
-        
         PLAYER.subJsonTem={
             "subtitle_01":{
-                "id":"subtitle_01",
-                "name":'subtitle_01', 
-                "duration":2000,               
-                "trimIn":0,                         
-                "trimOut":2000,                                   
-                "pixel":[
+                "assetid":"subtitle_01",
+                "name":"subtitle_01",
+                "duration":125, //帧数
+                "tempWidth":1920,
+                "tempHeight":1080,
+                "frame":{
+                    "x":0,
+                    "y":0,
+                    "width":player_w,
+                    "height":player_h,
+                    "orientation":0
+                },
+                "object":[
                     {
-                        "x1": parseInt(1400/project_w*player_w),                      
-                        "y1": parseInt(340/project_h*player_h),                                       
+                        "objectId": "000",
+                        "type": "text",
+                        "z-index": 0,
+                        "x1": 545,
+                        "y1": 873,
+                        "clipStart": 600,
+                        "clipDuraiton": 6640,
+                        "attr": {
+                          "type": "fade",
+                          "text": "TITLE",
+                          "fontFamily": "黑体",
+                          "fontSize": 100,
+                          "fillStyle": "#ffffff",
+                          "align": "left",
+                          "vertical-align": "top",
+                          "fadeInTime": 240,
+                          "fadeOutTime": 240
+                        }
+                    },
+                    {
+                        "objectId": "001",
+                        "type": "piantou",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index": 1,
+                        "actionIn": null,
+                        "actionOut": null,
+                        "clipStart": 0,
+                        "clipDuraiton": 4040,
+                        "filePath": `${subtitleServer}/test01/01-1.mov`
+                    },
+                    {
+                        "objectId": "002",
+                        "type": "remain",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index": 1,
+                        "actionIn": null,
+                        "actionOut": null,
+                        "clipStart": 4040,
+                        "clipDuraiton": 2960,
+                        "filePath": `${subtitleServer}/test01/01-2.png`
+                    },
+                    {
+                        "objectId": "003",
+                        "type": "pianwei",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index": 1,
+                        "actionIn": null,
+                        "actionOut": null,
+                        "clipStart": 7000,
+                        "clipDuraiton": 240,
+                        "filePath":`${subtitleServer}/test01/01-3.mov`
+                    }
+                ]
+            },
+            "subtitle_02":{
+                "assetid":"subtitle_02",
+                "name":"subtitle_02",
+                "duration":101, //帧数
+                "tempWidth":1920,
+                "tempHeight":1080,
+                "frame":{
+                    "x":0,
+                    "y":0,
+                    "width":player_w,
+                    "height":player_h,
+                    "orientation":0
+                },
+                "object":[
+                    {
+                        "objectId":"000",
+                        "type":"text",
+                        "z-index":0,
+                        "x1":-1000 ,
+                        "y1":862,
+                        "x2":0 ,
+                        "y2":860,
+                        "x3":1970,
+                        "y3":862,
+                        "clipStart":560,
+                        "clipDuraiton":3480,
+                        "attr":{
+                            "type":"move",
+                            "text":"TITLE HERE ",
+                            "fontFamily": "黑体",
+                            "fontSize":100,
+                            "fillStyle":"#ffffff",
+                            "align":"left",
+                            "vertical-align":"top",
+                            "moveInTime":120,
+                            "moveOutTime":40
+                        }
+                    },
+                    {
+                        "objectId":"001",
+                        "type":"piantou",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":1,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":0,
+                        "clipDuraiton":1000,
+                        "filePath":`${subtitleServer}/test02/02-1.mov`
+                    },
+                    {
+                        "objectId":"003",
+                        "type":"remain",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":1,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":1000,
+                        "clipDuraiton":2800,
+                        "filePath":`${subtitleServer}/test02/02-2.png`
+                    },
+                    {
+                        "objectId":"004",
+                        "type":"pianwei",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":1,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":3800,
+                        "clipDuraiton":240,
+                        "filePath":`${subtitleServer}/test02/02-3.mov`
+                    }
+                ]
+            },
+            "subtitle_04":{
+                "assetid":"subtitle_04",
+                "name":"subtitle_04",
+                "duration":139, //帧数
+                "tempWidth":1920,
+                "tempHeight":1080,
+                "frame":{
+                    "x":0,
+                    "y":0,
+                    "width":player_w,
+                    "height":player_h,
+                    "orientation":0
+                },
+                "object":[
+                    {
+                        "objectId":"000",
+                        "type":"text",
+                        "z-index":0,
+                        "x1":393,
+                        "y1":835,
+                        "clipStart":680,
+                        "clipDuraiton":4520,
                         "attr":{
                             "type":"fade",
-                            "text":'FAST CARVE',
-                            "fontFamily": 'PingFang Heavy',       
-                            "fontSize":parseInt(70/project_h*player_h),                
-                            "fillStyle":'#ffffff',    
-                            "textAlign":'left',
-                            "fontWeight":'bold',
-                            "fadeInTime":1000,
-                            "fadeOutTime":1000
-                        },
-                        "attrID":'attrID_'+PLAYER.genNonDuplicateID(12)
+                            "text":"TITLE HERE",
+                            "fontFamily": "黑体",
+                            "fontSize":100,
+                            "fillStyle":"#000000",
+                            "align":"left",
+                            "vertical-align":"top",
+                            "fadeInTime":160,
+                            "fadeOutTime":160
+                        }
+                    },
+                    {
+                        "objectId":"001",
+                        "type":"text",
+                        "title":null,
+                        "z-index":1,
+                        "x1":397,
+                        "y1":929,
+                        "clipStart":680,
+                        "clipDuraiton":4520,
+                        "attr":{
+                            "type":"fade",
+                            "text":"SUBTITLE",
+                            "fontFamily": "黑体",
+                            "fontSize":70,
+                            "fillStyle":"#ffffff",
+                            "align":"left",
+                            "vertical-align":"top",
+                            "fadeInTime":160,
+                            "fadeOutTime":160
+                        }
+                    },
+                    {
+                        "objectId":"002",
+                        "type":"piantou",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":2,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":0,
+                        "clipDuraiton":3040,
+                        "filePath":`${subtitleServer}/test04/04-1.mov`
+                    },
+                    {
+                        "objectId":"003",
+                        "type":"remain",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":2,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":3040,
+                        "clipDuraiton":2000,
+                        "filePath":`${subtitleServer}/test04/04-2.png`
+                    },
+                    {
+                        "objectId":"004",
+                        "type":"pianwei",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":2,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":5040,
+                        "clipDuraiton":520,
+                        "filePath":`${subtitleServer}/test04/04-3.mov`
                     }
-                ]    
+                ]
+            },
+            "subtitle_05":{
+                "assetid":"subtitle_05",
+                "name":"subtitle_05",
+                "duration":106,     //帧数,其他为ms
+                "tempWidth":1920,
+                "tempHeight":1080,
+                "frame":{
+                    "x":0,
+                    "y":0,
+                    "width":player_w,
+                    "height":player_h,
+                    "orientation":0
+                },
+                "object":[
+                    {
+                        "objectId":"000",
+                        "type":"text",
+                        "title":null,
+                        "z-index":0,
+                        "x1":81,
+                        "y1":837,
+                        "clipStart":450,
+                        "clipDuraiton":3840,
+                        "attr":{
+                            "type":"fade",
+                            "text":"TITLE",
+                            "fontFamily": "黑体",
+                            "fontSize":100,
+                            "fillStyle":"#ffffff",
+                            "align":"left",
+                            "vertical-align":"top",
+                            "fadeInTime":160,
+                            "fadeOutTime":160
+                        }
+                    },
+                    {
+                        "objectId":"001",
+                        "type":"text",
+                        "title":null,
+                        "z-index":1,
+                        "x1":77,
+                        "y1":951,
+                        "clipStart":450,
+                        "clipDuraiton":3840,
+                        "attr":{
+                            "type":"fade",
+                            "text":"SUBTITLE",
+                            "fontFamily": "PingFang Heavy",
+                            "fontSize":100,
+                            "fillStyle":"#ffffff",
+                            "align":"left",
+                            "vertical-align":"top",
+                            "fadeInTime":160,
+                            "fadeOutTime":160
+                        }
+                    },
+
+                    {
+                        "objectId":"002",
+                        "type":"piantou",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":2,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":0,
+                        "clipDuraiton":1000,
+                        "filePath":`${subtitleServer}/test05/05-1.mov`
+                    },
+                    {
+                        "objectId":"003",
+                        "type":"remain",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":2,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":1000,
+                        "clipDuraiton":3040,
+                        "filePath":`${subtitleServer}/test05/05-2.png`
+                    },
+                    {
+                        "objectId":"004",
+                        "type":"pianwei",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":2,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":4040,
+                        "clipDuraiton":200,
+                        "filePath":`${subtitleServer}/test05/05-3.mov`
+                    }
+                ]
+            },
+            "subtitle_09":{
+                "assetid":"subtitle_09",
+                "name":"subtitle_09",
+                "duration":166,     //帧数,其他为ms
+                "tempWidth":1920,
+                "tempHeight":1080,
+                "frame":{
+                    "x":0,
+                    "y":0,
+                    "width":player_w,
+                    "height":player_h,
+                    "orientation":0
+                },
+                "object":[
+                    {
+                        "objectId":"000",
+                        "type":"text",
+                        "z-index":0,
+                        "x1":99,
+                        "y1":853,
+                        "clipStart":1320,
+                        "clipDuraiton":5160,
+                        "attr":{
+                            "type":"fade",
+                            "text":"TITLE HERE",
+                            "fontFamily": "黑体",
+                            "fontSize":100,
+                            "fillStyle":"#ffffff",
+                            "align":"left",
+                            "vertical-align":"top",
+                            "fadeInTime":40,
+                            "fadeOutTime":200
+                        }
+                    },
+                    {
+                        "objectId":"001",
+                        "type":"piantou",
+                        "x": 0,
+                        "y": 0,
+                        "width": 100,
+                        "height": 100,
+                        "z-index":1,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":0,
+                        "clipDuraiton":2400,
+                        "filePath":`${subtitleServer}/test09/09-1.mov`
+                    },
+                    {
+                        "objectId":"002",
+                        "type":"remain",
+                        "x": 0,
+                        "y": 0,
+                        "width": 100,
+                        "height": 100,
+                        "z-index":1,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":2400,
+                        "clipDuraiton":3840,
+                        "filePath":`${subtitleServer}/test09/09-2.png`
+                    },
+                    {
+                        "objectId":"003",
+                        "type":"pianwei",
+                        "x": 0,
+                        "y": 0,
+                        "width": 100,
+                        "height": 100,
+                        "z-index":1,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":6240,
+                        "clipDuraiton":400,
+                        "filePath":`${subtitleServer}/test09/09-3.mov`
+                    }
+                ]
+            },
+            "subtitle_11":{
+                "assetid":"subtitle_11",
+                "name":"subtitle_11",
+                "duration":100,     //帧数,其他为ms
+                "tempWidth":1920,
+                "tempHeight":1080,
+                "frame":{
+                    "x":0,
+                    "y":0,
+                    "width":player_w,
+                    "height":player_h,
+                    "orientation":0
+                },
+                "object":[
+                    {
+                        "objectId":"001",
+                        "type":"remain",
+                        "x": 0,
+                        "y": 0,
+                        "width": 1920,
+                        "height": 1080,
+                        "z-index":1,
+                        "actionIn":null,
+                        "actionOut":null,
+                        "clipStart":0,
+                        "clipDuraiton":4000,
+                        "filePath":`${subtitleServer}/test11/11-2.png`
+                    }
+                ]
             }
         };
         return JSON.stringify(PLAYER.subJsonTem[id]);
-    } 
+    }
 }
 /*------自定义事件开始------*/
 PLAYER.EventTarget = function() {
@@ -1717,7 +2162,7 @@ PLAYER.EventTarget = function() {
     return constructor;
 }();
 /*------轨道时间线开始------*/
-PLAYER.timeRuler = function() {   
+PLAYER.timeRuler = function() {
     var trimInOrginPos = 0;
     var trimOutOrginPos = 0;
     var trimInCurrPos = 0;
@@ -1731,17 +2176,17 @@ PLAYER.timeRuler = function() {
     var containerMovableDistance;   //整体刻度条可滚动距离
     var scrollLeftWidth=0;          //左滚动宽度
     var scrollRightWidth=0;         //右滚动宽度
-    
+
     var initContainerMarginLeft=0;  //初始化刻度条相对于刻度容器的left值
-    var newContainerMarginLeft=0;   //新的刻度条相对于刻度容器的left值  
+    var newContainerMarginLeft=0;   //新的刻度条相对于刻度容器的left值
     var newContainerWidth=0;        //新的刻度容器宽度
-    
-    var boxWidth; //刻度容器可视区的宽度 
+
+    var boxWidth; //刻度容器可视区的宽度
     var self = this;
 
-    var trimIn=0;                   //素材入点      
+    var trimIn=0;                   //素材入点
     var trimOut=0;                  //素材出点
-    var sequenceTrimIn=0;           //序列入点      
+    var sequenceTrimIn=0;           //序列入点
     var sequenceTrimOut=0;          //序列出点
     var subClipAttr=null;           //存储切片属性
 
@@ -1828,18 +2273,18 @@ PLAYER.timeRuler = function() {
         framePerPixel:0,                    //默认比率
         max_fpp:0,
         min_fpp:0.125,
-        smallScaleNumsPerLargeScale: 10,    //每个大格包含多少小格 
+        smallScaleNumsPerLargeScale: 10,    //每个大格包含多少小格
         smallScaleFrame:0,                  //每小格帧数
         smallScaleWidth: 0,                 //每小格宽度
         largeScaleWidth: 0,                 //每大格代表的宽度
         largeScaleMillisecondInterval: 0,   //每大格代表的毫秒数
 
         seekComandTimesMonitor:[],
-        largeScaleHeight: 30,       //每个大格高度         
-        smallScaleHeight: 12.5,     //每个小个高度                  
+        largeScaleHeight: 30,       //每个大格高度
+        smallScaleHeight: 12.5,     //每个小个高度
         backgroundColor: "#262626", //刻度背景颜色
         trimHeight: 67,             //出入点高度
-        scaleColor: "#929293",      //线性样式    
+        scaleColor: "#929293",      //线性样式
         fontColor: "#929293",       //字体样式
         fontSize: 12,               //字体大小
         fontFamily: "微软雅黑",     //字体样式
@@ -1849,7 +2294,7 @@ PLAYER.timeRuler = function() {
         $trimInOut: null,           //出入点
         $trimIn : null,             //入点
         $trimOut:null,              //出点
-    
+
         $sliderTrack:null,          //滚动槽
         $sliderBar:null,            //滚动条
         $sliderBarLeft:null,        //滚动条左
@@ -1871,10 +2316,10 @@ PLAYER.timeRuler = function() {
         self.config = $.extend(defaultConfig,playerConfig);
         self.targetObj = self.config.targetObj;
         self.trimInCurrTime = 0;    //入点目前毫秒数
-        self.trimOutCurrTime=0;     //出点目前帧数     
-        self.currTime=0;            //指针目前毫秒数          
-        
-        drawRuler();//初始化一些配置参数、初始化HTML、初始化时间刻度       
+        self.trimOutCurrTime=0;     //出点目前帧数
+        self.currTime=0;            //指针目前毫秒数
+
+        drawRuler();//初始化一些配置参数、初始化HTML、初始化时间刻度
         handleDocumentEvent(); //执行文档事件
 
         this.config.$rulerWrap.addEventListener("mousedown", seekToCursorFrame);
@@ -1894,15 +2339,15 @@ PLAYER.timeRuler = function() {
 
         this.DragDrop.addHandler('sequenceClick',handleSequenceClickEvent);
         this.DragDrop.addHandler('effectClick',handleEffectClickEvent);
-        
+
         //this.DragDrop.addHandler('mousewheel',privateMousewheelEvent);//私人滚轮事件
         this.DragDrop.addHandler('keydown',privateKeyDownEvent);    //私人键盘事件
 
         //this.DragDrop.addHandler('contextmenu',handleClipContextmenuEvent);//音频切片右键菜单
 
         window.addEventListener("resize", handleplayerResizeEvent);
-       
-        PLAYER.EventUtil.addHandler($('.time_ruler_edit_box')[0],'click',toolbarZoomInOut);//点击工具条放大镜 
+
+        PLAYER.EventUtil.addHandler($('.time_ruler_edit_box')[0],'click',toolbarZoomInOut);//点击工具条放大镜
     };
     constructor.prototype = {
         updateRuler: function(newConfig) {
@@ -1933,7 +2378,7 @@ PLAYER.timeRuler = function() {
                 letFramePerPixelValid(config.framePerPixel);
                 zoomRulerConfig(s.smallScaleFrame,s.smallScaleNumsPerLargeScale,config.framePerPixel);
                 newtotalScrollWidth=0.5*config.$sliderTrack.width();
-                
+
                 newTotalBtnScollLeft=0;
                 newContainerMarginLeft=0;
 
@@ -1941,12 +2386,12 @@ PLAYER.timeRuler = function() {
                 config.$sliderBar.css('width',newtotalScrollWidth);
                 config.$sliderBar.css('left',newTotalBtnScollLeft);
                 config.$sliderBarMiddle.css("width", newtotalScrollWidth-2*scrollRightWidth);
-                config.$sliderBarMiddle.css("left",scrollRightWidth);             
+                config.$sliderBarMiddle.css("left",scrollRightWidth);
                 config.$sliderBarLeft.css('left',0);
                 config.$sliderBarRight.css('left',newtotalScrollWidth-scrollRightWidth);
 
             }else{
-                
+
                 newContainerWidth=config.maxTime/config.framePerPixel;
                 newContainerMarginLeft=Math.abs(parseInt(config.$rulerWrap.css('marginLeft')));
 
@@ -1958,25 +2403,24 @@ PLAYER.timeRuler = function() {
                 scrollBtnMovableDistance = parseInt(config.$sliderTrack.width()-newtotalScrollWidth);
                 containerMovableDistance = parseInt(newContainerWidth - config.$headerRight.width());
                 newTotalBtnScollLeft=newContainerMarginLeft*scrollBtnMovableDistance/containerMovableDistance;
-                 
+
                 config.$rulerWrap.width(newContainerWidth);
                 config.$sliderBar.css('width',newtotalScrollWidth);
                 config.$sliderBar.css('left',newTotalBtnScollLeft);
                 config.$sliderBarMiddle.css("width", newtotalScrollWidth-2*scrollRightWidth);
-                config.$sliderBarMiddle.css("left",scrollRightWidth);             
+                config.$sliderBarMiddle.css("left",scrollRightWidth);
                 config.$sliderBarLeft.css('left',0);
                 config.$sliderBarRight.css('left',newtotalScrollWidth-scrollRightWidth);
             }
-            
+
             self.fixArrowCurrentTime(self.currTime);
             self.fixTrimInByCurrentTime(self.trimInCurrTime);
             self.fixTrimOutByCurrentTime(self.trimOutCurrTime);
-            drawCanvas(newContainerMarginLeft);  
+            drawCanvas(newContainerMarginLeft);
         },
         fixArrowCurrentTime: function(time) {
             var config = this.config;
             var targetObj = this.targetObj;
-
             currPos = time/config.framePerPixel;
 
             var ml=Math.abs(parseFloat(config.$rulerWrap.css("margin-left")));
@@ -1991,18 +2435,18 @@ PLAYER.timeRuler = function() {
                 newContainerMarginLeft = currPos - w;
                 scrollBtnMovableDistance = parseFloat(config.$sliderTrack.width() -config.$sliderBar.width());//滚动条可滚动距离
                 containerMovableDistance = parseFloat(config.$rulerWrap.width() - w); //刻度可滚动距离
-                
+
                 newTotalBtnScollLeft=newContainerMarginLeft*scrollBtnMovableDistance/containerMovableDistance;
-                
+
                 //重新滚动条
                 config.$sliderBar.css('left',newTotalBtnScollLeft);
                 //重新计算刻度容器
                 config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
-                config.$ruler.css("left", newContainerMarginLeft); 
+                config.$ruler.css("left", newContainerMarginLeft);
                 config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
                 config.$line.css("margin-left", -newContainerMarginLeft);
                 //更新canvas画布
-                drawCanvas(newContainerMarginLeft);   
+                drawCanvas(newContainerMarginLeft);
             }
             /*if(currPos<ml){
                 console.log('2')
@@ -2012,12 +2456,12 @@ PLAYER.timeRuler = function() {
                 config.$sliderBar.css('left',newTotalBtnScollLeft);
                 config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
                 config.$ruler.css("left", newContainerMarginLeft);
-                drawCanvas(newContainerMarginLeft); 
+                drawCanvas(newContainerMarginLeft);
                 //重新滚动条
                 config.$sliderBar.css('left',newTotalBtnScollLeft);
                 //重新计算刻度容器
                 config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
-                config.$ruler.css("left", newContainerMarginLeft); 
+                config.$ruler.css("left", newContainerMarginLeft);
                 config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
 
                 //更新canvas画布
@@ -2027,6 +2471,7 @@ PLAYER.timeRuler = function() {
             $('#js_time_ruler_title_nowTime').html(PLAYER.getDurationToString(self.currTime));
             config.$cursor.css("left",currPos);
             config.$line.css("left",currPos);
+
         },
         fixTrimInByCurrentTime: function(time) {
             var config = this.config;
@@ -2034,16 +2479,16 @@ PLAYER.timeRuler = function() {
             trimInCurrPos = this.trimInCurrTime /config.framePerPixel;
             trimOutCurrPos = this.trimOutCurrTime/config.framePerPixel;
 
-            
+
             /*if(PLAYER.keyNum===73&&this.trimInCurrTime===0){
                 trimOutCurrPos = config.maxTime/config.framePerPixel;
                 this.trimOutCurrTime=config.maxTime;
-                trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel; 
+                trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel;
             }*/
             if(trimInCurrPos>trimOutCurrPos){
                 trimOutCurrPos = config.maxTime/config.framePerPixel;
                 this.trimOutCurrTime=config.maxTime;
-                trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel; 
+                trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel;
             }
             config.$trimInOut.css("left", trimInCurrPos);
             config.$trimInOut.css("width", trimOutCurrPos + 2 - trimInCurrPos);
@@ -2057,15 +2502,15 @@ PLAYER.timeRuler = function() {
 
             config.$sliderBar.css('left',0);
             config.$sliderBarMiddle.css("width", newtotalScrollWidth-scrollLeftWidth-scrollRightWidth);
-            config.$sliderBarMiddle.css("left", scrollLeftWidth);             
+            config.$sliderBarMiddle.css("left", scrollLeftWidth);
             config.$sliderBarLeft.css('left',0);
-            config.$sliderBarRight.css('left',newtotalScrollWidth-scrollRightWidth); 
-            
+            config.$sliderBarRight.css('left',newtotalScrollWidth-scrollRightWidth);
+
             config.$rulerWrap.css("margin-left", 0);
-            config.$ruler.css("left", 0); 
+            config.$ruler.css("left", 0);
             config.$clipTrackBar.css("margin-left", 0);
             drawCanvas(0);
-            self.fixArrowCurrentTime(0); 
+            self.fixArrowCurrentTime(0);
         },
         fixTrimOutByCurrentTime: function(time) {
             var config = this.config;
@@ -2075,13 +2520,13 @@ PLAYER.timeRuler = function() {
 
             if(trimOutCurrPos<trimInCurrPos){
                trimInCurrPos=0;
-               this.trimInCurrTime=0; 
+               this.trimInCurrTime=0;
             }
             config.$trimInOut.css("left", trimInCurrPos);
             config.$trimInOut.css("width", trimOutCurrPos + 2 - trimInCurrPos);
 
             var timeHtml=PLAYER.getDurationToString((parseInt(self.trimOutCurrTime)-parseInt(self.trimInCurrTime)));
-            $('#js_player_trimInOutTime').html(timeHtml);  
+            $('#js_player_trimInOutTime').html(timeHtml);
         },
         cutArrowCurrentTime:function(){
             var config = self.config;
@@ -2090,7 +2535,7 @@ PLAYER.timeRuler = function() {
 
             var intId='interleaved_id_'+PLAYER.genNonDuplicateID(12);
             PLAYER.checkPlaying();
-            
+
             PLAYER.cutIndex++;
             $.each($('.onselected'),function(i,n){
                 v0_sequenceTrimIn=parseInt($(n).attr('data-sequencetrimin'));
@@ -2100,9 +2545,9 @@ PLAYER.timeRuler = function() {
                     //执行函数
                     cutSubclip($(n));
                     function cutSubclip(v_target){
-                        
+
                         //原素材
-                        var v0_sequenceTrimIn=0; 
+                        var v0_sequenceTrimIn=0;
                         var v0_sequenceTrimOut=0;
                         var v0_trimIn=0;
                         var v0_trimOut=0;
@@ -2114,7 +2559,7 @@ PLAYER.timeRuler = function() {
                         //原素材属性
                         var v_dataId=v_target.attr('data-id');
                         var v_dataName=v_target.attr('data-name');
-                        var v_dataTime=v_target.attr('data-time'); 
+                        var v_dataTime=v_target.attr('data-time');
                         var v_dataDuration=parseInt(v_target.attr('data-duration'));
                         var v_interleaved=v_target.attr('data-interleaved');
                         var v_interleaved_id=v_target.attr('data-intid');
@@ -2125,26 +2570,26 @@ PLAYER.timeRuler = function() {
                         //切后素材属性
                         var add_subclip;
                         var add_subclip_attr;
-                        var _createTime=v_type+'_'+PLAYER.genNonDuplicateID(12);
+                        var subclipId=v_type+'_'+PLAYER.genNonDuplicateID(12);
 
                         //加状态
                         PLAYER.checkPlaying();
                         v_target.css('cursor','url(images/cur/cut.cur),default');
                         v_target.removeClass('onselected');
                         //计算原素材属性
-                        
+
                         v0_sequenceTrimIn=parseInt(v_target.attr('data-sequencetrimin'));
                         v0_sequenceTrimOut=parseInt(currFrame);
                         v0_trimIn=parseInt(v_target.attr('data-trimin'));
                         v0_trimOut=v0_trimIn+v0_sequenceTrimOut-v0_sequenceTrimIn;
-                        
+
                         //切后节点属性
-                        
+
                         vcut_trimIn=v0_trimOut;
                         vcut_sequenceTrimIn=currFrame;
                         vcut_sequenceTrimOut=parseInt(v_target.attr('data-sequencetrimout'));
                         vcut_trimOut=parseInt(v_target.attr('data-trimout'));
-                        
+
                         //切片后新加切片
                         add_subclip=v_target.clone();
                         //除了马赛克其他特技不存在
@@ -2160,25 +2605,25 @@ PLAYER.timeRuler = function() {
                         add_subclip.attr('data-trimout',vcut_trimOut);
                         add_subclip.attr('data-sequencetrimin',vcut_sequenceTrimIn);
                         add_subclip.attr('data-sequencetrimout',vcut_sequenceTrimOut);
-                        add_subclip.attr('data-time',_createTime);
+                        add_subclip.attr('data-time',subclipId);
                         add_subclip.attr('data-intid',intId);
 
 
                         add_subclip.css('width',(vcut_sequenceTrimOut-vcut_sequenceTrimIn)/config.framePerPixel);
                         add_subclip.css('left',vcut_sequenceTrimIn/config.framePerPixel);
-                        
+
                         v_target.parent('.time_ruler_bar').append(add_subclip);
-                        
+
                         if(v_target.parent('.time_ruler_bar').hasClass('bar_v')){
                             var e_attr=PLAYER.operateJson.getCutNewEffectClip(v_dataTime,vcut_trimIn,vcut_trimOut);
                             add_subclip_attr={
-                                "assetID": v_dataId,
+                                "assetid": v_dataId,
                                 "trimIn": vcut_trimIn,
                                 "trimOut":vcut_trimOut,
                                 "sequenceTrimIn": vcut_sequenceTrimIn,
                                 "sequenceTrimOut":vcut_sequenceTrimOut,
                                 "effect":e_attr,
-                                "createTime":_createTime,
+                                "subclipId":subclipId,
                                 "type":v_type,
                                 "interleaved_id":intId
                             }
@@ -2187,18 +2632,18 @@ PLAYER.timeRuler = function() {
                             }else{
                                 add_subclip_attr.interleaved=false;
                             }
-                            
+
                             PLAYER.operateJson.addVideoClipAttr(add_subclip_attr,v_index);
-                            
+
                         }else if(v_target.parent('.time_ruler_bar').hasClass('bar_a')){
                             add_subclip_attr={
-                                "assetID": v_dataId,
+                                "assetid": v_dataId,
                                 "trimIn": vcut_trimIn,
                                 "trimOut":vcut_trimOut,
                                 "sequenceTrimIn": vcut_sequenceTrimIn,
                                 "sequenceTrimOut":vcut_sequenceTrimOut,
                                 "volume":100,
-                                "createTime":_createTime,
+                                "subclipId":subclipId,
                                 "type":v_type,
                                 "interleaved_id":intId
                             }
@@ -2207,7 +2652,7 @@ PLAYER.timeRuler = function() {
                             }else{
                                 add_subclip_attr.interleaved=false;
                             }
-                            
+
                             PLAYER.operateJson.addAudioClipAttr(add_subclip_attr,v_index);
 
                         }else if(v_target.parent('.time_ruler_bar').hasClass('bar_t')){
@@ -2217,13 +2662,13 @@ PLAYER.timeRuler = function() {
                                 "trimOut":vcut_trimOut,
                                 "sequenceTrimIn":vcut_sequenceTrimIn,
                                 "sequenceTrimOut":vcut_sequenceTrimOut,
-                                "createTime":_createTime,
+                                "subclipId":subclipId,
                                 "type":v_type,
                                 "interleaved_id":intId
                             }
-                            
+
                             $.extend(msg,subClipAttr_cut);
-                            PLAYER.operateJson.addSubtitleClipAttr(msg,v_index); 
+                            PLAYER.operateJson.addSubtitleClipAttr(msg,v_index);
                         }
 
                         v_target.attr('data-trimout',v0_trimOut);
@@ -2238,12 +2683,12 @@ PLAYER.timeRuler = function() {
                             sequenceTrimOut:v0_sequenceTrimOut
                         }
                         var e_attr2=PLAYER.operateJson.getCutOldEffectClip(v_dataTime,v0_trimIn,v0_trimOut);
-                        PLAYER.operateJson.updateClipAttr(v0_subClipAttr,v_dataTime,e_attr2); 
+                        PLAYER.operateJson.updateClipAttr(v0_subClipAttr,v_dataTime,e_attr2);
                     }
                 }
             });
             //更新json
-            PLAYER.operateJson.sendJson(); 
+            PLAYER.operateJson.sendJson();
         },
         fixEffectWidth:function(dragging){
             if(dragging.children('.effect_box')){
@@ -2276,16 +2721,16 @@ PLAYER.timeRuler = function() {
                 $(n).css('left',newLeft);
             });
         },
-        moveToNextFrame:function(){ 
-            PLAYER.keyNum=39; 
+        moveToNextFrame:function(){
+            PLAYER.keyNum=39;
             var config = self.config;
             self.currTime+=1;
             if(self.currTime>=config.maxTime){
                 self.currTime=config.maxTime;
             }
-            self.fixArrowCurrentTime(self.currTime); 
+            self.fixArrowCurrentTime(self.currTime);
             self.fixTrimInByCurrentTime(self.trimInCurrTime);
-            self.fixTrimOutByCurrentTime(self.trimOutCurrTime);  
+            self.fixTrimOutByCurrentTime(self.trimOutCurrTime);
         },
         moveToPrevFrame:function(){
             PLAYER.keyNum=37;
@@ -2294,9 +2739,9 @@ PLAYER.timeRuler = function() {
             if(self.currTime<=0){
                 self.currTime=0;
             }
-            self.fixArrowCurrentTime(self.currTime);  
+            self.fixArrowCurrentTime(self.currTime);
             self.fixTrimInByCurrentTime(self.trimInCurrTime);
-            self.fixTrimOutByCurrentTime(self.trimOutCurrTime);  
+            self.fixTrimOutByCurrentTime(self.trimOutCurrTime);
         },
         DragDrop:function(){
             var targetObj = this.targetObj;
@@ -2311,7 +2756,7 @@ PLAYER.timeRuler = function() {
             //游标
             var cursoring=null;
             var offsetX=0;
-        
+
             var arr_left=[]; //存储编组切片的left值
             var arr_right=[];//存储编组切片的right值
             var arr_in=[]; //存储编组切片的sin值
@@ -2325,7 +2770,7 @@ PLAYER.timeRuler = function() {
             var v0_dir;     //存储按下切片是初始化方向
             var v0_attr;    //存储按下切片是初始化信息
             var vd_attr;
-            
+
             function getInitDir(target,attr){
                 var dir=getClipDir(JSON.parse(attr));
                 target.attr('data-clipdir',dir);
@@ -2358,7 +2803,7 @@ PLAYER.timeRuler = function() {
                         cal_index=clipInitIndex+Math.ceil((clipInitOffsetTop-clientY)/70);
                     }
                     else if(clipInitIndex>=2&&clientY-clipInitClientY>10){
-                        cal_index=clipInitIndex-Math.ceil((clientY-clipInitClientY)/70);  
+                        cal_index=clipInitIndex-Math.ceil((clientY-clipInitClientY)/70);
                     }else if(Math.abs(clientY-clipInitClientY)<5){
                         cal_index=clipInitIndex;
                     }
@@ -2368,7 +2813,7 @@ PLAYER.timeRuler = function() {
                         cal_index=clipInitIndex+Math.ceil((clientY-clipInitOffsetTop)/70);
                     }
                     else if(clipInitIndex>=2&&clientY-clipInitClientY<-10){
-                        cal_index=clipInitIndex-Math.ceil((clipInitClientY-clientY)/70);  
+                        cal_index=clipInitIndex-Math.ceil((clipInitClientY-clientY)/70);
                     }else if(Math.abs(clientY-clipInitClientY)<5){
                         cal_index=clipInitIndex;
                     }
@@ -2376,7 +2821,7 @@ PLAYER.timeRuler = function() {
                 if(cal_index){
                     return cal_index;
                 }
-                
+
             }
             function handleEvent(event){
                 event=PLAYER.EventUtil.getEvent(event);
@@ -2390,7 +2835,7 @@ PLAYER.timeRuler = function() {
                             initClientX=event.clientX;
 
                             PLAYER.operateJson.mouseDownState(v0_dragging);
-                            
+
                             //存储初始化信息
                             v0_attr=getDragInfo(v0_dragging,event);
                             v0_dir=getInitDir(v0_dragging,v0_attr);
@@ -2400,14 +2845,14 @@ PLAYER.timeRuler = function() {
                             arr_right.push(getInitRight(v0_attr));
                             arr_in.push(getInitIn(v0_attr));
                             arr_out.push(getInitOut(v0_attr));
-                            
+
                             dragdrop.fire({
                                 type:'clipDragstart',
                                 target:v0_dragging,
                                 x:event.clientX,
                                 y:event.clientY
                             });
-                            
+
                             if(v0_dir==='middle'){
                                 var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
                                 if(seleElem.length!==0){
@@ -2452,7 +2897,7 @@ PLAYER.timeRuler = function() {
                                     });
                                 }
                             }
-                            
+
                             min_left=Math.min.apply(null,arr_left);
                             max_right=Math.max.apply(null,arr_right);
                             min_in=Math.min.apply(null,arr_in);
@@ -2462,13 +2907,13 @@ PLAYER.timeRuler = function() {
                     case 'mousemove':
                         if(v0_dragging!==null){
                             var s=Math.abs(event.clientX-initClientX);
-                            
+
                             if(s<=1){
                                 PLAYER.clickOrMove=false; //click
                             }else{
                                 PLAYER.clickOrMove=true; //move
                                 var cal_index=getIndex(v0_attr,event.clientY);
-                                
+
                                 dragdrop.fire({
                                     type:'clipDrag',
                                     target:v0_dragging,
@@ -2515,13 +2960,13 @@ PLAYER.timeRuler = function() {
                                             cal_index:cal_index
                                         });
                                     }
-                                    
+
                                 }
                             }
                         }
                         if(target.className.indexOf('draggable')>-1){
                             mouseing=$(target);
-                            mouseing.css({cursor:"default"});                
+                            mouseing.css({cursor:"default"});
                             dragdrop.fire({
                                 type:'clipCheckDir',
                                 target:mouseing,
@@ -2538,10 +2983,10 @@ PLAYER.timeRuler = function() {
                             }else{
                                 PLAYER.clickOrMove=true; //move
                             }
-                            
+
 
                             if(PLAYER.clickOrMove&&v0_dragging){
-                                
+
                                 if( v0_dragging.hasClass('draggable') || v0_dragging.hasClass('time_ruler_bar') ){
                                     dragdrop.fire({
                                         type:'clipDragend',
@@ -2550,7 +2995,7 @@ PLAYER.timeRuler = function() {
                                         y:event.clientY
 
                                     });
-                                    
+
                                     if(v0_dir==='middle'){
                                         var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
                                         if(seleElem.length!==0){
@@ -2574,13 +3019,13 @@ PLAYER.timeRuler = function() {
                                                 y:event.clientY
                                             });
                                         }
-                                        
+
                                     }
-                                    
+
                                     PLAYER.operateJson.sendJson();
                                 }
 
-                                
+
                             }
                             //click结束
                             if(!PLAYER.clickOrMove&&v0_dragging&&v0_dragging.hasClass('draggable')){
@@ -2592,8 +3037,8 @@ PLAYER.timeRuler = function() {
                                     y:event.clientY,
                                     intId:id
                                 });
-                               
-                                
+
+
                                 if(v0_dir==='middle'){
                                     var seleElem=PLAYER.operateJson.chooseSelectedElem(v0_dragging);
                                     if(seleElem.length!==0){
@@ -2620,25 +3065,25 @@ PLAYER.timeRuler = function() {
                                             intId:id
                                         });
                                     }
-                                    
-                                        
+
+
                                 }
 
                                 if(PLAYER.keyNum===85){
                                     PLAYER.operateJson.sendJson();
                                 }
-                                
+
                             }
-                            
-                            v0_dragging=null; 
+
+                            v0_dragging=null;
                             dragging=null;
                             min_left=0;
                             max_right=0;
                             min_in=0;
                             max_out=0;
-                            arr_left=[]; 
+                            arr_left=[];
                             arr_right=[];
-                            arr_in=[]; 
+                            arr_in=[];
                             arr_out=[];
                         break;
                     case 'click':
@@ -2703,7 +3148,7 @@ PLAYER.timeRuler = function() {
                             });
                         }
                         break;*/
-                }  
+                }
             }
             dragdrop.enable=function(){
                 PLAYER.EventUtil.addHandler(document,'mousedown',handleEvent);
@@ -2728,7 +3173,7 @@ PLAYER.timeRuler = function() {
                 //PLAYER.EventUtil.removeHandler(document,'contextmenu',handleEvent);
             };
             return dragdrop;
-        }()   
+        }()
     }
     /*初始化整个结构函数*/
     function drawRuler() {
@@ -2740,10 +3185,10 @@ PLAYER.timeRuler = function() {
         config.$headerLeft=$('<div class="' + targetObj + '_header_left fl">'
                 +'<div class="time_ruler_title_nowTime" id="js_time_ruler_title_nowTime">00:00:00:00</div>'
                 +'<div class="time_ruler_title_toolbar">'
-                    +'<span class="toolbar_insert_model add_audio_track" title="添加音频轨道" id="js_add_audio_track">'
+                    /*+'<span class="toolbar_insert_model add_audio_track" title="添加音频轨道" id="js_add_audio_track">'
                         +'<a class="fa fa-plus"></a>'
                     +'</span>'
-                    /*+'<span class="toolbar_insert_model add_audio_track" title="添加音频轨道" id="js_add_audio_track">'
+                    +'<span class="toolbar_insert_model add_audio_track" title="添加音频轨道" id="js_add_audio_track">'
                         +'<a class="fa fa-plus"></a>'
                     +'</span>'
                     +'<span class="toolbar_insert_model add_subtitle_track" title="添加字幕轨道" id="js_add_subtitle_track">'
@@ -2758,7 +3203,7 @@ PLAYER.timeRuler = function() {
 
         config.$rulerWrap=$('<div class="' + targetObj + '_canvas_wrap"></div>');
         config.$ruler = $('<canvas class="' + targetObj + '_canvas"></canvas>');
-        config.$ruler.attr("width", config.$headerRight.width());  
+        config.$ruler.attr("width", config.$headerRight.width());
         config.$rulerWrap.append(config.$ruler);
 
         config.$headerRight.append(config.$rulerWrap);
@@ -2811,7 +3256,7 @@ PLAYER.timeRuler = function() {
             +'<div class="' + targetObj + '_bar bar_a"data-type="a" data-index="1"></div>'
             +'<div class="' + targetObj + '_bar bar_a"data-type="a" data-index="2"></div>'
         );
-        
+
         config.$line=$('<div class="'+targetObj+'_line">');
         config.$clipTrackLeftRight.append(config.$clipTrackBar);
         config.$clipTrackLeftRight.append(config.$line);
@@ -2874,13 +3319,12 @@ PLAYER.timeRuler = function() {
             var dMinFPP=(unitTablePal[i].smallScaleFrame*unitTablePal[i].smallScaleNumsPerLargeScale)/80;
             if(_m<=dMinFPP){
                 arr.push(i);
-            } 
+            }
         }
         obj.smallScaleFrame=unitTablePal[arr[0]].smallScaleFrame;
         obj.smallScaleNumsPerLargeScale=unitTablePal[arr[0]].smallScaleNumsPerLargeScale;
         return obj;
     }
-
     /*初始化滚动条宽度函数*/
     function initScrollWidth(){
         var config = self.config;
@@ -2890,21 +3334,21 @@ PLAYER.timeRuler = function() {
         scrollLeftWidth=config.$sliderBarLeft.width();
         scrollRightWidth=config.$sliderBarRight.width();
         inittotalScrollWidth= (config.$headerRight.width() * config.$sliderTrack.width() / config.$rulerWrap.width());  //843
-        
+
         //滚动条可滚动距离
         scrollBtnMovableDistance = parseInt(config.$sliderTrack.width() -inittotalScrollWidth);
         //刻度可滚动距离
-        containerMovableDistance = parseInt(config.$rulerWrap.width() - config.$headerRight.width()); 
-        
+        containerMovableDistance = parseInt(config.$rulerWrap.width() - config.$headerRight.width());
+
         if (inittotalScrollWidth>=config.$sliderTrack.width()) {
             inittotalScrollWidth =config.$sliderTrack.width();
         }
         config.$sliderBar.css('width',inittotalScrollWidth);
         config.$sliderBar.css('left',0);
         config.$sliderBarMiddle.css("width", inittotalScrollWidth-scrollLeftWidth-scrollRightWidth);
-        config.$sliderBarMiddle.css("left", scrollLeftWidth);             
+        config.$sliderBarMiddle.css("left", scrollLeftWidth);
         config.$sliderBarLeft.css('left',0);
-        config.$sliderBarRight.css('left',inittotalScrollWidth-scrollRightWidth);  
+        config.$sliderBarRight.css('left',inittotalScrollWidth-scrollRightWidth);
     }
     /*初始化画布函数*/
     function drawCanvas(scrollLeft) {
@@ -2923,7 +3367,7 @@ PLAYER.timeRuler = function() {
         ctx.fillStyle = config.backgroundColor;
         ctx.fillRect(0, 0, rulerWidth, rulerHeight);  //画正方形
 
-        var linePosition = rulerHeight;                   
+        var linePosition = rulerHeight;
 
         //设置画笔线性样式
         ctx.lineWidth = 1;
@@ -2933,14 +3377,14 @@ PLAYER.timeRuler = function() {
         ctx.textAlign = "center";
 
         //添加画笔路径
-        ctx.beginPath(); 
+        ctx.beginPath();
 
         //画时间轴下边线
-       /* ctx.moveTo(0, linePosition);     
+       /* ctx.moveTo(0, linePosition);
         ctx.lineTo(rulerWidth, linePosition);*/
 
         var textPos = parseInt(scrollLeft / config.largeScaleWidth) * config.largeScaleMillisecondInterval;  //0
-        
+
         var offsetNums = parseInt(scrollLeft / config.smallScaleWidth) + 1; //1
 
         var offsetLeft = offsetNums * config.smallScaleWidth - scrollLeft; //20
@@ -2954,27 +3398,27 @@ PLAYER.timeRuler = function() {
         while (lastTopRulerPos < rulerWidth) {
 
             lastTopRulerPos = index * config.smallScaleWidth + .3 + offsetLeft;   //10.5-20.5-30.5-40.5.......800.5
-            
+
 
             if (beginIndex % config.smallScaleNumsPerLargeScale == 0) {
                 //每隔100 画一大格
                 ctx.moveTo(lastTopRulerPos, linePosition - 1);                       //(100.5,25)
-                ctx.lineTo(lastTopRulerPos, linePosition - config.largeScaleHeight); //(100.5,12.5)  
-                
-                textPos += config.largeScaleMillisecondInterval;   //1e4,2e4,3e4,.....            
+                ctx.lineTo(lastTopRulerPos, linePosition - config.largeScaleHeight); //(100.5,12.5)
+
+                textPos += config.largeScaleMillisecondInterval;   //1e4,2e4,3e4,.....
                 var nTime = PLAYER.$millisecondsToTimeFrame(textPos);      //大格上时间文本
-                
+
                 ctx.fillText(nTime, lastTopRulerPos, linePosition - config.largeScaleHeight - 3);  //(text,x,27.5)
             } else {
                 //每隔10距离画小格
                 ctx.moveTo(lastTopRulerPos, linePosition - 1);                         //(10.5,25)
-                ctx.lineTo(lastTopRulerPos, linePosition - config.smallScaleHeight);   //(10.5,18.5)  
+                ctx.lineTo(lastTopRulerPos, linePosition - config.smallScaleHeight);   //(10.5,18.5)
 
             }
             index++;
             beginIndex++;
         }
-        ctx.stroke();  
+        ctx.stroke();
     }
     /*总的文档事件函数*/
     function handleDocumentEvent() {
@@ -2988,6 +3432,18 @@ PLAYER.timeRuler = function() {
         var targetObj=self.targetObj;
         config.$headerRight.width(config.$headerRight.parent().width()-151);
         self.updateEvent(self.config.maxTime,true);
+
+        //随着窗口变化播放器宽高跟着变化
+        var elem = document.getElementById("ocx");
+		var oStyle = elem.currentStyle?elem.currentStyle:window.getComputedStyle(elem, null);
+		var height = parseFloat(oStyle.height);
+        var playerWidth=parseFloat((16*height/9));
+        $('#ocx').width(playerWidth);
+        $('#ocx').css('marginLeft',($('.player').width()-playerWidth)/2);
+
+        $('#js_dragger_subtitle_wrap').width(playerWidth);
+        $('#js_dragger_subtitle_wrap').css('marginLeft',($('.player').width()-playerWidth)/2);
+
     }
     /*关于移动游标事件函数开始*/
     function handleArrowEvent() {
@@ -3028,7 +3484,7 @@ PLAYER.timeRuler = function() {
             e = e || event;
             x = e.clientX;
             y = e.clientY;
-            _left = title.offsetLeft; 
+            _left = title.offsetLeft;
             _top = title.offsetTop;
             this.ondragstart = function() {
                 return false;
@@ -3055,9 +3511,9 @@ PLAYER.timeRuler = function() {
         //求出鼠标距离容器left值
         var cursorX = mouseX - config.$headerRight.offset().left;
         var ml=Math.abs(parseFloat(config.$rulerWrap.css("margin-left")));
-        
+
         currPos = cursorX + ml;
-        currPos = parseFloat(currPos*config.framePerPixel)/config.framePerPixel; //获得整数位帧数的位置  
+        currPos = parseFloat(currPos*config.framePerPixel)/config.framePerPixel; //获得整数位帧数的位置
 
         if(currPos<=0){
             currPos=0;
@@ -3065,27 +3521,27 @@ PLAYER.timeRuler = function() {
         if(currPos>=config.$rulerWrap.width()){
             currPos=config.$rulerWrap.width();
         }
- 
+
         if(currPos-ml>w){
             newContainerMarginLeft = currPos - w;
             scrollBtnMovableDistance = parseFloat(config.$sliderTrack.width() -config.$sliderBar.width());//滚动条可滚动距离
             containerMovableDistance = parseFloat(config.$rulerWrap.width() - w); //刻度可滚动距离
-            
+
             newTotalBtnScollLeft=newContainerMarginLeft*scrollBtnMovableDistance/containerMovableDistance;
 
             config.$sliderBar.css('left',newTotalBtnScollLeft);
             config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
             config.$ruler.css("left", newContainerMarginLeft);
-            drawCanvas(newContainerMarginLeft); 
+            drawCanvas(newContainerMarginLeft);
             //重新滚动条
             config.$sliderBar.css('left',newTotalBtnScollLeft);
             //重新计算刻度容器
             config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
-            config.$ruler.css("left", newContainerMarginLeft); 
+            config.$ruler.css("left", newContainerMarginLeft);
 
             config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
             //更新canvas画布
-            drawCanvas(newContainerMarginLeft);   
+            drawCanvas(newContainerMarginLeft);
         }
         if(currPos<ml){
             newContainerMarginLeft = currPos;
@@ -3094,14 +3550,14 @@ PLAYER.timeRuler = function() {
             config.$sliderBar.css('left',newTotalBtnScollLeft);
             config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
             config.$ruler.css("left", newContainerMarginLeft);
-            drawCanvas(newContainerMarginLeft); 
+            drawCanvas(newContainerMarginLeft);
             //重新滚动条
             config.$sliderBar.css('left',newTotalBtnScollLeft);
             //重新计算刻度容器
             config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
-            config.$ruler.css("left", newContainerMarginLeft); 
+            config.$ruler.css("left", newContainerMarginLeft);
             config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
-            
+
             //更新canvas画布
             drawCanvas(newContainerMarginLeft);
         }
@@ -3109,42 +3565,43 @@ PLAYER.timeRuler = function() {
         config.$cursor.css("left", currPos);
         config.$line.css("left", currPos);
 
-        var preSeekTime = self.currTime; 
-        self.currTime =  Math.round(currPos*config.framePerPixel);        
+        var preSeekTime = self.currTime;
+        self.currTime =  Math.round(currPos*config.framePerPixel);
         if (callback !== null && preSeekTime !==self.currTime) {
             callback(self.currTime);
         }
-    } 
-    function seekToCursorFrame(time) { 
+    }
+    function seekToCursorFrame(time) {
+        PLAYER.buffHas=false;
         PLAYER.checkPlaying();
         self.currTime=time;
         self.fixArrowCurrentTime(time);
 
         PLAYER.OCX.seek(time);   //必须seek在播放器轨道前，因为播放器最大时常不加15000帧
-        
+
         if(time>=PLAYER.PTR.config.maxTime){
             time=PLAYER.PTR.config.maxTime;
         }
         PLAYER.PTR.currTime=time;
         PLAYER.PTR.fixArrowCurrentTime(time);
-        
+
         var s=PLAYER.operateJson.checkCorsorhasClip(self.currTime);
-        
+
         if(!s){
-            var c1 = document.getElementById("js_voCanvas"); 
-            var ctx = c1.getContext("2d"); 
-            ctx.clearRect(0,0,100,500) 
+            var c1 = document.getElementById("js_voCanvas");
+            var ctx = c1.getContext("2d");
+            ctx.clearRect(0,0,100,500)
         }
-    }  
+    }
     function getVideoCurrFrame(time){
         PLAYER.checkPlaying();
         var config=self.config;
         config.seekComandTimesMonitor.push(time);
-    }  
+    }
     function getDragInfo(target,ev){
         var attr={};
         attr.clipInitTime=target.attr('data-time');
-        
+
         attr.clipInitWidth=parseInt(target.outerWidth());
         attr.clipInitLeft=parseInt(target.position().left);
         attr.clipInitClientX=ev.x;
@@ -3196,8 +3653,8 @@ PLAYER.timeRuler = function() {
         dragging=ev.target;
         PLAYER.checkPlaying();
         if($('.space').size()!==0){
-           $('.space').remove(); 
-        }  
+           $('.space').remove();
+        }
     }
     var help_index;
     //拖拽中clip
@@ -3205,15 +3662,15 @@ PLAYER.timeRuler = function() {
         var config=self.config;
         var target=$(ev.target);
         var parentWidth=config.$header.width();
-        
+
         var id=target.attr('data-time');
         var cal_index;
-        
+
         var helpElem=PLAYER.operateJson.getDraggingHelp(id); //联动助手
-        
+
         helpElem.show();
         var initAttr=JSON.parse(PLAYER.operateJson.getDraggingAttr(id));
-        
+
         clipInitWidth=initAttr.clipInitWidth;
         clipInitLeft=initAttr.clipInitLeft;
         clipInitClientX=initAttr.clipInitClientX;
@@ -3225,19 +3682,19 @@ PLAYER.timeRuler = function() {
         clipInitIndex=initAttr.clipInitIndex;
         clipInitType=initAttr.clipInitType;
 
-        
+
 
         clipInitTrimIn=initAttr.clipInitTrimIn;
         clipInitTrimOut=initAttr.clipInitTrimOut;
         clipInitSequenceTrimIn=initAttr.clipInitSequenceTrimIn;
         clipInitSequenceTrimOut=initAttr.clipInitSequenceTrimOut;
-        clipMaxFrame=initAttr.clipMaxFrame; 
+        clipMaxFrame=initAttr.clipMaxFrame;
 
         //移动状态
         var clipDir=target.attr('data-clipdir');
         PLAYER.operateJson.mouseMoveState(helpElem,clipDir);
-        
-        
+
+
         if(clipDir==='middle'){
             var move=(ev.x-clipInitClientX);
             var moveFrame=Math.floor((ev.x-clipInitClientX)*config.framePerPixel);
@@ -3250,16 +3707,16 @@ PLAYER.timeRuler = function() {
             if(sequenceTrimIn<=0){
                 sequenceTrimIn=0;
             }
-           
+
             sequenceTrimOut=sequenceTrimIn+(helpElem.attr('data-trimout')-helpElem.attr('data-trimin'));
             nowLeft=sequenceTrimIn/config.framePerPixel;
-            
+
             checkAdhereMiddle(helpElem,moveFrame);
             PLAYER.help_index=ev.cal_index;
             if(PLAYER.help_index && PLAYER.help_index>=1){
-                addHelpObj(helpElem,clipInitType,PLAYER.help_index);  
+                addHelpObj(helpElem,clipInitType,PLAYER.help_index);
             }
-          
+
             helpElem.attr('data-sequencetrimin',sequenceTrimIn);
             helpElem.attr('data-sequencetrimout',sequenceTrimOut);
             helpElem.css('left',nowLeft);
@@ -3273,7 +3730,7 @@ PLAYER.timeRuler = function() {
 
             trimIn=clipInitTrimIn+moveFrame;
             sequenceTrimIn=clipInitSequenceTrimOut-clipInitTrimOut+trimIn;
-            
+
             if(target.attr('data-type')!=='subtitle'&&target.attr('data-type')!=='video'){
                 if(trimIn<=0){
                     trimIn=0;
@@ -3297,7 +3754,7 @@ PLAYER.timeRuler = function() {
                 nowLeft=0;
                 sequenceTrimIn=0;
                 trimIn=clipInitTrimOut-clipInitSequenceTrimOut;
-                nowWidth=clipInitWidth+clipInitLeft;  
+                nowWidth=clipInitWidth+clipInitLeft;
             }
             checkAdhereLeft(helpElem,moveFrame);
 
@@ -3343,11 +3800,11 @@ PLAYER.timeRuler = function() {
             helpElem.attr('data-trimout',trimOut);
             helpElem.attr('data-sequencetrimout',sequenceTrimOut);
             helpElem.css('width',nowWidth);
-        } 
-        
+        }
+
         function getOut(max_out){
             var _s;
-            
+
             $.each(helpElem.siblings(),function(i,n){
                 if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
 
@@ -3361,7 +3818,7 @@ PLAYER.timeRuler = function() {
                     }
                 }
             });
-            
+
 
             if(!_s){
                 var intid=helpElem.attr('data-intid');
@@ -3384,7 +3841,7 @@ PLAYER.timeRuler = function() {
                             }
                         });
                     }
-                }); 
+                });
             }
 
             return _s;
@@ -3404,7 +3861,7 @@ PLAYER.timeRuler = function() {
                     }
                 }
             });
-            
+
             if(!_s){
                 var intid=helpElem.attr('data-intid');
                 var elem;
@@ -3425,7 +3882,7 @@ PLAYER.timeRuler = function() {
                             }
                         });
                     }
-                }); 
+                });
             }
             return _s;
         }
@@ -3433,8 +3890,8 @@ PLAYER.timeRuler = function() {
             if(move>0){
                 var max_sout=ev.max_out+moveFrame;
                 var adhere_point=getOut(max_sout);   //获取所有切片的吸附点
-                
-                
+
+
                 var offset=Math.abs(max_sout-adhere_point)/config.framePerPixel;
 
                 if(Math.abs(offset)<=10){
@@ -3477,7 +3934,7 @@ PLAYER.timeRuler = function() {
 
             var min_sIn=ev.min_in+moveFrame;
             var adhere_point=getIn(min_sIn);   //获取所有切片的吸附点
-            
+
             var offset=Math.abs(min_sIn-adhere_point)/config.framePerPixel;
 
             if(Math.abs(offset)<=10){
@@ -3501,13 +3958,13 @@ PLAYER.timeRuler = function() {
             var max_sout=ev.max_out+moveFrame;
             var adhere_point=getOut(max_sout);   //获取所有切片的吸附点
             var offset=(max_sout-adhere_point)/config.framePerPixel;
-            
+
             if(Math.abs(offset)<=10){
                 //更具吸附点设置切片位置属性
                 max_sout=adhere_point;
-                
+
                 sequenceTrimOut=clipInitSequenceTrimOut+max_sout-ev.max_out;
-                
+
                 trimOut=clipInitTrimOut+(sequenceTrimOut-clipInitSequenceTrimOut);
                 nowWidth=Math.round((sequenceTrimOut-clipInitSequenceTrimIn)/config.framePerPixel);
                 //显示吸附线
@@ -3515,9 +3972,9 @@ PLAYER.timeRuler = function() {
             }else{
                 //隐藏吸附线
                 PLAYER.operateJson.hideAdhere(helpElem);
-            } 
+            }
         }
-        
+
     }
     function addHelpObj(obj,clipInitType,cal_index){
         $.each($('.time_ruler_bar[data-type="'+clipInitType+'"]'),function(i,n){
@@ -3536,14 +3993,14 @@ PLAYER.timeRuler = function() {
         var initAttr=JSON.parse(PLAYER.operateJson.getDraggingAttr(id));
         var dir=target.attr('data-clipdir');
         var helpElem=PLAYER.operateJson.getDraggingHelp(id); //联动助手
-        
+
         var sequenceTrimIn=parseInt(helpElem.attr('data-sequencetrimin'));
         var sequenceTrimOut=parseInt(helpElem.attr('data-sequencetrimout'));
         var trimIn=parseInt(helpElem.attr('data-trimin'));
         var trimOut=parseInt(helpElem.attr('data-trimout'));
         var left=helpElem.css('left');
         var width=helpElem.width();
-        
+
         var subClipAttr={
             sequenceTrimIn:sequenceTrimIn,
             sequenceTrimOut:sequenceTrimOut,
@@ -3559,13 +4016,13 @@ PLAYER.timeRuler = function() {
 
         //判断对象是否有中间淡入淡出特技
         if(dir!=='left'&&initAttr.nextClip){
-            
+
             var _type=target.find('.effect_box_r').attr('data-type');
             var _pos=target.find('.effect_box_r').attr('data-pos');
             PLAYER.operateJson.removeOtherEffectClip(id,_type,_pos);
             $('.edit_box_v').each(function(i,n){
                 if($(n).attr('data-time')===initAttr.nextClip){
-                    
+
                     var _type=$(n).find('.effect_box_l').attr('data-type');
                     var _pos=$(n).find('.effect_box_l').attr('data-pos');
                     PLAYER.operateJson.removeOtherEffectClip(initAttr.nextClip,_type,_pos);
@@ -3574,7 +4031,7 @@ PLAYER.timeRuler = function() {
                 }
             });
             target.find('.effect_box_r').remove();
-            
+
         }else if(dir!=='right'&&initAttr.prevClip){
             var _type=target.find('.effect_box_l').attr('data-type');
             var _pos=target.find('.effect_box_l').attr('data-pos');
@@ -3594,7 +4051,7 @@ PLAYER.timeRuler = function() {
         var clipInitType=helpElem.parent().attr('data-type');
         var cal_index=parseInt(helpElem.parent().attr('data-index'));
         addHelpObj(target,clipInitType,cal_index);
-        
+
         var arr=[];
         $.each(helpElem.siblings(),function(i,n){
             if(!$(n).hasClass('onselected') && !$(n).hasClass('changeHelp')){
@@ -3607,10 +4064,10 @@ PLAYER.timeRuler = function() {
         //更新json
         var _index=parseInt(helpElem.parent().attr('data-index'));
         var _type=helpElem.parent().attr('data-type');
-        
 
-        PLAYER.operateJson.updateClipAttr(subClipAttr,id); 
-        PLAYER.operateJson.changeIndexClipAttr(_type,_index,id); 
+
+        PLAYER.operateJson.updateClipAttr(subClipAttr,id);
+        PLAYER.operateJson.changeIndexClipAttr(_type,_index,id);
         //移除助手
         PLAYER.operateJson.removeDraggingInfo(id);
         helpElem.remove();
@@ -3633,7 +4090,7 @@ PLAYER.timeRuler = function() {
         function cutSubclip(v_target,ev){
 
             //原素材
-            var v0_sequenceTrimIn=0; 
+            var v0_sequenceTrimIn=0;
             var v0_sequenceTrimOut=0;
             var v0_trimIn=0;
             var v0_trimOut=0;
@@ -3644,18 +4101,18 @@ PLAYER.timeRuler = function() {
             var vcut_trimOut=0;
             //原素材属性
             var v_dataId=v_target.attr('data-id');
-            
-            var v_dataTime=v_target.attr('data-time'); 
+
+            var v_dataTime=v_target.attr('data-time');
             var v_interleaved=v_target.attr('data-interleaved');
             var v_index=parseInt(v_target.parent('.time_ruler_bar').attr('data-index'));
             var v_type=v_target.attr('data-type');
-            var _createTime=v_type+'_'+PLAYER.genNonDuplicateID(12);
+            var subclipId=v_type+'_'+PLAYER.genNonDuplicateID(12);
             var v_offsetLeft=parseInt(v_target.offset().left);
             var v_width=parseInt(v_target.width());
             //切后素材属性
             var add_subclip;
             var add_subclip_attr;
-            
+
             if(ev.x<=v_offsetLeft){
                 return false;
             }
@@ -3669,13 +4126,13 @@ PLAYER.timeRuler = function() {
             v0_trimOut=parseInt(v0_trimIn+Math.round(_w*config.framePerPixel));
             v0_sequenceTrimIn=parseInt(v_target.attr('data-sequencetrimin'));
             v0_sequenceTrimOut=parseInt(v0_sequenceTrimIn+Math.round(_w*config.framePerPixel));
-            
+
             //切后节点属性
             vcut_trimIn=v0_trimOut;
             vcut_trimOut=parseInt(v_target.attr('data-trimout'));
             vcut_sequenceTrimIn=v0_sequenceTrimOut;
             vcut_sequenceTrimOut=parseInt(v_target.attr('data-sequencetrimout'));
-            
+
             //切片后新加切片
             add_subclip=v_target.clone();
             //除了马赛克其他特技不存在
@@ -3685,13 +4142,13 @@ PLAYER.timeRuler = function() {
             if(add_subclip.find('.effect_box_r')){
                 v_target.find('.effect_box_r').remove();
             }
-            
+
             add_subclip.removeClass('onselected');
             add_subclip.attr('data-trimin',vcut_trimIn);
             add_subclip.attr('data-trimout',vcut_trimOut);
             add_subclip.attr('data-sequencetrimin',vcut_sequenceTrimIn);
             add_subclip.attr('data-sequencetrimout',vcut_sequenceTrimOut);
-            add_subclip.attr('data-time',_createTime);
+            add_subclip.attr('data-time',subclipId);
             add_subclip.attr('data-intid',ev.intId);
 
             var _left=ev.x-v_target.parent().offset().left;
@@ -3699,18 +4156,18 @@ PLAYER.timeRuler = function() {
             add_subclip.css('left',_left);
             add_subclip.css('width',_width);
             v_target.parent('.time_ruler_bar').append(add_subclip);
-            
+
 
             if(v_target.parent('.time_ruler_bar').hasClass('bar_v')){
                 var e_attr=PLAYER.operateJson.getCutNewEffectClip(v_dataTime,vcut_trimIn,vcut_trimOut);
                 add_subclip_attr={
-                    "assetID": v_dataId,
+                    "assetid": v_dataId,
                     "trimIn": vcut_trimIn,
                     "trimOut":vcut_trimOut,
                     "sequenceTrimIn": vcut_sequenceTrimIn,
                     "sequenceTrimOut":vcut_sequenceTrimOut,
                     "effect":e_attr,
-                    "createTime":_createTime,
+                    "subclipId":subclipId,
                     "type":v_type,
                     "interleaved_id":ev.intId
                 }
@@ -3719,18 +4176,18 @@ PLAYER.timeRuler = function() {
                 }else{
                     add_subclip_attr.interleaved=false;
                 }
-                
+
                 PLAYER.operateJson.addVideoClipAttr(add_subclip_attr,v_index);
-                
+
             }else if(v_target.parent('.time_ruler_bar').hasClass('bar_a')){
                 add_subclip_attr={
-                    "assetID": v_dataId,
+                    "assetid": v_dataId,
                     "trimIn": vcut_trimIn,
                     "trimOut":vcut_trimOut,
                     "sequenceTrimIn": vcut_sequenceTrimIn,
                     "sequenceTrimOut":vcut_sequenceTrimOut,
                     "volume":100,
-                    "createTime":_createTime,
+                    "subclipId":subclipId,
                     "type":v_type,
                     "interleaved_id":ev.intId
                 }
@@ -3739,7 +4196,7 @@ PLAYER.timeRuler = function() {
                 }else{
                     add_subclip_attr.interleaved=false;
                 }
-                
+
                 PLAYER.operateJson.addAudioClipAttr(add_subclip_attr,v_index);
 
             }else if(v_target.parent('.time_ruler_bar').hasClass('bar_t')){
@@ -3749,13 +4206,13 @@ PLAYER.timeRuler = function() {
                     "trimOut":vcut_trimOut,
                     "sequenceTrimIn":vcut_sequenceTrimIn,
                     "sequenceTrimOut":vcut_sequenceTrimOut,
-                    "createTime":_createTime,
+                    "subclipId":subclipId,
                     "type":v_type,
                     "interleaved_id":ev.intId
                 }
-                
+
                 $.extend(msg,subClipAttr_cut);
-                PLAYER.operateJson.addSubtitleClipAttr(msg,v_index); 
+                PLAYER.operateJson.addSubtitleClipAttr(msg,v_index);
             }
 
             v_target.attr('data-trimout',v0_trimOut);
@@ -3772,7 +4229,7 @@ PLAYER.timeRuler = function() {
             var e_attr2=PLAYER.operateJson.getCutOldEffectClip(v_dataTime,v0_trimIn,v0_trimOut);
 
             PLAYER.operateJson.updateClipAttr(v0_subClipAttr,v_dataTime,e_attr2);
-        } 
+        }
         //console.log($('.onselected').hasClass('.edit_box_a '))
     }
     /*关于clip移入函数开始*/
@@ -3801,27 +4258,27 @@ PLAYER.timeRuler = function() {
             target.css({cursor:"url(images/cur/zoom_minus.cur),default"});
         }
         else{
-            
-            if(Math.abs(_s+_l-_x)<=8){     
-                target.css({cursor:"url(images/cur/cursor1.cur),default"});    
+
+            if(Math.abs(_s+_l-_x)<=8){
+                target.css({cursor:"url(images/cur/cursor1.cur),default"});
             }
             else if(Math.abs(_s+_l+_w-_x)<=8){
-                target.css({cursor:"url(images/cur/cursor2.cur),default"}); 
+                target.css({cursor:"url(images/cur/cursor2.cur),default"});
             }else{
-                target.css({cursor:"default"});  
+                target.css({cursor:"default"});
             }
-        } 
+        }
 
     }
     /*关于点击删除空隙事件开始*/
     function handleSequenceClickEvent(ev){
-        
+
         var config=self.config;
         var targetObj = self.targetObj;
         var s=ev.target.children().length;
 
         if(s!==0){
-            
+
             if($('.space').size()!==0){
                $('.space').remove(); //点击生成空隙前先删除所有的空隙
             }
@@ -3865,15 +4322,15 @@ PLAYER.timeRuler = function() {
             space.css('left',max_out/config.framePerPixel);
             space.css('width',(min_in-max_out)/config.framePerPixel);
             space.insertBefore(right_dom);
-            
+
 
             if(right_dom.attr('data-interleaved')==="true"){
 
                 var dragging=PLAYER.operateJson.chooseInterleavedElem(right_dom)
-                
+
                 arr_init_sequenceTrimIn.push(parseInt(dragging.attr('data-sequencetrimin')));
                 if(parseInt(dragging.siblings().attr('data-sequencetrimout'))<=parseInt(dragging.attr('data-sequencetrimin'))){
-                    arr_init_sequenceTrimOut.push(parseInt(dragging.siblings().attr('data-sequencetrimout')));  
+                    arr_init_sequenceTrimOut.push(parseInt(dragging.siblings().attr('data-sequencetrimout')));
                 }
             }
             var vcut_init_sequenceTrimIn;
@@ -3902,7 +4359,7 @@ PLAYER.timeRuler = function() {
         var targetObj = self.targetObj;
         var target=ev.target;
         target.toggleClass('onEffect');
-        
+
         if(target.attr('data-pos')==='footer-middle'){
             var sout=parseInt(target.parent().attr('data-sequencetrimout'));
             var nextClip=PLAYER.operateJson.checkNextSubClip(sout);
@@ -3913,10 +4370,13 @@ PLAYER.timeRuler = function() {
             var nextClip=PLAYER.operateJson.checkPrevSubClip(sin);
             nextClip.children('.effect_box_r').toggleClass('onEffect');
         }
-    }  
+    }
     /*关于双击字幕事件开始*/
     function handleClipDblclickEvent(ev){
-        PLAYER.hideSubititleEdit();
+        PLAYER.TR.DragDrop.disable();
+        PLAYER.PTR.DragDrop.disable();
+        PLAYER.documentEvent.enable();
+
         var config=self.config;
         var targetObj = self.targetObj;
         var target=ev.target;
@@ -3925,219 +4385,276 @@ PLAYER.timeRuler = function() {
         var index=parseInt(target.parent().attr('data-index'));
         var type=target.parent().attr('data-type');
         var subtitleAttr=JSON.parse(PLAYER.operateJson.getSubtitleClip(time,index));
-        
+        var playerFrame=subtitleAttr.frame;
+        var objectText=subtitleAttr.object.filter(item=>item.type==='text');
         PLAYER.showSubititleEdit();
+
+        //添加参数编辑去
         _addSubtitleDom(subtitleAttr);
-        _initSubtitleStyle(subtitleAttr,subtitleAttr.id,type);
-        _initSubtitleOperate(subtitleAttr,time,index,type,'subtitle');
-
+        //添加字幕颜色插件
+        objectText.forEach(function(item,i){
+            let targetId=item.objectId;
+            let elm= $(".subtitle_color[data-id="+targetId+"]");
+            let initColor=item.attr.fillStyle;
+            _addSubtitleColor(elm,targetId,initColor,subtitleAttr,time,index,type,'subtitle');
+        });
+        //添加字幕编辑框
+        _addSubtitleFrame(playerFrame);
+         //操作字幕拖拽框
+        _operateSubtitleFrame(playerFrame,time,index,type,'subtitle');
+        //操作字幕编辑区
+        _operateSubtitleDom(subtitleAttr,time,index,type,'subtitle');
     }
-    /*字幕右侧编辑框*/
+    /*字幕左侧编辑框*/
     function _addSubtitleDom(subtitleAttr){
-        $('#js_subtitle_h_form').empty();
+        $('.conetent_tabs1 .subtitle_h_form').empty();
+        $('.conetent_tabs2 .subtitle_h_form').empty();
         var id=subtitleAttr.id;
-        var elm1;
-        //2个图文
-        elm1=$(
-            '<div class="form-group">'
-                +'<label class="col-md-4 control-label" for="fontsize">左边距</label>'
-                +'<div class="col-md-8">'
-                    +'<input type="range" class="form-control" id="js_subtitle_left" step="0.5">'
-                +'</div>'
-            +'</div>'
-            +'<div class="form-group">'
-                +'<label class="col-md-4 control-label" for="name" ></label>'
-                +'<div class="col-md-8">'
-                    +'<input type="text" class="form-control" id="js_subtitle_left_value" disabled="disabled">'
-                +'</div>'
-            +'</div>'
-            +'<div class="form-group">'
-                +'<label class="col-md-4 control-label" for="fontsize">上边距</label>'
-                +'<div class="col-md-8">'
-                    +'<input type="range" class="form-control" id="js_subtitle_top" step="0.5">'
-                +'</div>'
-            +'</div>'
-            +'<div class="form-group">'
-                +'<label class="col-md-4 control-label" for="name" ></label>'
-                +'<div class="col-md-8">'
-                    +'<input type="text" class="form-control" id="js_subtitle_top_value" disabled="disabled">'
-                +'</div>'
-            +'</div>');
-        
-        $('#js_subtitle_h_form').append(elm1);
-        var arrText=subtitleAttr.pixel.filter(function(t){
-            return t.attr.type!=='images';
-        });
-        var arrImages= subtitleAttr.pixel.filter(function(t){
-            return t.attr.type==='images';
-        });
-
-        $.each(arrText,function(i,n){
-            var font=$('<div class="form-group">'
-                    +'<label class="col-md-4 control-label" for="name" >字体'+(i+1)+'</label>'
-                    +'<div class="col-md-8">'
-                        +'<input type="text" class="form-control subtitle_text" id="js_subtitle_text'+(i+1)+'" placeholder="字体'+(i+1)+'" data-id="'+n.attrID+'">'
+        var objectText=subtitleAttr.object.filter(data=>data.type==='text');
+        $.each(objectText,function(i,n){
+            var line1=$('<div class="form-group">'
+                    +'<label class="col-md-2 control-label" for="fonttext" >内容</label>'
+                    +'<div class="col-md-3">'
+                        +'<input type="text" class="form-control subtitle_text" placeholder="你的字体" data-id="'+n.objectId+'" value="'+n.attr.text+'">'
                     +'</div>'
-                +'</div>');
-            var color=$('<div class="form-group">'
-                    +'<label class="col-md-4 control-label" for="fontcolor">字体'+(i+1)+'颜色</label>'
-                    +'<div class="col-md-8">'
-                        +'<input type="text" class="form-control subtitle_color" id="js_subtitle_color'+(i+1)+'" data-control="hue" value="#ffffff" data-id="'+n.attrID+'">'
-                    +'</div>'
-                +'</div>');
-            var size=$('<div class="form-group">'
-                    +'<label class="col-md-4 control-label" for="fontsize">字体'+(i+1)+'字号</label>'
-                    +'<div class="col-md-8">'
-                        +'<input type="number" class="form-control subtitle_fontsize" id="js_subtitle_fontsize'+(i+1)+'" data-id="'+n.attrID+'">'
+                    +'<label class="col-md-2 control-label" for="fontsize">字号</label>'
+                    +'<div class="col-md-3">'
+                        +'<input type="number" class="form-control subtitle_size"  data-id="'+n.objectId+'"  value="'+n.attr.fontSize+'">'
                     +'</div>'
                 +'</div>');
 
-            $('#js_subtitle_h_form').append(font);
-            $('#js_subtitle_h_form').append(color);
-            $('#js_subtitle_h_form').append(size);
-        });
-
-        var btn=$('<div class="form-group">'
-                    +'<label class="col-md-4 control-label" for="name" ></label>'
-                    +'<div class="col-md-8">'
-                        +'<button type="button" class="btn btn-sm pull-right" id="js_subtitle_btn">关闭</button>'
+            var line2=$('<div class="form-group">'
+                    +'<label class="col-md-2 control-label" for="fontcolor">颜色</label>'
+                    +'<div class="col-md-3">'
+                        +'<input type="text" class="form-control subtitle_color"  data-id="'+n.objectId+'">'
+                    +'</div>'
+                    +'<label class="col-md-2 control-label" for="fontcolor">样式</label>'
+                    +'<div class="col-md-3">'
+                        +'<select name="" data-id="'+n.objectId+'" class="form-control subtitle_family" value="'+n.attr.fontFamily+'">'
+                            +'<option value="微软雅黑">微软雅黑</option>'
+                            +'<option value="宋体">宋体</option>'
+                            +'<option value="黑体">黑体</option>'
+                            +'<option value="楷体">楷体</option>'
+                        +'</select>'
                     +'</div>'
                 +'</div>');
-        
-        $('#js_subtitle_h_form').append(btn);
-        //3个图文
+
+            $('.conetent_tabs1 .subtitle_h_form').append(line1);
+            $('.conetent_tabs1 .subtitle_h_form').append(line2);
+        });
     }
-    function _initSubtitleStyle(obj,id,type){
-        
-        var arr=obj.pixel.filter(function(t){
-            return t.attr.type!=='images';
-        }); //过滤掉图元的数组
-        if($('#js_subtitle_h_form').height()>$('.subtitle_h_form_wrap').height()){
-            $('.subtitle_edit_track').show();
-            var s1=new Scrollbar({
-                dirSelector:'y',
-                contSelector:$('.subtitle_h_form_wrap'),
-                barSelector:$('.subtitle_edit_track'),
-                sliderSelector:$('.subtitle_edit_scroll')
-            }); 
-        }
-        if(id==="subtitle_01" || id==="subtitle_02" || id==="subtitle_03" || id==="subtitle_05"|| id==="subtitle_06" || id==="subtitle_07"){
-            $('#js_subtitle_left').attr('max',$('#ocx').width());
-            $('#js_subtitle_top').attr('max',$('#ocx').height());
-            $('#js_subtitle_left').attr('min',0);
-            $('#js_subtitle_top').attr('min',0);
-
-
-            $('#js_subtitle_left,#js_subtitle_left_value').val(arr[0].x1);
-            $('#js_subtitle_top,#js_subtitle_top_value').val(arr[0].y1);
-
-            $('#js_subtitle_text1').val(arr[0].attr.text);
-
-            $('#js_subtitle_fontsize1').val(arr[0].attr.fontSize);
-
-            $('#js_subtitle_color1').val(arr[0].attr.fillStyle);
-
-            $('#js_subtitle_color1').minicolors({
-                control: $(this).attr('data-control') || 'hue',
-                defaultValue: $(this).attr('data-defaultValue') || '',
-                inline: $(this).attr('data-inline') === 'true',
-                letterCase: $(this).attr('data-letterCase') || 'lowercase',
-                opacity: $(this).attr('data-opacity'),
-                position: $(this).attr('data-position') || 'bottom left',
-                change: function(hex, opacity) {
-                    if (!hex)
-                        return;
-                    if (opacity)
-                        hex += ', ' + opacity;
-                    try {
-                        $('#js_subtitle_color1').val(hex)
-                    } catch (e) {
-                        console.log(e);
-                    }
-                },
-                theme: 'bootstrap'
-            });
-        }
-    }
-    function _initSubtitleOperate(obj,time,index,type,effectType){
-        
-        var s_arr=JSON.stringify(obj.pixel);
-        var initArr=JSON.parse(JSON.stringify(obj.pixel));
-        
-        var jsonObj={
+    function _addSubtitleColor(elm,targetId,initColor,subtitleAttr,time,index,type,effectType){
+        old_object=subtitleAttr.object;
+        let jsonObj={
             trackType:type,
             trackIndex:index,
             subClipId:time,
             name:effectType,
-            attr:JSON.parse(s_arr)
+            params:{object:old_object}
         };
-        
-        var newArray=[];
-        $('#js_subtitle_left')[0].oninput=function(e){
-
-            $('#js_subtitle_left_value').val($(e.target).val());
-
-            for (var i = 0; i < jsonObj.attr.length; i++) {
-                jsonObj.attr[i].x1=parseInt($(e.target).val());
+        function updateBorders(color) {
+            var hexColor = "transparent";
+            if(color) {
+                hexColor = color.toHexString();
+                let new_object= PLAYER.operateJson.updateSubtitleObject(old_object,targetId,{fillStyle:hexColor});
+                jsonObj.params.object=new_object;
+                updateSubtitleJson(jsonObj);
             }
-            
-            updateJson(jsonObj);
+            $("#docs-content").css("border-color", hexColor);
+        }
+        elm.spectrum({
+            allowEmpty:true,
+            color: initColor,
+            showInput: true,
+            containerClassName: "full-spectrum",
+            showInitial: true,
+            showPalette: true,
+            showSelectionPalette: true,
+            maxPaletteSize: 10,
+            preferredFormat: "hex",
+            localStorageKey: "spectrum.demo",
+            move: function (color) {
+                //updateBorders(color);
+            },
+            hide: function (color) {
+                updateBorders(color);
+            },
+            palette: [
+                ["rgb(0, 0, 0)", "rgb(67, 67, 67)", "rgb(102, 102, 102)", /*"rgb(153, 153, 153)","rgb(183, 183, 183)",*/
+                "rgb(204, 204, 204)", "rgb(217, 217, 217)", /*"rgb(239, 239, 239)", "rgb(243, 243, 243)",*/ "rgb(255, 255, 255)"],
+                ["rgb(152, 0, 0)", "rgb(255, 0, 0)", "rgb(255, 153, 0)", "rgb(255, 255, 0)", "rgb(0, 255, 0)",
+                "rgb(0, 255, 255)", "rgb(74, 134, 232)", "rgb(0, 0, 255)", "rgb(153, 0, 255)", "rgb(255, 0, 255)"],
+                ["rgb(230, 184, 175)", "rgb(244, 204, 204)", "rgb(252, 229, 205)", "rgb(255, 242, 204)", "rgb(217, 234, 211)",
+                "rgb(208, 224, 227)", "rgb(201, 218, 248)", "rgb(207, 226, 243)", "rgb(217, 210, 233)", "rgb(234, 209, 220)",
+                "rgb(221, 126, 107)", "rgb(234, 153, 153)", "rgb(249, 203, 156)", "rgb(255, 229, 153)", "rgb(182, 215, 168)",
+                "rgb(162, 196, 201)", "rgb(164, 194, 244)", "rgb(159, 197, 232)", "rgb(180, 167, 214)", "rgb(213, 166, 189)",
+                "rgb(204, 65, 37)", "rgb(224, 102, 102)", "rgb(246, 178, 107)", "rgb(255, 217, 102)", "rgb(147, 196, 125)",
+                "rgb(118, 165, 175)", "rgb(109, 158, 235)", "rgb(111, 168, 220)", "rgb(142, 124, 195)", "rgb(194, 123, 160)",
+                "rgb(166, 28, 0)", "rgb(204, 0, 0)", "rgb(230, 145, 56)", "rgb(241, 194, 50)", "rgb(106, 168, 79)",
+                "rgb(69, 129, 142)", "rgb(60, 120, 216)", "rgb(61, 133, 198)", "rgb(103, 78, 167)", "rgb(166, 77, 121)",
+                /*"rgb(133, 32, 12)", "rgb(153, 0, 0)", "rgb(180, 95, 6)", "rgb(191, 144, 0)", "rgb(56, 118, 29)",
+                "rgb(19, 79, 92)", "rgb(17, 85, 204)", "rgb(11, 83, 148)", "rgb(53, 28, 117)", "rgb(116, 27, 71)",*/
+                "rgb(91, 15, 0)", "rgb(102, 0, 0)", "rgb(120, 63, 4)", "rgb(127, 96, 0)", "rgb(39, 78, 19)",
+                "rgb(12, 52, 61)", "rgb(28, 69, 135)", "rgb(7, 55, 99)", "rgb(32, 18, 77)", "rgb(76, 17, 48)"]
+            ]
+        });
+    }
+    function _addSubtitleFrame(playerFrame){
+        if($('.player').find('#js_dragger_subtitle_wrap').size()>0){
+            $('.player').find('#js_dragger_subtitle_wrap').remove();
+        }
+        var elem=$(`<div id="js_dragger_subtitle_wrap">
+            <div id="js_dragger_subtitle">
+                <span class="coverLT" data-type="LT"></span>
+                <span class="coverRT" data-type="RT"></span>
+                <span class="coverLB" data-type="LB"></span>
+                <span class="coverRB" data-type="RB"></span>
+            </div>
+        </div>`);
+        elem.insertAfter($('#ocx'));
+
+        let _w=$('#ocx').width();
+        elem.width(_w);
+        elem.css('margin-left',($('.player').width()-_w)/2);
+        elem.find('#js_dragger_subtitle').width(playerFrame.width);
+        elem.find('#js_dragger_subtitle').height(playerFrame.height);
+        elem.find('#js_dragger_subtitle').css('left',playerFrame.x);
+        elem.find('#js_dragger_subtitle').css('top',playerFrame.y);
+    }
+    function _operateSubtitleFrame(playerFrame,time,index,type,effectType){
+        let s_playerFrame=JSON.stringify(playerFrame);
+        let targetObj;
+        let initLeft=0;
+        let initTop=0;
+        let initWidth=0;
+        let initHeight=0;
+        let initClientX=0;
+        let initClientY=0;
+        let offsetLeft=0;
+        let offsetTop=0;
+
+        let nowLeft=0;
+        let nowTop=0;
+        let nowWidth=0;
+        let nowHeight=0;
+
+        let jsonObj={
+            trackType:type,
+            trackIndex:index,
+            subClipId:time,
+            name:effectType,
+            params:{frame:JSON.parse(s_playerFrame)}
         };
-        
-        $('#js_subtitle_top')[0].oninput=function(e){
-            $('#js_subtitle_top_value').val($(e.target).val());
-            for (var i = 0; i < jsonObj.attr.length; i++) {
-                jsonObj.attr[i].y1=parseInt($(e.target).val());
-            }
-            updateJson(jsonObj);
-        };
-        
-        $('#js_subtitle_h_form .subtitle_text').on('change',function(e){
-            var id=$(e.target).attr('data-id');
-            var newObj={
-                text:$(e.target).val()
-            }
-            changeJson(jsonObj,id,newObj);
-            updateJson(jsonObj);
-        });
-        $('#js_subtitle_h_form .subtitle_color').on('change',function(e){
-            var id=$(e.target).attr('data-id');
-            var newObj={
-                fillStyle:$(e.target).val()
-            }
-            changeJson(jsonObj,id,newObj);
-            updateJson(jsonObj);
-        });
-        $('#js_subtitle_h_form .subtitle_fontsize').on('change',function(e){
-            var id=$(e.target).attr('data-id');
-            var newObj={
-                fontSize:parseInt($(e.target).val())
-            }
-            changeJson(jsonObj,id,newObj);
-            updateJson(jsonObj);
-        });
 
-        $('#js_subtitle_btn').on('click',function(e){
-            PLAYER.hideSubititleEdit();
-        });
+        $('#js_dragger_subtitle')[0].onmousedown=function(e){
+            targetObj=$(e.target).attr('data-type');
+            initClientX=e.clientX;
+            initClientY=e.clientY;
+            initLeft=parseFloat($(this).position().left);
+            initTop=parseFloat($(this).position().top);
+            initWidth=parseFloat($(this).outerWidth());
+            initHeight=parseFloat($(this).outerHeight());
+            document.onmousemove=function(e){
+                e.preventDefault();
+                offsetLeft=e.clientX-initClientX;
+                offsetTop=e.clientY-initClientY;
+                if(targetObj==='LT'){
 
-        function changeJson(jsonObj,id,newObj){
-            $.each(jsonObj.attr,function(i,n){
-                if(n.attrID===id){
-                    $.extend(n.attr,newObj);
+                    nowTop=initTop+offsetTop;
+
+                    nowHeight=initHeight-offsetTop;
+                    nowWidth=16/9*nowHeight;
+
+                    offsetLeft=initWidth-nowWidth;
+                    nowLeft=initLeft+offsetLeft;
+
                 }
-            });
+                else if(targetObj==='LB'){
+                    nowTop=initTop;
+                    nowLeft=initLeft+offsetLeft;
+                    nowWidth=initWidth-offsetLeft;
+                    //nowHeight=initHeight+offsetTop;
+                    nowHeight=9/16*nowWidth;
+
+                }
+                else if(targetObj==='RT'){
+                    nowLeft=initLeft;
+                    nowTop=initTop+offsetTop;
+                    //nowWidth=initWidth+offsetLeft;
+                    nowHeight=initHeight-offsetTop;
+                    //nowHeight=9/16*nowWidth;
+                    nowWidth=16/9*nowHeight;
+                }
+                else if(targetObj==='RB'){
+                    nowTop=initTop;
+                    nowLeft=initLeft;
+                    nowWidth=initWidth+offsetLeft;
+                    //nowHeight=initHeight+offsetTop;
+                    nowHeight=9/16*nowWidth;
+                }else{
+                    nowLeft=initLeft+offsetLeft;
+                    nowTop=initTop+offsetTop;
+                    nowWidth=initWidth;
+                    nowHeight=initHeight;
+                }
+                $('#js_dragger_subtitle').css('left',nowLeft);
+                $('#js_dragger_subtitle').css('top',nowTop);
+                $('#js_dragger_subtitle').css('width',nowWidth)
+                $('#js_dragger_subtitle').css('height',nowHeight);
+
+                $.extend(jsonObj.params.frame,{
+                    x:nowLeft,
+                    y:nowTop,
+                    width:nowWidth,
+                    height:nowHeight
+                });
+                updateSubtitleJson(jsonObj);
+            };
+            document.onmouseup=function(){
+                document.onmousemove=null;
+                document.onmouseup=null;
+            }
         }
 
-        function updateJson(jsonObj){
-
-            PLAYER.OCX.adjustEffect(jsonObj);
-            PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
-            
-            PLAYER.operateJson.updateSubtitleClip(jsonObj);
-        }      
     }
-
+    function _operateSubtitleDom(subtitleAttr,time,index,type,effectType){
+        let old_object=subtitleAttr.object;
+        let jsonObj={
+            trackType:type,
+            trackIndex:index,
+            subClipId:time,
+            name:effectType,
+            params:{object:old_object}
+        };
+        $('.subtitle_text').on('change',function(e){
+            let targetId=$(e.target).attr('data-id');
+            let targetValue=$(e.target).val();
+            let new_object= PLAYER.operateJson.updateSubtitleObject(old_object,targetId,{text:targetValue});
+            jsonObj.params.object=new_object;
+            updateSubtitleJson(jsonObj);
+        });
+        $('.subtitle_size').on('change',function(e){
+            let targetId=$(e.target).attr('data-id');
+            let targetValue=$(e.target).val();
+            let new_object= PLAYER.operateJson.updateSubtitleObject(old_object,targetId,{fontSize:parseInt(targetValue)});
+            jsonObj.params.object=new_object;
+            updateSubtitleJson(jsonObj);
+        });
+        $('.subtitle_family').on('change',function(e){
+            let targetId=$(e.target).attr('data-id');
+            let targetValue=$(e.target).val();
+            let new_object= PLAYER.operateJson.updateSubtitleObject(old_object,targetId,{fontFamily:targetValue});
+            jsonObj.params.object=new_object;
+            updateSubtitleJson(jsonObj);
+        });
+    }
+    function updateSubtitleJson(jsonObj){
+        PLAYER.OCX.adjustEffect(jsonObj);
+        PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime));
+        console.log('更新字幕canshu',jsonObj)
+        PLAYER.operateJson.updateSubtitleClip(jsonObj);
+        console.log('更新字幕json',PLAYER.jsonObj.rootBin.sequence[0].tracks[0]);
+    }
     /*键盘+-快捷键*/
     function privateKeyDownEvent(e){
         var config=self.config;
@@ -4157,7 +4674,7 @@ PLAYER.timeRuler = function() {
         var time=0;             //每个切片的创建时间
         var subClipAttr=null;   //更新切片json
         var prevClipSequenceTrimOut=0;
-        
+
 
         if(key===189){//--
             //PLAYER.keyNum=189;
@@ -4175,26 +4692,26 @@ PLAYER.timeRuler = function() {
         }
         else if(key===46||key===8){//delete/backspace
             key=0;
-            e.returnValue=false;  
+            e.returnValue=false;
             PLAYER.checkPlaying();
 
             if(!e.target.hasClass('form-control')){
                 if($('#js_time_ruler_bar_box .onselected').length>0){
                     $.each($('.onselected'),function(i,n){
-                        
+
                         var time=$(n).attr('data-time');
                         var sequenceTrimIn=parseInt($(n).attr('data-sequencetrimin'));
                         var sequenceTrimOut=parseInt($(n).attr('data-sequencetrimout'));
-                        
+
                         //判断对象是否有中间淡入淡出特技
                         if($(n).find('.effect_box_r').length>=1 && PLAYER.operateJson.checkNextSubClip(sequenceTrimOut)){
                             var nextClip=PLAYER.operateJson.checkNextSubClip(sequenceTrimOut).attr('data-time');
-   
+
                             var _type=$('.edit_box_v[data-time="'+nextClip+'"]').find('.effect_box_l').attr('data-type');
                             var _pos=$('.edit_box_v[data-time="'+nextClip+'"]').find('.effect_box_l').attr('data-pos');
                             PLAYER.operateJson.removeOtherEffectClip(nextClip,_type,_pos);
                             $('.edit_box_v[data-time="'+nextClip+'"]').find('.effect_box_l').remove();
-                           
+
                         }
                         if($(n).find('.effect_box_l').length>=1 && PLAYER.operateJson.checkPrevSubClip(sequenceTrimIn)){
                             var prevClip=PLAYER.operateJson.checkPrevSubClip(sequenceTrimIn).attr('data-time');
@@ -4204,18 +4721,18 @@ PLAYER.timeRuler = function() {
                             PLAYER.operateJson.removeOtherEffectClip(prevClip,_type,_pos);
                             $('.edit_box_v[data-time="'+prevClip+'"]').find('.effect_box_r').remove();
                         }
-                        
-                        
+
+
                         PLAYER.operateJson.deleteClipAttr(time);
                         $(n).remove();
 
-                    }); 
-                    
+                    });
+
                     PLAYER.operateJson.pushCancelArray(PLAYER.jsonObj.rootBin.sequence[0]);
 
                     PLAYER.OCX.updateProjectJson(PLAYER.jsonObj);
                     PLAYER.OCX.seek(parseInt(self.currTime));
-                    
+
 
                     PLAYER.PTR.config.maxTime=(PLAYER.operateJson.getLastFrame()||1000);
                     $('#js_player_totalTime').html(PLAYER.getDurationToString(PLAYER.operateJson.getLastFrame()||0));
@@ -4231,7 +4748,7 @@ PLAYER.timeRuler = function() {
                     var v0_sequencetrimin=0;
                     var v0_sequencetrimout=0;
                     //移动后素材
-                    var vcut_sequenceTrimIn=0; 
+                    var vcut_sequenceTrimIn=0;
                     var vcut_sequenceTrimOut=0;
 
                     if($('.space').attr('data-offset')){
@@ -4239,30 +4756,30 @@ PLAYER.timeRuler = function() {
                     }else {
                         spaceFrame=parseInt($('.space').attr('data-sequencetrimout'))-parseInt($('.space').attr('data-sequencetrimin'));
                     }
-                   
+
                     $.each(s_target,function(i,n){
                         if($(n).attr('data-sequencetrimin')>=currFrame){
                             move($(n));
                             if($(n).attr('data-interleaved')==="true"){
                                 var dragging=PLAYER.operateJson.chooseInterleavedElem($(n))
-                                
+
                                 move(dragging);
-                                
+
                             }
-                        }  
+                        }
                     });
                     function move(target){
                         var v_dataTime=target.attr('data-time');
                         //元数据
                         v0_sequencetrimin=parseInt(target.attr('data-sequencetrimin'));
                         v0_sequencetrimout=parseInt(target.attr('data-sequencetrimout'));
-                        
+
                         console.log('spaceFrame',spaceFrame)
                         console.log('v0_sequencetrimin',v0_sequencetrimin)
                         //移动后数据
                         vcut_sequenceTrimIn=v0_sequencetrimin-spaceFrame;
                         vcut_sequenceTrimOut=v0_sequencetrimout-spaceFrame;
-                        
+
                         target.attr('data-sequencetrimin',vcut_sequenceTrimIn);
                         target.attr('data-sequencetrimout',vcut_sequenceTrimOut);
                         target.css('left',vcut_sequenceTrimIn/config.framePerPixel);
@@ -4272,7 +4789,7 @@ PLAYER.timeRuler = function() {
                         }
                         PLAYER.operateJson.updateClipAttr(subClipAttr,v_dataTime);
                     }
-                    
+
                     $('.space').remove();
                     PLAYER.operateJson.sendJson();
                 }
@@ -4281,18 +4798,18 @@ PLAYER.timeRuler = function() {
                         var time=$(n).parent('.edit_box_v').attr('data-time');
                         var _type=$(n).attr('data-type');
                         var _pos=$(n).attr('data-pos');
-                        
+
                         PLAYER.operateJson.removeOtherEffectClip(time,_type,_pos);
                         $(n).remove();
-                    }); 
+                    });
                     PLAYER.operateJson.sendJson();
                 }
             }
-            
+
         }
         else if(e.ctrl&&key===65){//ctrl+a(全选)
             if($('#js_time_ruler_bar_box').find('.draggable').length!==0){
-                $('#js_time_ruler_bar_box').find('.draggable').addClass('onselected'); 
+                $('#js_time_ruler_bar_box').find('.draggable').addClass('onselected');
             }
         }
         else if(e.ctrl&&key===17){//ctrl(选duoge)
@@ -4303,9 +4820,9 @@ PLAYER.timeRuler = function() {
         }
         else if(e.ctrl&&key===88){//ctrl+x
             PLAYER.checkPlaying();
-            PLAYER.copyOrcut='cut'; 
+            PLAYER.copyOrcut='cut';
             var arr_sIn=[];
-            
+
             $.each($('.onselected'),function(i,n){
                 arr_sIn.push(parseInt($(this).attr('data-sequencetrimin')));
                 PLAYER.clipboard.push($(this));
@@ -4334,11 +4851,11 @@ PLAYER.timeRuler = function() {
             var min_sIn;
             $('.onselected').each(function(i,n){
                 arr_sIn.push(parseInt($(n).attr('data-sequencetrimin')))
-            }); 
+            });
             min_sIn=Math.min.apply(null,arr_sIn);
             $('.onselected').each(function(i,n){
                 addClipboardClip($(n),$(n).parent('.time_ruler_bar'),checkId,min_sIn);
-            });  
+            });
 
             PLAYER.operateJson.sendJson();
         }
@@ -4353,18 +4870,18 @@ PLAYER.timeRuler = function() {
                 for (var i = 0; i < PLAYER.clipboard.length; i++) {
                     addClipboardClip(PLAYER.clipboard[i],PLAYER.clipboard.parent[i],checkId,PLAYER.cut_min_sIn);
                 }
-                
+
                 PLAYER.operateJson.sendJson();
             }
             PLAYER.clipboard=[];
             PLAYER.clipboard.parent=[];
-        } 
-        else if(e.ctrl&&key===90){//ctrl+z撤销  
+        }
+        else if(e.ctrl&&key===90){//ctrl+z撤销
 
            if((PLAYER.goBackJson.length-1)<=0){
                 $('.time_ruler_bar').empty();
                 PLAYER.goBackJson=[];
-                
+
                 $.each($('#js_time_ruler_bar_box .time_ruler_bar'),function(i,n){
                     var attr={
                         type:$(n).attr('data-type'),
@@ -4375,7 +4892,7 @@ PLAYER.timeRuler = function() {
                 });
                 if(PLAYER.operateJson.checkNoClip()){//如果轨道上没有素材了，则不update
                     PLAYER.OCX.clearWindow();
-                }   
+                }
                 return false;
             }else{
                 //获取上一步json
@@ -4384,9 +4901,9 @@ PLAYER.timeRuler = function() {
 
                 //渲染视频
                 $('.time_ruler_bar').empty();
-                
+
                 for (var i = 0;i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++ ) {
-                    var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i]; 
+                    var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
                     var type=track.type;
                     var index=track.index;
                     if(track.subclip.length===0){
@@ -4397,13 +4914,13 @@ PLAYER.timeRuler = function() {
                         $.each(track.subclip,function(i,n){
                             var duration;
                             var name;
-                            var _id=n.assetID;//素材ID
+                            var _id=n.assetid;//素材ID
                             var _id2=n.id; //字幕ID
                             if(_id){
                                 PLAYER.operateJson.getMaterialDuration(_id,function(msg){
                                     duration=msg.duration;
                                     name=msg.name;
-                                }); 
+                                });
                             }
                             if(_id2){
                                 PLAYER.operateJson.getSubtitleDuration(_id2,function(msg){
@@ -4411,17 +4928,17 @@ PLAYER.timeRuler = function() {
                                     name=msg.name;
                                 });
                             }
-                            
+
                             var initWidth=(n.trimOut-n.trimIn)/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
                             var _left=n.sequenceTrimIn/PLAYER.TR.config.framePerPixel;
 
                             var subclipBox=$('<div class="edit_box draggable" data-trimin="'+n.trimIn+'" data-trimout="'+n.trimOut+'" data-sequencetrimin="'+n.sequenceTrimIn+'" data-sequencetrimout="'+n.sequenceTrimOut+'">'+name+'</div>');
                             subclipBox.attr('data-duration',duration ||2000);
                             subclipBox.attr('data-name',name);
-                            subclipBox.attr('data-id',n.assetID || n.id);
+                            subclipBox.attr('data-id',n.assetid || n.id);
                             subclipBox.attr('data-type',n.type);
                             subclipBox.attr('data-interleaved',n.interleaved);
-                            subclipBox.attr('data-time',n.createTime);
+                            subclipBox.attr('data-time',n.subclipId);
                             subclipBox.attr('data-intid',n.interleaved_id);
                             subclipBox.css('width',initWidth);
                             subclipBox.css('left',_left);
@@ -4462,7 +4979,7 @@ PLAYER.timeRuler = function() {
                         PLAYER.PTR.config.maxTime=PLAYER.operateJson.getLastFrame();
                         PLAYER.PTR.updateEvent(PLAYER.PTR.config);
                     }
-                } 
+                }
 
                 PLAYER.goBackJson.pop();
                 //提交json
@@ -4495,7 +5012,7 @@ PLAYER.timeRuler = function() {
             v_type=v_target.attr('data-type');
             v_interleaved=v_target.attr('data-interleaved');
             v_index=parseInt(v_parent.attr('data-index'));
-            var _createTime=v_type+'_'+PLAYER.genNonDuplicateID(12);
+            var subclipId=v_type+'_'+PLAYER.genNonDuplicateID(12);
 
             v0_trimIn=parseInt(v_target.attr('data-trimin'));
             v0_trimOut=parseInt(v_target.attr('data-trimout'));
@@ -4512,13 +5029,13 @@ PLAYER.timeRuler = function() {
             cloneBox.css('left',vcut_sequenceTrimIn/config.framePerPixel);
             cloneBox.attr('data-sequencetrimin',vcut_sequenceTrimIn);
             cloneBox.attr('data-sequencetrimout',vcut_sequenceTrimOut);
-            cloneBox.attr('data-time',_createTime);
+            cloneBox.attr('data-time',subclipId);
             cloneBox.attr('data-intid',intId);
-            
+
             v_parent.append(cloneBox);
 
             PLAYER.operateJson.checkCoverEvent(cloneBox,checkId);
-            
+
             if(v_parent.hasClass('bar_v')){
                 var time=v_target.attr('data-time');
                 var e_attr=JSON.parse(PLAYER.operateJson.getEffectClip(time));
@@ -4533,13 +5050,13 @@ PLAYER.timeRuler = function() {
                     e_attr=[];
                 }
                 add_subclip_attr={
-                    "assetID": v_dataId,
+                    "assetid": v_dataId,
                     "trimIn": vcut_trimIn,
                     "trimOut":vcut_trimOut,
                     "sequenceTrimIn": vcut_sequenceTrimIn,
                     "sequenceTrimOut":vcut_sequenceTrimOut,
                     "effect":e_attr,
-                    "createTime":_createTime,
+                    "subclipId":subclipId,
                     "type":v_type
                 }
                 if(v_interleaved==='true'){
@@ -4550,18 +5067,18 @@ PLAYER.timeRuler = function() {
                     var i_id='interleaved_id_'+PLAYER.genNonDuplicateID(12);
                     add_subclip_attr.interleaved_id=i_id;
                 }
-                
+
                 PLAYER.operateJson.addVideoClipAttr(add_subclip_attr,v_index);
-                
+
             }else if(v_parent.hasClass('bar_a')){
                 add_subclip_attr={
-                    "assetID": v_dataId,
+                    "assetid": v_dataId,
                     "trimIn": vcut_trimIn,
                     "trimOut":vcut_trimOut,
                     "sequenceTrimIn": vcut_sequenceTrimIn,
                     "sequenceTrimOut":vcut_sequenceTrimOut,
                     "volume":100,
-                    "createTime":_createTime,
+                    "subclipId":subclipId,
                     "type":v_type,
                     "interleaved_id":intId
                 }
@@ -4573,7 +5090,7 @@ PLAYER.timeRuler = function() {
                     var i_id='interleaved_id_'+PLAYER.genNonDuplicateID(12);
                     add_subclip_attr.interleaved_id=i_id;
                 }
-                
+
                 PLAYER.operateJson.addAudioClipAttr(add_subclip_attr,v_index);
 
             }else if(v_parent.hasClass('bar_t')){
@@ -4586,13 +5103,13 @@ PLAYER.timeRuler = function() {
                     "trimOut":vcut_trimOut,
                     "sequenceTrimIn":vcut_sequenceTrimIn,
                     "sequenceTrimOut":vcut_sequenceTrimOut,
-                    "createTime":_createTime,
+                    "subclipId":subclipId,
                     "type":v_type,
                     "interleaved_id":i_id
                 }
 
                 $.extend(msg,subClipAttr_cut);
-                PLAYER.operateJson.addSubtitleClipAttr(msg,v_index); 
+                PLAYER.operateJson.addSubtitleClipAttr(msg,v_index);
             }
         }
 
@@ -4624,7 +5141,7 @@ PLAYER.timeRuler = function() {
             }
             changeFramePerPixel(10,old_fpp,old_scrollWidth,old_scrollLeft,old_marginLeft);
         }
-    }  
+    }
     /*滚轮事件*/
     function privateMousewheelEvent(ev){
         var targetObj=self.targetObj;
@@ -4715,11 +5232,11 @@ PLAYER.timeRuler = function() {
         }
         var offset = mouseX - trimInOutStartPos;
 
-        if(trimInOrginPos + offset > trimOutCurrPos - 3){ 
+        if(trimInOrginPos + offset > trimOutCurrPos - 3){
             return;
         }
         if(trimInOrginPos + offset < 0) {
-            trimInCurrPos = 0; 
+            trimInCurrPos = 0;
         }else {
             trimInCurrPos = trimInOrginPos + offset;
         }
@@ -4728,7 +5245,7 @@ PLAYER.timeRuler = function() {
 
         var newWidth = trimOutCurrPos - trimInCurrPos;
         config.$trimInOut.css("left", trimInCurrPos);
-        config.$trimInOut.css("width", newWidth);      
+        config.$trimInOut.css("width", newWidth);
         if (callback != null) {
             var currentTime = self.trimInCurrTime;
             callback(currentTime);
@@ -4745,7 +5262,7 @@ PLAYER.timeRuler = function() {
             return;
         }
         if (trimOutOrginPos + offset > config.maxTime * config.perMsecWidth) {
-            trimOutCurrPos = config.maxTime * config.perMsecWidth; 
+            trimOutCurrPos = config.maxTime * config.perMsecWidth;
         }else {
             trimOutCurrPos = trimOutOrginPos + offset;
         }
@@ -4771,7 +5288,7 @@ PLAYER.timeRuler = function() {
         PLAYER.PTR.trimOutCurrTime=currMsec;
         PLAYER.PTR.fixTrimOutByCurrentTime(currMsec);
     }
-    //滚动条函数 
+    //滚动条函数
     function handleScrollBtnEvent() {
         var targetObj = self.targetObj;
         var config = self.config;
@@ -4780,12 +5297,12 @@ PLAYER.timeRuler = function() {
         var totalBtnScollMove;          //整体滑动范围
         var totalScrollStartX;          //整体鼠标开始点击值
         var old_marginLeft;      //刻度尺旧的left值
-        
+
         var targertEvent;
         var b;
         var old_fpp;            //按下时帧率
         var offset;
-        config.$sliderBarLeft.mousedown(function(e) { 
+        config.$sliderBarLeft.mousedown(function(e) {
             var e = e || window.event;
             config.$sliderBarMiddle.addClass("now");
             totalScrollStartX= e.clientX;
@@ -4797,7 +5314,7 @@ PLAYER.timeRuler = function() {
                 var e = e || window.event;
                 window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
                 var scale;
-                e.preventDefault(); 
+                e.preventDefault();
                 $('body').css({cursor:"url(images/cur/hand_move.cur),default"});
                 //滚动距离
                 diff_move=totalScrollStartX-e.clientX;
@@ -4810,7 +5327,7 @@ PLAYER.timeRuler = function() {
                 $(document)[0].onmousemove = null;
             };
         });
-        config.$sliderBarRight.mousedown(function(e) { 
+        config.$sliderBarRight.mousedown(function(e) {
             var e = e || window.event;
             config.$sliderBarMiddle.addClass("now");
             totalScrollStartX= e.clientX;
@@ -4822,8 +5339,8 @@ PLAYER.timeRuler = function() {
                 var e = e || window.event;
                 window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
                 var scale;
-                e.preventDefault(); 
-                
+                e.preventDefault();
+
                 $('body').css({cursor:"url(images/cur/hand_move.cur),default"});
                 //滚动距离
                 diff_move=e.clientX-totalScrollStartX;
@@ -4835,7 +5352,7 @@ PLAYER.timeRuler = function() {
             };
         });
 
-        config.$sliderBarMiddle.mousedown(function(e) { 
+        config.$sliderBarMiddle.mousedown(function(e) {
             var e = e || window.event;
             config.$sliderBarMiddle.addClass("now");
             totalScrollStartX= e.clientX;
@@ -4844,37 +5361,37 @@ PLAYER.timeRuler = function() {
             $(document)[0].onmousemove = function(e) {
                 $('body').css({cursor:"move"});
                     //滚动条移动距离
-                    totalBtnScollMove= e.clientX - totalScrollStartX;                 
-                    newTotalBtnScollLeft = oldTotalBtnScollLeft+ totalBtnScollMove; 
-                    newtotalScrollWidth= oldtotalScrollWidth; 
+                    totalBtnScollMove= e.clientX - totalScrollStartX;
+                    newTotalBtnScollLeft = oldTotalBtnScollLeft+ totalBtnScollMove;
+                    newtotalScrollWidth= oldtotalScrollWidth;
                     //限定滚动条滚动距离
                     if (newTotalBtnScollLeft < 0) {
                         newTotalBtnScollLeft = 0;
-                    } 
+                    }
                     if (newTotalBtnScollLeft > scrollBtnMovableDistance) {
                         newTotalBtnScollLeft = scrollBtnMovableDistance;
                     }
 
                     config.$sliderBar.css('left',newTotalBtnScollLeft);
-                    config.$sliderBarMiddle.addClass("now"); 
- 
+                    config.$sliderBarMiddle.addClass("now");
+
                     if (newtotalScrollWidth != config.$sliderTrack.width()) {
 
                         scrollBtnMovableDistance = parseInt(config.$sliderTrack.width() -newtotalScrollWidth);
-                        containerMovableDistance = parseInt(config.$rulerWrap.width() - boxWidth); 
+                        containerMovableDistance = parseInt(config.$rulerWrap.width() - boxWidth);
                         //没有到中部前,$rulerWrap.width()不变
-                        
-                        newContainerMarginLeft = Math.floor(parseInt(containerMovableDistance * newTotalBtnScollLeft / scrollBtnMovableDistance)); 
+
+                        newContainerMarginLeft = Math.floor(parseInt(containerMovableDistance * newTotalBtnScollLeft / scrollBtnMovableDistance));
                     } else {
                         newContainerMarginLeft = 0;
-                    } 
+                    }
                     //刻度条容器和刻度的left值
                     config.$rulerWrap.css("margin-left", parseInt(-newContainerMarginLeft));
                     config.$ruler.css("left", newContainerMarginLeft);
                     config.$clipTrackBar.css("margin-left", parseInt(-newContainerMarginLeft));
                     config.$line.css("margin-left", parseInt(-newContainerMarginLeft)+1);
                     //更新canvas画布
-                    drawCanvas(newContainerMarginLeft); 
+                    drawCanvas(newContainerMarginLeft);
                     return false;
             };
             $(document)[0].onmouseup = function(e) {
@@ -4882,7 +5399,7 @@ PLAYER.timeRuler = function() {
                 $('body').css({cursor:"default"});
                 $(document)[0].onmousemove = null;
             };
-        });   
+        });
     }
     //改变精度
     function changeFramePerPixel(diff_move,old_fpp,oldtotalScrollWidth,oldTotalBtnScollLeft,old_marginLeft){
@@ -4893,7 +5410,7 @@ PLAYER.timeRuler = function() {
         var offset;
 
         if(diff_move>0){//--
-            
+
             if(config.max_fpp===old_fpp){
                 offset=0;
             }else{
@@ -4904,7 +5421,7 @@ PLAYER.timeRuler = function() {
             newTotalBtnScollLeft=oldTotalBtnScollLeft-diff_move;
             newtotalScrollWidth=oldtotalScrollWidth+2*diff_move;
             config.framePerPixel=old_fpp*(offset+1);
-            
+
             if(newTotalBtnScollLeft<=0){
                 newTotalBtnScollLeft=0;
             }
@@ -4914,9 +5431,9 @@ PLAYER.timeRuler = function() {
             }
             if(newtotalScrollWidth>=config.$sliderTrack.width()){
                 newtotalScrollWidth=config.$sliderTrack.width();
-                config.framePerPixel=config.maxTime/config.$headerRight.width(); 
+                config.framePerPixel=config.maxTime/config.$headerRight.width();
             }
-            
+
             letFramePerPixelValid(config.framePerPixel);
         }
         else if(diff_move<0){//++
@@ -4927,7 +5444,7 @@ PLAYER.timeRuler = function() {
                 scale=(oldtotalScrollWidth-(2*scrollRightWidth+8))/((old_fpp/config.min_fpp)-1);
                 offset=diff_move/scale;
             }
-             
+
             newTotalBtnScollLeft=oldTotalBtnScollLeft-diff_move;
             newtotalScrollWidth=oldtotalScrollWidth+2*diff_move;
             config.framePerPixel=old_fpp/(-offset+1);
@@ -4938,11 +5455,11 @@ PLAYER.timeRuler = function() {
                 newTotalBtnScollLeft=oldTotalBtnScollLeft-((2*scrollRightWidth+8)-oldtotalScrollWidth/2);
                 config.framePerPixel=config.min_fpp;
             }
-            
+
             letFramePerPixelValid(config.framePerPixel);
 
         }else{
-           config.framePerPixel=old_fpp; 
+           config.framePerPixel=old_fpp;
            letFramePerPixelValid(config.framePerPixel);
         }
 
@@ -4950,22 +5467,22 @@ PLAYER.timeRuler = function() {
         //改变帧率
         var s=getUnitInfo(config.framePerPixel);
         zoomRulerConfig(s.smallScaleFrame,s.smallScaleNumsPerLargeScale,config.framePerPixel);
-        
+
         //改变容器宽
         newContainerWidth=Math.floor(config.maxTime/config.framePerPixel);
-        
+
         if(newContainerWidth<=config.$headerRight.width()){
-            newContainerWidth=config.$headerRight.width(); 
+            newContainerWidth=config.$headerRight.width();
         }
         //改变容器left
-        
+
         scrollBtnMovableDistance = parseInt(config.$sliderTrack.width() -newtotalScrollWidth);//滚动条可滚动距离
         containerMovableDistance = parseInt(newContainerWidth - config.$headerRight.width()); //刻度可滚动距离
         //改变容器left
         if(self.currTime!=0){
             currPos=Math.floor(parseInt(self.currTime/config.framePerPixel));
             newContainerMarginLeft=currPos-middlePos;
-            newTotalBtnScollLeft=newContainerMarginLeft*scrollBtnMovableDistance/containerMovableDistance; 
+            newTotalBtnScollLeft=newContainerMarginLeft*scrollBtnMovableDistance/containerMovableDistance;
             if(newTotalBtnScollLeft>=scrollBtnMovableDistance){
                 newTotalBtnScollLeft=scrollBtnMovableDistance;
                 newContainerMarginLeft=containerMovableDistance;
@@ -4975,7 +5492,7 @@ PLAYER.timeRuler = function() {
                 newTotalBtnScollLeft=0;
             }
         }else{
-            newContainerMarginLeft = Math.floor(containerMovableDistance * newTotalBtnScollLeft / scrollBtnMovableDistance); 
+            newContainerMarginLeft = Math.floor(containerMovableDistance * newTotalBtnScollLeft / scrollBtnMovableDistance);
         }
 
         if(isNaN(newContainerMarginLeft)||newContainerMarginLeft<=0){
@@ -4991,17 +5508,17 @@ PLAYER.timeRuler = function() {
 
         //重新计算刻度容器
         config.$rulerWrap.css("margin-left", -newContainerMarginLeft);
-        config.$rulerWrap.css("width", newContainerWidth); 
-        config.$ruler.css("left", newContainerMarginLeft); 
+        config.$rulerWrap.css("width", newContainerWidth);
+        config.$ruler.css("left", newContainerMarginLeft);
         config.$clipTrackBar.css("margin-left", -newContainerMarginLeft);
         config.$line.css("margin-left", parseInt(-newContainerMarginLeft)+1);
 
         //更新canvas画布
-        drawCanvas(newContainerMarginLeft); 
+        drawCanvas(newContainerMarginLeft);
         //更新计算游标位置和出入点
-        self.fixArrowCurrentTime(self.currTime); 
+        self.fixArrowCurrentTime(self.currTime);
         self.fixTrimInByCurrentTime(self.trimInCurrTime);
-        self.fixTrimOutByCurrentTime(self.trimOutCurrTime); 
+        self.fixTrimOutByCurrentTime(self.trimOutCurrTime);
         self.fixClipWidth();
     }
     //让帧率再合适的范围
@@ -5026,11 +5543,11 @@ PLAYER.timeRuler = function() {
         config.smallScaleNumsPerLargeScale = _smallScaleNumsPerLargeScale;
         config.framePerPixel = _framePerPixel;
         self.updateRuler(config);
-    }   
-    return constructor;  
+    }
+    return constructor;
 }();
 /*------播放器时间线开始------*/
-PLAYER.timeRuler2 = function() {   
+PLAYER.timeRuler2 = function() {
     var trimInOrginPos = 0;
     var trimOutOrginPos = 0;
     var trimInCurrPos = 0;
@@ -5044,12 +5561,12 @@ PLAYER.timeRuler2 = function() {
     var containerMovableDistance;   //整体刻度条可滚动距离
     var scrollLeftWidth=0;          //左滚动宽度
     var scrollRightWidth=0;         //右滚动宽度
-    
+
     var initContainerMarginLeft=0;  //初始化刻度条相对于刻度容器的left值
-    var newContainerMarginLeft=0;   //新的刻度条相对于刻度容器的left值  
+    var newContainerMarginLeft=0;   //新的刻度条相对于刻度容器的left值
     var newContainerWidth=0;        //新的刻度容器宽度
 
-    var boxWidth;  
+    var boxWidth;
     var self = this;
     /*------精度数组开始------*/
     var unitTablePal=[
@@ -5128,20 +5645,20 @@ PLAYER.timeRuler2 = function() {
         min_largeScaleWidth: 80,            //每个大格宽度80px
         framePerPixel:0,                    //默认比率
         max_fpp:0,
-        min_fpp:0.125,                   
-        smallScaleNumsPerLargeScale: 10,    //每个大格包含多少小格 
+        min_fpp:0.125,
+        smallScaleNumsPerLargeScale: 10,    //每个大格包含多少小格
         smallScaleFrame:0,                  //每小格帧数
         smallScaleWidth: 0,                 //每小格宽度
         largeScaleWidth: 0,                 //每大格代表的宽度
         largeScaleMillisecondInterval: 0,   //每大格代表的毫秒数
         seekComandTimesMonitor:[],
-        
-        largeScaleHeight: 20,       //每个大格高度         
-        smallScaleHeight: 12.5,     //每个小个高度                  
+
+        largeScaleHeight: 20,       //每个大格高度
+        smallScaleHeight: 12.5,     //每个小个高度
         backgroundColor: "#262626", //刻度背景颜色
         rulerHeight: 35,            //刻度容器高度
         trimHeight: 45,             //出入点高度
-        scaleColor: "#929293",      //线性样式    
+        scaleColor: "#929293",      //线性样式
         fontColor: "#929293",       //字体样式
         fontSize: 12,               //字体大小
         fontFamily: "微软雅黑",     //字体样式
@@ -5151,7 +5668,7 @@ PLAYER.timeRuler2 = function() {
         $trimInOut: null,           //出入点
         $trimIn : null,             //入点
         $trimOut:null,              //出点
-    
+
         $sliderTrack:null,          //滚动槽
         $sliderBar:null,            //滚动条
         $sliderBarLeft:null,        //滚动条左
@@ -5163,12 +5680,12 @@ PLAYER.timeRuler2 = function() {
         self = this;
         self.config = $.extend(defaultConfig,playerConfig);
         self.targetObj = self.config.targetObj;
-        self.trimInCurrTime = 0;    //入点目前帧数 
+        self.trimInCurrTime = 0;    //入点目前帧数
         self.trimOutCurrTime=0;     //出点目前帧数
-        self.currTime=0;            //指针目前毫秒数          
+        self.currTime=0;            //指针目前毫秒数
         boxWidth=$("." + this.targetObj).width();
 
-        initTargetObjectConfig();//初始化一些配置参数、初始化HTML、初始化时间刻度       
+        initTargetObjectConfig();//初始化一些配置参数、初始化HTML、初始化时间刻度
         handleDocumentEvent(); //执行文档事件
 
         this.config.$container.addEventListener("mousedown", seekToCursorFrame);
@@ -5199,31 +5716,31 @@ PLAYER.timeRuler2 = function() {
         updateEvent:function(newConfig,init){
             //设置新的参数
             var config = $.extend(self.config,newConfig);
-            var targetObj = self.targetObj;   
-            
-            //设置容器宽 
+            var targetObj = self.targetObj;
+
+            //设置容器宽
             config.max_fpp=Math.min(config.maxTime/$("." + self.targetObj).width(),25*60.0*60*10.0/80);
             //设置滚动条宽
             newtotalScrollWidth=parseInt(config.$sliderTrack.width());
             newContainerWidth= $("." + self.targetObj).width();
-            config.framePerPixel=config.maxTime/newContainerWidth;      
-           
+            config.framePerPixel=config.maxTime/newContainerWidth;
+
             //如果帧率变化改变精度
             var s=getUnitInfo(config.framePerPixel);
             zoomRulerConfig(s.smallScaleFrame,s.smallScaleNumsPerLargeScale,config.framePerPixel);
-            
+
             config.$container.width(newContainerWidth);
             config.$sliderBar.css('width',newtotalScrollWidth);
             config.$sliderBar.css('left',0);
             config.$sliderBarMiddle.css("width", newtotalScrollWidth-2*scrollRightWidth);
-            config.$sliderBarMiddle.css("left",scrollRightWidth);             
+            config.$sliderBarMiddle.css("left",scrollRightWidth);
             config.$sliderBarLeft.css('left',0);
             config.$sliderBarRight.css('left',newtotalScrollWidth-scrollRightWidth);
 
             self.fixArrowCurrentTime(self.currTime);
             self.fixTrimInByCurrentTime(self.trimInCurrTime);
             self.fixTrimOutByCurrentTime(self.trimOutCurrTime);
-            drawCanvas(0);  
+            drawCanvas(0);
         },
         fixArrowCurrentTime: function(time) {
             var config = this.config;
@@ -5242,20 +5759,20 @@ PLAYER.timeRuler2 = function() {
                 newContainerMarginLeft = currPos - w;
                 scrollBtnMovableDistance = parseFloat(config.$sliderTrack.width() -config.$sliderBar.width());//滚动条可滚动距离
                 containerMovableDistance = parseFloat(config.$container.width() - w); //刻度可滚动距离
-                
+
                 newTotalBtnScollLeft=newContainerMarginLeft*scrollBtnMovableDistance/containerMovableDistance;
 
                 config.$sliderBar.css('left',newTotalBtnScollLeft);
                 config.$container.css("margin-left", -newContainerMarginLeft);
                 config.$ruler.css("left", newContainerMarginLeft);
-                drawCanvas(newContainerMarginLeft); 
+                drawCanvas(newContainerMarginLeft);
                 //重新滚动条
                 config.$sliderBar.css('left',newTotalBtnScollLeft);
                 //重新计算刻度容器
                 config.$container.css("margin-left", -newContainerMarginLeft);
-                config.$ruler.css("left", newContainerMarginLeft); 
+                config.$ruler.css("left", newContainerMarginLeft);
                 //更新canvas画布
-                drawCanvas(newContainerMarginLeft);   
+                drawCanvas(newContainerMarginLeft);
             }
             if(currPos<ml){
                 newContainerMarginLeft = currPos;
@@ -5264,16 +5781,16 @@ PLAYER.timeRuler2 = function() {
                 config.$sliderBar.css('left',newTotalBtnScollLeft);
                 config.$container.css("margin-left", -newContainerMarginLeft);
                 config.$ruler.css("left", newContainerMarginLeft);
-                drawCanvas(newContainerMarginLeft); 
+                drawCanvas(newContainerMarginLeft);
                 //重新滚动条
                 config.$sliderBar.css('left',newTotalBtnScollLeft);
                 //重新计算刻度容器
                 config.$container.css("margin-left", -newContainerMarginLeft);
-                config.$ruler.css("left", newContainerMarginLeft); 
+                config.$ruler.css("left", newContainerMarginLeft);
                 //更新canvas画布
                 drawCanvas(newContainerMarginLeft);
             }
-            
+
             if(time>=config.maxTime){
                 time=config.maxTime;
             }
@@ -5286,19 +5803,19 @@ PLAYER.timeRuler2 = function() {
             this.trimInCurrTime = time;
             trimInCurrPos = this.trimInCurrTime /config.framePerPixel;
             trimOutCurrPos = this.trimOutCurrTime/config.framePerPixel;
-            
+
             /*if(PLAYER.keyNum===73&&this.trimInCurrTime===0){
                 trimOutCurrPos = config.maxTime/config.framePerPixel;
                 this.trimOutCurrTime=config.maxTime;
-                trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel; 
+                trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel;
             }*/
             if(trimInCurrPos>trimOutCurrPos){
                 trimOutCurrPos = config.maxTime/config.framePerPixel;
                 this.trimOutCurrTime=config.maxTime;
-                trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel; 
+                trimOutCurrPos = parseInt(trimOutCurrPos*config.framePerPixel)/config.framePerPixel;
             }
             config.$trimInOut.css("left", trimInCurrPos);
-            config.$trimInOut.css("width", trimOutCurrPos + 2 - trimInCurrPos); 
+            config.$trimInOut.css("width", trimOutCurrPos + 2 - trimInCurrPos);
         },
         fixTrimOutByCurrentTime: function(time) {
             var config = this.config;
@@ -5307,7 +5824,7 @@ PLAYER.timeRuler2 = function() {
             trimOutCurrPos = this.trimOutCurrTime /config.framePerPixel;
             if(trimOutCurrPos<trimInCurrPos){
                trimInCurrPos=0;
-               this.trimInCurrTime=0; 
+               this.trimInCurrTime=0;
             }
             config.$trimInOut.css("left", trimInCurrPos);
             config.$trimInOut.css("width", trimOutCurrPos + 2 - trimInCurrPos);
@@ -5315,18 +5832,18 @@ PLAYER.timeRuler2 = function() {
         initTime:function(){
             var config = this.config;
             var targetObj = this.targetObj;
-            
+
             config.$sliderBar.css('left',0);
             config.$sliderBarMiddle.css("width", newtotalScrollWidth-scrollLeftWidth-scrollRightWidth);
-            config.$sliderBarMiddle.css("left", scrollLeftWidth);             
+            config.$sliderBarMiddle.css("left", scrollLeftWidth);
             config.$sliderBarLeft.css('left',0);
-            config.$sliderBarRight.css('left',newtotalScrollWidth-scrollRightWidth); 
-            
+            config.$sliderBarRight.css('left',newtotalScrollWidth-scrollRightWidth);
+
             config.$container.css("margin-left", 0);
-            config.$ruler.css("left", 0); 
+            config.$ruler.css("left", 0);
             drawCanvas(0);
 
-            self.fixArrowCurrentTime(0); 
+            self.fixArrowCurrentTime(0);
         },
         moveToNextFrame:function(){
             PLAYER.keyNum=39;
@@ -5335,7 +5852,7 @@ PLAYER.timeRuler2 = function() {
             if(self.currTime>=config.maxTime){
                 self.currTime=config.maxTime;
             }
-            self.fixArrowCurrentTime(self.currTime); 
+            self.fixArrowCurrentTime(self.currTime);
             self.fixTrimInByCurrentTime(self.trimInCurrTime);
             self.fixTrimOutByCurrentTime(self.trimOutCurrTime);
         },
@@ -5346,7 +5863,7 @@ PLAYER.timeRuler2 = function() {
             if(self.currTime<=0){
                 self.currTime=0;
             }
-            self.fixArrowCurrentTime(self.currTime); 
+            self.fixArrowCurrentTime(self.currTime);
             self.fixTrimInByCurrentTime(self.trimInCurrTime);
             self.fixTrimOutByCurrentTime(self.trimOutCurrTime);
         },
@@ -5378,8 +5895,8 @@ PLAYER.timeRuler2 = function() {
                             ctrl:event.ctrlKey
                         });
                     break;
-                    
-                }  
+
+                }
             }
             dragdrop.enable=function(){
                 PLAYER.EventUtil.addHandler(document,'mousewheel',handleEvent);
@@ -5390,7 +5907,7 @@ PLAYER.timeRuler2 = function() {
                 PLAYER.EventUtil.removeHandler(document,'keydown',handleEvent);
             };
             return dragdrop;
-        }()   
+        }()
     }
     /*初始化config配置*/
     function initTargetObjectConfig() {
@@ -5403,7 +5920,7 @@ PLAYER.timeRuler2 = function() {
         config.largeScaleWidth=config.smallScaleWidth*config.smallScaleNumsPerLargeScale;//初始化一大格宽度
         config.largeScaleMillisecondInterval=config.smallScaleFrame*config.smallScaleNumsPerLargeScale*40;//初始化一大格代表的毫秒数
         config.max_fpp=Math.min(config.maxTime/$("." + targetObj).width(),25*60.0*60*10.0/80);
-        newContainerWidth=$("." + targetObj).width(); 
+        newContainerWidth=$("." + targetObj).width();
         drawRuler();
     }
     /*初始化精度函数*/
@@ -5415,7 +5932,7 @@ PLAYER.timeRuler2 = function() {
             var dMinFPP=(unitTablePal[i].smallScaleFrame*unitTablePal[i].smallScaleNumsPerLargeScale)/80;
             if(_m<=dMinFPP){
                 arr.push(i);
-            } 
+            }
         }
         obj.smallScaleFrame=unitTablePal[arr[0]].smallScaleFrame;
         obj.smallScaleNumsPerLargeScale=unitTablePal[arr[0]].smallScaleNumsPerLargeScale;
@@ -5430,7 +5947,7 @@ PLAYER.timeRuler2 = function() {
         config.$container.css("width", newContainerWidth);
         config.$container.css("height", config.rulerHeight);
         config.$ruler = $('<canvas class="' + targetObj + '_canvas"></canvas>');
-        config.$ruler.attr("width", $("." + targetObj).width());        
+        config.$ruler.attr("width", $("." + targetObj).width());
         config.$ruler.attr("height", config.rulerHeight-2);
         config.$ruler.css("height", config.rulerHeight-2);
         config.$ruler.appendTo(config.$container);
@@ -5456,7 +5973,7 @@ PLAYER.timeRuler2 = function() {
         cursorTop.appendTo(config.$cursor);
         config.$container.appendTo($("." + targetObj));
 
-        
+
         //添加滑块
         config.$sliderTrack=$('<div class="' + targetObj + '_slider_track">');        //滑动槽
         config.$sliderBar=$('<div class="' + targetObj + '_slider_scroll_total">');    //滑动条
@@ -5481,23 +5998,23 @@ PLAYER.timeRuler2 = function() {
         var inittotalScrollWidth;
         //初始化滚动条宽度和左右放大按钮的位置
         scrollLeftWidth=config.$sliderBarLeft.width();
-        scrollRightWidth=config.$sliderBarRight.width();  
+        scrollRightWidth=config.$sliderBarRight.width();
         inittotalScrollWidth= ($("." + targetObj).width() * config.$sliderTrack.width() / config.$container.width());  //843
-        
+
         //滚动条可滚动距离
         scrollBtnMovableDistance = parseInt(config.$sliderTrack.width() -inittotalScrollWidth);
         //刻度可滚动距离
-        containerMovableDistance = parseInt(config.$container.width() - $("." + self.targetObj).width()); 
-        
+        containerMovableDistance = parseInt(config.$container.width() - $("." + self.targetObj).width());
+
         if (inittotalScrollWidth>=config.$sliderTrack.width()) {
             inittotalScrollWidth =config.$sliderTrack.width();
         }
         config.$sliderBar.css('width',inittotalScrollWidth);
         config.$sliderBar.css('left',0);
         config.$sliderBarMiddle.css("width", inittotalScrollWidth-scrollLeftWidth-scrollRightWidth);
-        config.$sliderBarMiddle.css("left", scrollLeftWidth);             
+        config.$sliderBarMiddle.css("left", scrollLeftWidth);
         config.$sliderBarLeft.css('left',0);
-        config.$sliderBarRight.css('left',inittotalScrollWidth-scrollRightWidth);    
+        config.$sliderBarRight.css('left',inittotalScrollWidth-scrollRightWidth);
     }
     /*初始化画布函数*/
     function drawCanvas(scrollLeft) {
@@ -5513,7 +6030,7 @@ PLAYER.timeRuler2 = function() {
         ctx.fillStyle = config.backgroundColor;
         ctx.fillRect(0, 0, rulerWidth, config.$ruler.height());  //画正方形
 
-        var linePosition = config.rulerHeight;                   
+        var linePosition = config.rulerHeight;
 
         //设置画笔线性样式
         ctx.lineWidth = 1;
@@ -5523,14 +6040,14 @@ PLAYER.timeRuler2 = function() {
         ctx.textAlign = "center";
 
         //添加画笔路径
-        ctx.beginPath(); 
+        ctx.beginPath();
 
         //画时间轴下边线
-        ctx.moveTo(0, linePosition);     
+        ctx.moveTo(0, linePosition);
         ctx.lineTo(rulerWidth, linePosition);
 
         var textPos = parseInt(scrollLeft / config.largeScaleWidth) * config.largeScaleMillisecondInterval;  //0
-        
+
         var offsetNums = parseInt(scrollLeft / config.smallScaleWidth) + 1; //1
 
         var offsetLeft = offsetNums * config.smallScaleWidth - scrollLeft; //20
@@ -5544,27 +6061,27 @@ PLAYER.timeRuler2 = function() {
         while (lastTopRulerPos < rulerWidth) {
 
             lastTopRulerPos = index * config.smallScaleWidth + .3 + offsetLeft;   //10.5-20.5-30.5-40.5.......800.5
-            
+
 
             if (beginIndex % config.smallScaleNumsPerLargeScale == 0) {
                 //每隔100 画一大格
                 ctx.moveTo(lastTopRulerPos, linePosition - 1);                       //(100.5,25)
-                ctx.lineTo(lastTopRulerPos, linePosition - config.largeScaleHeight); //(100.5,12.5)  
-                
-                textPos += config.largeScaleMillisecondInterval;   //1e4,2e4,3e4,.....            
+                ctx.lineTo(lastTopRulerPos, linePosition - config.largeScaleHeight); //(100.5,12.5)
+
+                textPos += config.largeScaleMillisecondInterval;   //1e4,2e4,3e4,.....
                 var nTime = PLAYER.$millisecondsToTimeFrame(textPos);      //大格上时间文本
-                
+
                 ctx.fillText(nTime, lastTopRulerPos, linePosition - config.largeScaleHeight - 3);  //(text,x,27.5)
             } else {
                 //每隔10距离画小格
                 ctx.moveTo(lastTopRulerPos, linePosition - 1);                         //(10.5,25)
-                ctx.lineTo(lastTopRulerPos, linePosition - config.smallScaleHeight);   //(10.5,18.5)  
+                ctx.lineTo(lastTopRulerPos, linePosition - config.smallScaleHeight);   //(10.5,18.5)
 
             }
             index++;
             beginIndex++;
         }
-        ctx.stroke();  
+        ctx.stroke();
     }
     /*总的文档事件函数*/
     function handleDocumentEvent() {
@@ -5594,7 +6111,7 @@ PLAYER.timeRuler2 = function() {
                     }
                     function undrag(e) {
                         this.onmousemove = null;
-                        this.onmouseup = null;  
+                        this.onmouseup = null;
                     }
                 });
             } else if (type == "click") {
@@ -5616,7 +6133,7 @@ PLAYER.timeRuler2 = function() {
             e = e || event;
             x = e.clientX;
             y = e.clientY;
-            _left = title.offsetLeft; 
+            _left = title.offsetLeft;
             _top = title.offsetTop;
             this.ondragstart = function() {
                 return false;
@@ -5637,19 +6154,19 @@ PLAYER.timeRuler2 = function() {
     function fixArrowPosition(mouseX, mouseY, callback) {
         if(PLAYER.isPlaying){
             PLAYER.OCX.doPause();
-            PLAYER.isPlaying=false; 
+            PLAYER.isPlaying=false;
             $("#js_play").removeClass("stop")
-            $("#js_play").attr("title", "播放");       
-        } 
+            $("#js_play").attr("title", "播放");
+        }
         var config = self.config;
         var targetObj = self.targetObj;
         var w=$("." + targetObj).width();
         //求出鼠标距离容器left值
         var cursorX = mouseX - $("." + targetObj).offset().left;
         var ml=Math.abs(parseFloat(config.$container.css("margin-left")));
-        
+
         currPos = cursorX + ml;
-        currPos = parseFloat(currPos*config.framePerPixel)/config.framePerPixel; //获得整数位帧数的位置  
+        currPos = parseFloat(currPos*config.framePerPixel)/config.framePerPixel; //获得整数位帧数的位置
 
         if(currPos<=0){
             currPos=0;
@@ -5657,26 +6174,26 @@ PLAYER.timeRuler2 = function() {
         if(currPos>=config.$container.width()){
             currPos=config.$container.width();
         }
- 
+
         if(currPos-ml>w){
             newContainerMarginLeft = currPos - w;
             scrollBtnMovableDistance = parseFloat(config.$sliderTrack.width() -config.$sliderBar.width());//滚动条可滚动距离
             containerMovableDistance = parseFloat(config.$container.width() - w); //刻度可滚动距离
-            
+
             newTotalBtnScollLeft=newContainerMarginLeft*scrollBtnMovableDistance/containerMovableDistance;
 
             config.$sliderBar.css('left',newTotalBtnScollLeft);
             config.$container.css("margin-left", -newContainerMarginLeft);
             config.$ruler.css("left", newContainerMarginLeft);
-            drawCanvas(newContainerMarginLeft); 
+            drawCanvas(newContainerMarginLeft);
             //重新滚动条
             config.$sliderBar.css('left',newTotalBtnScollLeft);
             //重新计算刻度容器
             config.$container.css("margin-left", -newContainerMarginLeft);
-            config.$ruler.css("left", newContainerMarginLeft); 
+            config.$ruler.css("left", newContainerMarginLeft);
 
             //更新canvas画布
-            drawCanvas(newContainerMarginLeft);   
+            drawCanvas(newContainerMarginLeft);
         }
         if(currPos<ml){
             newContainerMarginLeft = currPos;
@@ -5685,12 +6202,12 @@ PLAYER.timeRuler2 = function() {
             config.$sliderBar.css('left',newTotalBtnScollLeft);
             config.$container.css("margin-left", -newContainerMarginLeft);
             config.$ruler.css("left", newContainerMarginLeft);
-            drawCanvas(newContainerMarginLeft); 
+            drawCanvas(newContainerMarginLeft);
             //重新滚动条
             config.$sliderBar.css('left',newTotalBtnScollLeft);
             //重新计算刻度容器
             config.$container.css("margin-left", -newContainerMarginLeft);
-            config.$ruler.css("left", newContainerMarginLeft); 
+            config.$ruler.css("left", newContainerMarginLeft);
 
             //更新canvas画布
             drawCanvas(newContainerMarginLeft);
@@ -5699,7 +6216,7 @@ PLAYER.timeRuler2 = function() {
         config.$cursor.css("left", currPos);
 
         var preSeekTime = self.currTime;
-        self.currTime =  Math.round(currPos*config.framePerPixel);        
+        self.currTime =  Math.round(currPos*config.framePerPixel);
         if (callback !== null && preSeekTime !==self.currTime) {
             callback(self.currTime);
         }
@@ -5707,22 +6224,22 @@ PLAYER.timeRuler2 = function() {
     function seekToCursorFrame(time) {
         if(PLAYER.isPlaying){
             PLAYER.OCX.doPause();
-            PLAYER.isPlaying=false; 
+            PLAYER.isPlaying=false;
             $("#js_play").removeClass("stop")
-            $("#js_play").attr("title", "播放");       
+            $("#js_play").attr("title", "播放");
         }
         if(time>=self.config.maxTime){
             time=self.config.maxTime;
-        } 
+        }
         self.currTime=time;
         self.fixArrowCurrentTime(time);
 
         if(!PLAYER.dbClick){
             PLAYER.TR.currTime=time;
-            PLAYER.TR.fixArrowCurrentTime(time); 
+            PLAYER.TR.fixArrowCurrentTime(time);
         }
         PLAYER.OCX.seek(time);
-        
+
     }
     function getVideoCurrFrame(time){
         var config=self.config;
@@ -5854,11 +6371,11 @@ PLAYER.timeRuler2 = function() {
         }
         var offset = mouseX - trimInOutStartPos;
 
-        if(trimInOrginPos + offset > trimOutCurrPos - 3){ 
+        if(trimInOrginPos + offset > trimOutCurrPos - 3){
             return;
         }
         if(trimInOrginPos + offset < 0) {
-            trimInCurrPos = 0; 
+            trimInCurrPos = 0;
         }else {
             trimInCurrPos = trimInOrginPos + offset;
         }
@@ -5867,7 +6384,7 @@ PLAYER.timeRuler2 = function() {
 
         var newWidth = trimOutCurrPos - trimInCurrPos;
         config.$trimInOut.css("left", trimInCurrPos);
-        config.$trimInOut.css("width", newWidth);      
+        config.$trimInOut.css("width", newWidth);
         if (callback != null) {
             var currentTime = self.trimInCurrTime;
             callback(currentTime);
@@ -5884,7 +6401,7 @@ PLAYER.timeRuler2 = function() {
             return;
         }
         if (trimOutOrginPos + offset > config.maxTime * config.perMsecWidth) {
-            trimOutCurrPos = config.maxTime * config.perMsecWidth; 
+            trimOutCurrPos = config.maxTime * config.perMsecWidth;
         }else {
             trimOutCurrPos = trimOutOrginPos + offset;
         }
@@ -5910,7 +6427,7 @@ PLAYER.timeRuler2 = function() {
         PLAYER.TR.trimOutCurrTime=currMsec;
         PLAYER.TR.fixTrimOutByCurrentTime(currMsec);
     }
-    //滚动条函数 
+    //滚动条函数
     function handleScrollBtnEvent() {
         var targetObj = self.targetObj;
         var config = self.config;
@@ -5919,12 +6436,12 @@ PLAYER.timeRuler2 = function() {
         var totalBtnScollMove;          //整体滑动范围
         var totalScrollStartX;          //整体鼠标开始点击值
         var old_marginLeft;      //刻度尺旧的left值
-        
+
         var targertEvent;
         var b;
         var old_fpp;            //按下时帧率
         var offset;
-        config.$sliderBarLeft.mousedown(function(e) { 
+        config.$sliderBarLeft.mousedown(function(e) {
             var e = e || window.event;
             config.$sliderBarMiddle.addClass("now");
             totalScrollStartX= e.clientX;
@@ -5936,7 +6453,7 @@ PLAYER.timeRuler2 = function() {
                 var e = e || window.event;
                 window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
                 var scale;
-                e.preventDefault(); 
+                e.preventDefault();
                 $('body').css({cursor:"url(images/cur/hand_move.cur),default"});
                 //滚动距离
                 diff_move=totalScrollStartX-e.clientX;
@@ -5949,7 +6466,7 @@ PLAYER.timeRuler2 = function() {
                 $(document)[0].onmousemove = null;
             };
         });
-        config.$sliderBarRight.mousedown(function(e) { 
+        config.$sliderBarRight.mousedown(function(e) {
             var e = e || window.event;
             config.$sliderBarMiddle.addClass("now");
             totalScrollStartX= e.clientX;
@@ -5961,8 +6478,8 @@ PLAYER.timeRuler2 = function() {
                 var e = e || window.event;
                 window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
                 var scale;
-                e.preventDefault(); 
-                
+                e.preventDefault();
+
                 $('body').css({cursor:"url(images/cur/hand_move.cur),default"});
                 //滚动距离
                 diff_move=e.clientX-totalScrollStartX;
@@ -5974,7 +6491,7 @@ PLAYER.timeRuler2 = function() {
             };
         });
 
-        config.$sliderBarMiddle.mousedown(function(e) { 
+        config.$sliderBarMiddle.mousedown(function(e) {
             var e = e || window.event;
             config.$sliderBarMiddle.addClass("now");
             totalScrollStartX= e.clientX;
@@ -5983,36 +6500,36 @@ PLAYER.timeRuler2 = function() {
             $(document)[0].onmousemove = function(e) {
                 $('body').css({cursor:"move"});
                     //滚动条移动距离
-                    totalBtnScollMove= e.clientX - totalScrollStartX;                 
-                    newTotalBtnScollLeft = oldTotalBtnScollLeft+ totalBtnScollMove; 
-                    newtotalScrollWidth= oldtotalScrollWidth; 
+                    totalBtnScollMove= e.clientX - totalScrollStartX;
+                    newTotalBtnScollLeft = oldTotalBtnScollLeft+ totalBtnScollMove;
+                    newtotalScrollWidth= oldtotalScrollWidth;
                     //限定滚动条滚动距离
                     if (newTotalBtnScollLeft < 0) {
                         newTotalBtnScollLeft = 0;
-                    } 
+                    }
                     if (newTotalBtnScollLeft > scrollBtnMovableDistance) {
                         newTotalBtnScollLeft = scrollBtnMovableDistance;
                     }
 
                     config.$sliderBar.css('left',newTotalBtnScollLeft);
-                    config.$sliderBarMiddle.addClass("now"); 
- 
+                    config.$sliderBarMiddle.addClass("now");
+
                     if (newtotalScrollWidth != config.$sliderTrack.width()) {
 
                         scrollBtnMovableDistance = parseInt(config.$sliderTrack.width() -newtotalScrollWidth);
-                        containerMovableDistance = parseInt(config.$container.width() - $("." + self.targetObj).width()); 
+                        containerMovableDistance = parseInt(config.$container.width() - $("." + self.targetObj).width());
                         //没有到中部前,$container.width()不变
-                        
-                        newContainerMarginLeft = Math.floor(parseInt(containerMovableDistance * newTotalBtnScollLeft / scrollBtnMovableDistance)); 
+
+                        newContainerMarginLeft = Math.floor(parseInt(containerMovableDistance * newTotalBtnScollLeft / scrollBtnMovableDistance));
                     } else {
                         newContainerMarginLeft = 0;
-                    } 
+                    }
                     //刻度条容器和刻度的left值
                     config.$container.css("margin-left", parseInt(-newContainerMarginLeft));
                     config.$ruler.css("left", newContainerMarginLeft);
 
                     //更新canvas画布
-                    drawCanvas(newContainerMarginLeft); 
+                    drawCanvas(newContainerMarginLeft);
                     return false;
             };
             $(document)[0].onmouseup = function(e) {
@@ -6020,7 +6537,7 @@ PLAYER.timeRuler2 = function() {
                 $('body').css({cursor:"default"});
                 $(document)[0].onmousemove = null;
             };
-        });   
+        });
     }
     //改变精度
     function changeFramePerPixel(diff_move,old_fpp,oldtotalScrollWidth,oldTotalBtnScollLeft,old_marginLeft){
@@ -6040,7 +6557,7 @@ PLAYER.timeRuler2 = function() {
             newTotalBtnScollLeft=oldTotalBtnScollLeft-diff_move;
             newtotalScrollWidth=oldtotalScrollWidth+2*diff_move;
             config.framePerPixel=old_fpp*(offset+1);
-            
+
             if(newTotalBtnScollLeft<=0){
                 newTotalBtnScollLeft=0;
             }
@@ -6050,7 +6567,7 @@ PLAYER.timeRuler2 = function() {
             }
             if(newtotalScrollWidth>=config.$sliderTrack.width()){
                 newtotalScrollWidth=config.$sliderTrack.width();
-                config.framePerPixel=config.max_fpp; 
+                config.framePerPixel=config.max_fpp;
             }
 
             letFramePerPixelValid(config.framePerPixel);
@@ -6062,7 +6579,7 @@ PLAYER.timeRuler2 = function() {
                 scale=(oldtotalScrollWidth-(2*scrollRightWidth+8))/((old_fpp/config.min_fpp)-1);
                 offset=diff_move/scale;
             }
-             
+
             newTotalBtnScollLeft=oldTotalBtnScollLeft-diff_move;
             newtotalScrollWidth=oldtotalScrollWidth+2*diff_move;
             config.framePerPixel=old_fpp/(-offset+1);
@@ -6073,11 +6590,11 @@ PLAYER.timeRuler2 = function() {
                 newTotalBtnScollLeft=oldTotalBtnScollLeft-((2*scrollRightWidth+8)-oldtotalScrollWidth/2);
                 config.framePerPixel=config.min_fpp;
             }
-            
+
             letFramePerPixelValid(config.framePerPixel);
 
         }else{
-           config.framePerPixel=old_fpp; 
+           config.framePerPixel=old_fpp;
            letFramePerPixelValid(config.framePerPixel);
         }
 
@@ -6085,19 +6602,19 @@ PLAYER.timeRuler2 = function() {
         //改变帧率
         var s=getUnitInfo(config.framePerPixel);
         zoomRulerConfig(s.smallScaleFrame,s.smallScaleNumsPerLargeScale,config.framePerPixel);
-        
+
         //改变容器宽
         newContainerWidth=Math.floor(config.maxTime/config.framePerPixel);
-        
+
         if(newContainerWidth<=$("." + self.targetObj).width()){
-            newContainerWidth=$("." + self.targetObj).width(); 
+            newContainerWidth=$("." + self.targetObj).width();
         }
-        
+
         //改变容器left
         if(self.currTime!=0){
             currPos=Math.floor(parseInt(self.currTime/config.framePerPixel));
             newContainerMarginLeft=currPos-middlePos;
-            newTotalBtnScollLeft=newContainerMarginLeft*scrollBtnMovableDistance/containerMovableDistance; 
+            newTotalBtnScollLeft=newContainerMarginLeft*scrollBtnMovableDistance/containerMovableDistance;
             if(newTotalBtnScollLeft>=scrollBtnMovableDistance){
                 newTotalBtnScollLeft=scrollBtnMovableDistance;
                 newContainerMarginLeft=containerMovableDistance;
@@ -6107,7 +6624,7 @@ PLAYER.timeRuler2 = function() {
                 newTotalBtnScollLeft=0;
             }
         }else{
-            newContainerMarginLeft = Math.floor(containerMovableDistance * newTotalBtnScollLeft / scrollBtnMovableDistance); 
+            newContainerMarginLeft = Math.floor(containerMovableDistance * newTotalBtnScollLeft / scrollBtnMovableDistance);
         }
 
         if(isNaN(newContainerMarginLeft)||newContainerMarginLeft<=0){
@@ -6123,16 +6640,16 @@ PLAYER.timeRuler2 = function() {
 
         //重新计算刻度容器
         config.$container.css("margin-left", -newContainerMarginLeft);
-        config.$container.css("width", newContainerWidth); 
-        config.$ruler.css("left", newContainerMarginLeft); 
+        config.$container.css("width", newContainerWidth);
+        config.$ruler.css("left", newContainerMarginLeft);
 
         //更新canvas画布
-        drawCanvas(newContainerMarginLeft); 
+        drawCanvas(newContainerMarginLeft);
         //更新计算游标位置和出入点
-        self.fixArrowCurrentTime(self.currTime); 
+        self.fixArrowCurrentTime(self.currTime);
         self.fixTrimInByCurrentTime(self.trimInCurrTime);
-        self.fixTrimOutByCurrentTime(self.trimOutCurrTime); 
-       
+        self.fixTrimOutByCurrentTime(self.trimOutCurrTime);
+
     }
     //让帧率再合适的范围
     function letFramePerPixelValid(fpp){
@@ -6156,8 +6673,8 @@ PLAYER.timeRuler2 = function() {
         config.smallScaleNumsPerLargeScale = _smallScaleNumsPerLargeScale;
         config.framePerPixel = _framePerPixel;
         self.updateRuler(config);
-    }   
-    return constructor;   
+    }
+    return constructor;
 }();
 /*------绑定事件开始------*/
 PLAYER.EventUtil = {
@@ -6303,25 +6820,28 @@ PLAYER.EventUtil = {
 PLAYER.documentEvent=function(){
     var keyTarget=new PLAYER.EventTarget();
     var keyElem=null;
-    
+
     function handleEvent(event){
         event=PLAYER.EventUtil.getEvent(event);
         var target=PLAYER.EventUtil.getTarget(event);
         switch(event.type){
             case 'keydown':
                 keyElem=target;
-                keyTarget.fire({
-                    type:'keydown',
-                    target:keyElem,
-                    code:event.keyCode,
-                    shift:event.shiftKey,
-                    ctrl:event.ctrlKey
-                });  
+                if(target.nodeName!=='INPUT' && target.nodeName!=='input' && target.nodeName!=='TEXTAREA' && target.nodeName!=='textarea'){
+                    keyTarget.fire({
+                        type:'keydown',
+                        target:keyElem,
+                        code:event.keyCode,
+                        shift:event.shiftKey,
+                        ctrl:event.ctrlKey
+                    });
+                }
+
             break;
-        }  
+        }
     }
     keyTarget.enable=function(keyNum){
-        PLAYER.EventUtil.addHandler(document,'keydown',handleEvent);   
+        PLAYER.EventUtil.addHandler(document,'keydown',handleEvent);
     };
     keyTarget.disable=function(){
         PLAYER.EventUtil.removeHandler(document,'keydown',handleEvent);
@@ -6349,20 +6869,25 @@ PLAYER.$millisecondsToTimeFrame = function(milliseconds) {
 PLAYER.checkPlaying=function(){
     if(PLAYER.isPlaying){
         PLAYER.OCX.doPause();
-        PLAYER.isPlaying=false; 
+        PLAYER.isPlaying=false;
         $("#js_play").removeClass("stop")
-        $("#js_play").attr("title", "播放");       
-    } 
+        $("#js_play").attr("title", "播放");
+    }
 };
 PLAYER.showSubititleEdit=function(){
-    $('#js_carve').removeClass('col-md-6').addClass('col-md-4');
-    $('#js_carve_edit').show();
-    $('#js_carve_edit .list li').eq(0).trigger('click');  
+    $('#js_subtitile_edit_wrap').show();
+    $('#js_subtitle_header_btn').on('click',function(){
+        PLAYER.hideSubititleEdit();
+    });
+    $('#js_pageCover_subtitle').show();
 }
 PLAYER.hideSubititleEdit=function(){
-    $('#js_carve').removeClass('col-md-4').addClass('col-md-6');
-    $('#js_carve_edit').hide(); 
-    $('#js_subtitle_h_form').empty();
+    $('#js_subtitile_edit_wrap').hide();
+    $('#js_pageCover_subtitle').hide();
+    $('#js_dragger_subtitle_wrap').remove();
+
+    $('.conetent_tabs1 .subtitle_h_form').empty();
+    $('.conetent_tabs2 .subtitle_h_form').empty();
 }
 PLAYER.hideEffectEdit=function(){
     $('#js_carve_edit').hide();

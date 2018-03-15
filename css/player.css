@@ -141,7 +141,7 @@ h4 {
 .init_pro_modal {
   position: fixed;
   width: 1000px;
-  height: 410px;
+  height: 340px;
   top: 150px;
   left: 50%;
   margin-left: -500px;
@@ -174,7 +174,7 @@ h4 {
 .init_pro_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
 }
 .init_pro_modal .fast_content .fast_body .left {
@@ -291,7 +291,7 @@ h4 {
 .create_pro_modal {
   position: fixed;
   width: 500px;
-  height: 260px;
+  height: 230px;
   top: 150px;
   left: 50%;
   margin-left: -250px;
@@ -324,12 +324,10 @@ h4 {
 .create_pro_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
 }
 .create_pro_modal .fast_content .fast_body .form-control {
-  /* line-height: 30px;
-  height: 30px; */
   background: #000;
   border: none;
   border-radius: 15px;
@@ -390,7 +388,7 @@ h4 {
 .edit_pro_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
 }
 .edit_pro_modal .fast_content .fast_body .left {
@@ -584,7 +582,7 @@ h4 {
 .export_pro_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
 }
 .export_pro_modal .fast_content .fast_body label {
@@ -658,7 +656,7 @@ h4 {
 .add_pro_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
 }
 .add_pro_modal .fast_content .fast_body label {
@@ -732,7 +730,7 @@ h4 {
 .add_subtitle_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
   background: #1e1f22;
   padding: 15px;
@@ -938,7 +936,7 @@ h4 {
 .add_effect_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
   background: #1e1f22;
   padding: 15px;
@@ -1145,7 +1143,7 @@ h4 {
 .create_volume_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
 }
 .create_volume_modal .fast_content .fast_body .volume_num {
@@ -1266,7 +1264,7 @@ h4 {
 .create_facial_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
 }
 .create_facial_modal .fast_content .fast_body .facial_box {
@@ -1393,7 +1391,7 @@ h4 {
 .create_effectRemove_modal .fast_content .fast_body {
   padding: 20px;
   position: relative;
-  min-height: 150px;
+  min-height: 120px;
   background: none;
   padding: 26px;
 }
@@ -1441,6 +1439,237 @@ h4 {
   z-index: 5000;
   background-color: #000;
   opacity: 0.9;
+  display: none;
+}
+
+.zsp_pagecover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+}
+.zsp_pagecover .zsp_cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  background-color: #000;
+  z-index: 5000;
+}
+.zsp_pagecover .zsp_title {
+  position: absolute;
+  color: #fff;
+  text-align: center;
+  z-index: 5001;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.add_titleTovideo_modal {
+  position: fixed;
+  width: 800px;
+  height: 410px;
+  top: 150px;
+  left: 50%;
+  margin-left: -400px;
+  background-color: #282a2e;
+  z-index: 9999;
+  display: none;
+}
+.add_titleTovideo_modal .fast_content {
+  position: relative;
+}
+.add_titleTovideo_modal .fast_content .fast_header {
+  border-bottom: 1px #000 solid;
+  padding: 20px;
+}
+.add_titleTovideo_modal .fast_content .fast_header h4 {
+  line-height: 15px;
+  height: 15px;
+  font-size: 15px;
+  color: #fff;
+  font-weight: bold;
+  margin: 0;
+}
+.add_titleTovideo_modal .fast_content .fast_header span {
+  display: inline-block;
+  float: right;
+  font-size: 20px;
+  line-height: 15px;
+  height: 15px;
+  color: #fff;
+}
+.add_titleTovideo_modal .fast_content .fast_body {
+  padding: 20px;
+  position: relative;
+  min-height: 150px;
+  background: none;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  height: 300px;
+  margin: 0px;
+  padding: 0px;
+}
+.add_titleTovideo_modal .fast_content .fast_body .edit_area_wrap {
+  height: calc(100% - 40px);
+  width: calc(100% - 40px);
+  background: #000;
+  border: 3px solid #333;
+  margin-top: 20px;
+  margin-left: 20px;
+  display: block;
+  overflow: auto;
+}
+.add_titleTovideo_modal .fast_content .fast_body .edit_area {
+  color: #fff;
+  min-height: 100%;
+}
+.add_titleTovideo_modal .fast_content .fast_footer {
+  text-align: center;
+  padding: 5px 0;
+}
+.add_titleTovideo_modal .fast_content .fast_footer .fast_btn {
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  border-radius: 4px;
+  border: none;
+  display: inline-block;
+  color: #fff;
+  background: #666;
+  padding: 0 30px;
+  margin-left: 15px;
+}
+.add_titleTovideo_modal .fast_content .fast_footer .fast_btn:hover {
+  background: #f37401;
+}
+
+.subtitile_edit_wrap {
+  width: 50%;
+  height: 100%;
+  background: #1e1f23;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10000;
+  box-shadow: 6px 5px 33px #111;
+  display: none;
+}
+.subtitile_edit_wrap .subtitle_header {
+  width: 100%;
+  height: 50px;
+  color: #fff;
+  border-bottom: 2px solid #000;
+}
+.subtitile_edit_wrap .subtitle_header span {
+  line-height: 50px;
+  height: 50px;
+  font-size: 12px;
+  padding: 0px 10px;
+  float: left;
+  margin-right: 10px;
+}
+.subtitile_edit_wrap .subtitle_header .subtitle_header_tabs1 {
+  width: 40px;
+  font-size: 18px;
+  text-align: center;
+}
+.subtitile_edit_wrap .subtitle_header .subtitle_header_tabs1.active {
+  border-bottom: 2px solid #32bbff;
+}
+.subtitile_edit_wrap .subtitle_header .subtitle_header_tabs2 {
+  width: 40px;
+  padding: 15px 10px;
+  background: url(../images/sliders.png) center center no-repeat;
+}
+.subtitile_edit_wrap .subtitle_header .subtitle_header_tabs2.active {
+  border-bottom: 2px solid #32bbff;
+}
+.subtitile_edit_wrap .subtitle_header button {
+  float: right;
+  border: none;
+  background: #626777;
+  height: 30px;
+  line-height: 20px;
+  text-align: center;
+  margin-top: 10px;
+  margin-right: 30px;
+  font-size: 12px;
+  padding: 5px;
+  width: 80px;
+  border-radius: 10px;
+}
+.subtitile_edit_wrap .subtitle_content {
+  height: calc(100% - 50px);
+  width: 100%;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 {
+  display: block;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs2 {
+  display: none;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1, .subtitile_edit_wrap .subtitle_content .conetent_tabs2 {
+  width: 100%;
+  height: 100%;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 .subtitle_h_form, .subtitile_edit_wrap .subtitle_content .conetent_tabs2 .subtitle_h_form {
+  height: 30px;
+  margin-top: 30px;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 .subtitle_h_form button, .subtitile_edit_wrap .subtitle_content .conetent_tabs2 .subtitle_h_form button {
+  background: #3f424b;
+  color: #fff;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 .subtitle_h_form .form-group:nth-child(even), .subtitile_edit_wrap .subtitle_content .conetent_tabs2 .subtitle_h_form .form-group:nth-child(even) {
+  padding-bottom: 50px;
+  height: 70px;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 .subtitle_h_form .form-group:nth-child(odd), .subtitile_edit_wrap .subtitle_content .conetent_tabs2 .subtitle_h_form .form-group:nth-child(odd) {
+  height: 50px;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 .subtitle_h_form .form-group, .subtitile_edit_wrap .subtitle_content .conetent_tabs2 .subtitle_h_form .form-group {
+  margin-bottom: 8px;
+  margin-left: -10px;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 .subtitle_h_form .form-group label, .subtitile_edit_wrap .subtitle_content .conetent_tabs2 .subtitle_h_form .form-group label {
+  color: #999;
+  font-size: 12px;
+  text-align: left;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  padding: 0px;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 .subtitle_h_form .form-group .col-md-3, .subtitile_edit_wrap .subtitle_content .conetent_tabs2 .subtitle_h_form .form-group .col-md-3 {
+  padding: 0px;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 .subtitle_h_form .form-group .form-control, .subtitile_edit_wrap .subtitle_content .conetent_tabs2 .subtitle_h_form .form-group .form-control {
+  background: #000;
+  border: none;
+  border-radius: 5px;
+  color: #888;
+  height: 28px;
+  font-size: 12px;
+  text-indent: 2px;
+}
+.subtitile_edit_wrap .subtitle_content .conetent_tabs1 .subtitle_h_form .form-group .form-control[type='range'], .subtitile_edit_wrap .subtitle_content .conetent_tabs2 .subtitle_h_form .form-group .form-control[type='range'] {
+  padding: 0;
+}
+
+#js_pageCover_subtitle {
+  position: absolute;
+  width: 100%;
+  height: calc(40% + 40px);
+  top: calc(60% - 40px);
+  z-index: 90;
+  background-color: #1e1f23;
+  opacity: 0.5;
   display: none;
 }
 
@@ -1651,7 +1880,7 @@ h4 {
 }
 .container-fluid .container-fluid-box .carve .carve_header .logo {
   float: left;
-  width: 32px;
+  width: 50px;
   line-height: 46px;
   font-size: 24px;
   height: 46px;
@@ -1661,8 +1890,10 @@ h4 {
   color: #33bbff;
 }
 .container-fluid .container-fluid-box .carve .carve_header .logo a {
-  color: #3d3e40;
-  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  background: url(../images/back.png) center center no-repeat;
+  display: inline-block;
 }
 .container-fluid .container-fluid-box .carve .carve_header .user .user-avatar {
   color: #3d3e40;
@@ -1689,13 +1920,14 @@ h4 {
 }
 .container-fluid .container-fluid-box .carve .carve_header .list {
   float: right;
-  width: 190px;
+  width: 170px;
   list-style: none;
   height: 46px;
 }
 .container-fluid .container-fluid-box .carve .carve_header .list li {
   float: left;
   height: 48px;
+  width: 50px;
 }
 .container-fluid .container-fluid-box .carve .carve_header .list li a {
   border: none;
@@ -1703,9 +1935,9 @@ h4 {
   line-height: 24px;
   position: relative;
   display: inline-block;
-  padding: 10px 8px;
+  padding: 10px;
   height: 44px;
-  color: #3d3e40;
+  color: #999;
   text-decoration: none;
   outline: none;
   cursor: pointer;
@@ -1715,6 +1947,7 @@ h4 {
 }
 .container-fluid .container-fluid-box .carve .carve_header .list li.active {
   border-bottom: 2px solid #33bbff;
+  width: 50px;
 }
 .container-fluid .container-fluid-box .carve .carve_header .list li.active a {
   color: #fff;
@@ -1724,7 +1957,7 @@ h4 {
   margin-right: 2px;
   font-size: 14px;
   display: inline-block;
-  padding: 10px 15px;
+  padding: 10px;
   height: 44px;
 }
 .container-fluid .container-fluid-box .carve #tab_1 {
@@ -1788,55 +2021,15 @@ h4 {
   height: calc(100% - 85px);
   position: relative;
   overflow: hidden;
-  /* .meterial_thumbnail_box{
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
-      .col-md-3{
-          padding-right: 6px;
-          padding-left: 6px;
-          height: 36%;
-          margin-bottom: 20px;
-          position: relative;
-          .thumbnail_cover{
-              width: 100%;
-              height: 100%;
-              position: absolute;
-              left: 0;
-              top:0;
-              opacity: 0.001;
-              background: #000; 
-              filter:alpha(opacity=0);  
-          }
-          .thumbnail{
-              border: none;
-              padding: 0;
-              height: 100%;
-              margin-bottom: 0;
-              img{
-                  width: 100%;
-                  height: 100%;
-              }
-              span{
-                  display: block;
-                  position: absolute;
-                  bottom: 0;
-                  background: rgba(0,0,0,.6);
-                  color:#fff;
-                  text-align: center;
-                  height: 22px;
-                  width: 100%;
-                  line-height: 22px;
-                  font-size: 12px;
-              }
-          }   
-      } 
-  } */
 }
 .container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox .meterial_thumbnail_box {
   overflow: hidden;
   width: 100%;
   height: 100%;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox .meterial_thumbnail_box .meterial_loading {
+  color: #fff;
+  text-align: center;
 }
 .container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox .meterial_thumbnail_box .col-md-3:nth-child(1) {
   padding-left: 18px;
@@ -2030,6 +2223,142 @@ h4 {
   background: #323338;
   border-radius: 8px;
 }
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin {
+  border-bottom: 1px solid #000;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(1) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(4) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(5) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(8) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(9) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(12) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(13) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(16) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(17) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(20) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(21) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(24) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(25) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(28) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(29) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(32) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(33) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(36) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(37) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(40) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(41) {
+  padding-left: 18px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3:nth-child(44) {
+  padding-right: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3 {
+  padding-left: 6px;
+  height: 36%;
+  margin-top: 20px;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3 .thumbnail {
+  border: none;
+  padding: 0;
+  position: relative;
+  height: 100%;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3 .thumbnail img {
+  width: 100%;
+  height: 100%;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3 .thumbnail span {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  text-align: center;
+  height: 22px;
+  width: 100%;
+  line-height: 22px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3 .thumbnail .mask_thumbnail {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: .7;
+  background: #fff;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3 .thumbnail .mask_text_thumbnail {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100px;
+  height: 100px;
+  margin-left: -50px;
+  margin-top: -50px;
+  text-align: center;
+  font-size: 36px;
+  font-style: normal;
+  color: red;
+  line-height: 100px;
+  z-index: 8;
+  font-family: 'Verdana';
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .active .thumbnail {
+  border: 3px solid #33bbff;
+}
+.container-fluid .container-fluid-box .carve #tab_1 .carve_body_meterialBox_yueyin .meterial_thumbnail_box_yueying .col-md-3 {
+  height: 80px;
+}
 .container-fluid .container-fluid-box .carve #tab_1 .carve_footer_pagination {
   height: 40px;
   overflow: hidden;
@@ -2059,88 +2388,88 @@ h4 {
 .container-fluid .container-fluid-box .carve #tab_2 {
   display: none;
   height: calc(100% - 58px);
-  /* .subtitle_wrap{
-      position: relative;
-      height: calc(100% - 58px);
-      div.header{
-          height: 31px;
-          border-top:1px solid #000;
-          border-bottom: 1px solid #000;
-          cursor: pointer;
-          span{
-              border-right: 1px solid #000;
-              font-weight: bold;
-              color: #fff;
-              width: calc(25% - 3px);
-              float: left;
-              line-height: 30px;
-              height: 30px;
-              color: #888;
-              text-align: center;
-              cursor: pointer;
-          }
-          span:last-child{
-             border-right: none; 
-          }
-          span:first-child{
-              width: 24%;
-          } 
-      }
-      div.header:last-child{
-          border-bottom:1px solid #000;
-      }
-      .tab_subtitle{
-          height: calc(100% - 30px);
-          width: 100%;
-          list-style: none;
-          overflow: hidden;
-          li{
-              height: 30px;
-              border-top:1px solid #000;
-              cursor: pointer;
-              span{
-                  width: calc(25% - 3px);
-                  float: left;
-                  line-height: 30px;
-                  height: 30px;
-                  color: #888;
-                  text-align: center;
-                  cursor: pointer;
-              }
-              span:first-child{
-                  width: 24%;
-                  overflow: hidden;
-                  text-overflow:ellipsis;
-                  white-space: nowrap;
-              }
-              span:last-child{
-                 border-right: none; 
-              }
-          }
-          li:last-child{
-              border-bottom:1px solid #000;
-          }
-          
-      }
-      .subtitle_list_track{
-          display: none;
-          position: absolute;
-          right: 6px;
-          width: 6px;
-          height: calc(100% - 30px);
-          top:31px;
-          background: #000;
-          border-radius: 8px;
-          .subtitle_list_scroll{
-              position: absolute;
-              right: 0px;
-              width: 6px;
-              height: 100px;
-              background: #323338;
-              border-radius: 8px;
-          }
-      } 
-  } */
+                /* .subtitle_wrap{
+                    position: relative;
+                    height: calc(100% - 58px);
+                    div.header{
+                        height: 31px;
+                        border-top:1px solid #000;
+                        border-bottom: 1px solid #000;
+                        cursor: pointer;
+                        span{
+                            border-right: 1px solid #000;
+                            font-weight: bold;
+                            color: #fff;
+                            width: calc(25% - 3px);
+                            float: left;
+                            line-height: 30px;
+                            height: 30px;
+                            color: #888;
+                            text-align: center;
+                            cursor: pointer;
+                        }
+                        span:last-child{
+                           border-right: none;
+                        }
+                        span:first-child{
+                            width: 24%;
+                        }
+                    }
+                    div.header:last-child{
+                        border-bottom:1px solid #000;
+                    }
+                    .tab_subtitle{
+                        height: calc(100% - 30px);
+                        width: 100%;
+                        list-style: none;
+                        overflow: hidden;
+                        li{
+                            height: 30px;
+                            border-top:1px solid #000;
+                            cursor: pointer;
+                            span{
+                                width: calc(25% - 3px);
+                                float: left;
+                                line-height: 30px;
+                                height: 30px;
+                                color: #888;
+                                text-align: center;
+                                cursor: pointer;
+                            }
+                            span:first-child{
+                                width: 24%;
+                                overflow: hidden;
+                                text-overflow:ellipsis;
+                                white-space: nowrap;
+                            }
+                            span:last-child{
+                               border-right: none;
+                            }
+                        }
+                        li:last-child{
+                            border-bottom:1px solid #000;
+                        }
+
+                    }
+                    .subtitle_list_track{
+                        display: none;
+                        position: absolute;
+                        right: 6px;
+                        width: 6px;
+                        height: calc(100% - 30px);
+                        top:31px;
+                        background: #000;
+                        border-radius: 8px;
+                        .subtitle_list_scroll{
+                            position: absolute;
+                            right: 0px;
+                            width: 6px;
+                            height: 100px;
+                            background: #323338;
+                            border-radius: 8px;
+                        }
+                    }
+                } */
 }
 .container-fluid .container-fluid-box .carve #tab_2 h4 {
   position: relative;
@@ -2209,32 +2538,35 @@ h4 {
 .container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li.active .subtitle_list {
   border: 2px solid #33bbff;
 }
-.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li:nth-child(1) .subtitle_list {
-  background: #303236 url(../images/subtitles/special.jpg) center center no-repeat;
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_01 {
+  background: #303236 url(../images/subtitles/01.jpg) center center no-repeat;
 }
-.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li:nth-child(2) .subtitle_list {
-  background: #303236 url(../images/subtitles/name.jpg) center center no-repeat;
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_02 {
+  background: #303236 url(../images/subtitles/02.jpg) center center no-repeat;
 }
-.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li:nth-child(3) .subtitle_list {
-  background: #303236 url(../images/subtitles/line.jpg) center center no-repeat;
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_03 {
+  background: #303236 url(../images/subtitles/03.jpg) center center no-repeat;
 }
-.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li:nth-child(4) .subtitle_list {
-  background: #303236 url(../images/subtitles/year.jpg) center center no-repeat;
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_04 {
+  background: #303236 url(../images/subtitles/04.jpg) center center no-repeat;
 }
-.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li:nth-child(5) .subtitle_list {
-  background: #303236 url(../images/subtitles/light.jpg) center center no-repeat;
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_05 {
+  background: #303236 url(../images/subtitles/05.jpg) center center no-repeat;
 }
-.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li:nth-child(6) .subtitle_list {
-  background: #303236 url(../images/subtitles/website.jpg) center center no-repeat;
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_06 {
+  background: #303236 url(../images/subtitles/06.jpg) center center no-repeat;
 }
-.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li:nth-child(7) .subtitle_list {
-  background: #303236 url(../images/subtitles/Lower-Third.jpg) center center no-repeat;
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_07 {
+  background: #303236 url(../images/subtitles/07.jpg) center center no-repeat;
 }
-.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li:nth-child(8) .subtitle_list {
-  background: #303236 url(../images/subtitles/subtitle.jpg) center center no-repeat;
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_08 {
+  background: #303236 url(../images/subtitles/08.jpg) center center no-repeat;
 }
-.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li:nth-child(9) .subtitle_list {
-  background: #303236 url(../images/subtitles/end.jpg) center center no-repeat;
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_09 {
+  background: #303236 url(../images/subtitles/09.jpg) center center no-repeat;
+}
+.container-fluid .container-fluid-box .carve #tab_2 .subtitle_wrap li .subtitle_list_11 {
+  background: #303236 url(../images/subtitles/11.jpg) center center no-repeat;
 }
 .container-fluid .container-fluid-box .carve #tab_3 {
   display: none;
@@ -2363,41 +2695,34 @@ h4 {
 .container-fluid .container-fluid-box .carve #tab_4 .images_wrap li {
   float: left;
   width: 100px;
-  height: 124px;
+  height: 100px;
   margin-left: 15px;
   margin-right: 15px;
   margin-top: 30px;
+  position: relative;
 }
 .container-fluid .container-fluid-box .carve #tab_4 .images_wrap li .images_list {
   width: 100%;
-  height: calc(100% - 24px);
+  height: 100%;
   display: inline-block;
   background: #303236;
-  border: 3px solid #000;
+  border: 3px solid #999;
 }
 .container-fluid .container-fluid-box .carve #tab_4 .images_wrap li .images_text {
-  color: #909091;
+  color: #fff;
   width: 100%;
   display: inline-block;
   text-align: center;
   height: 24px;
   line-height: 24px;
   font-size: 12px;
+  position: absolute;
+  left: 0;
+  bottom: 0px;
+  background: rgba(0, 0, 0, 0.3);
 }
 .container-fluid .container-fluid-box .carve #tab_4 .images_wrap li.active .images_list {
   border: 3px solid #33bbff;
-}
-.container-fluid .container-fluid-box .carve #tab_4 .images_wrap li:nth-child(1) .images_list {
-  background: url(http://pic39.nipic.com/20140312/18085061_092729513131_2.jpg) center center no-repeat;
-}
-.container-fluid .container-fluid-box .carve #tab_4 .images_wrap li:nth-child(2) .images_list {
-  background: url(http://pic23.nipic.com/20120908/10639194_105138442151_2.jpg) center center no-repeat;
-}
-.container-fluid .container-fluid-box .carve #tab_4 .images_wrap li:nth-child(3) .images_list {
-  background: url(http://img01.taopic.com/150508/318763-15050PU9398.jpg) center center no-repeat;
-}
-.container-fluid .container-fluid-box .carve #tab_4 .images_wrap li:nth-child(4) .images_list {
-  background: url(http://img.taopic.com/uploads/allimg/110915/29-11091512035335.jpg) center center no-repeat;
 }
 .container-fluid .container-fluid-box .carve #tab_5 {
   display: none;
@@ -2443,135 +2768,132 @@ h4 {
 .container-fluid .container-fluid-box .carve #tab_5 .audio_wrap li {
   float: left;
   width: 100px;
-  height: 124px;
+  height: 100px;
   margin-left: 15px;
   margin-right: 15px;
   margin-top: 30px;
+  position: relative;
 }
 .container-fluid .container-fluid-box .carve #tab_5 .audio_wrap li .audio_list {
   width: 100%;
-  height: calc(100% - 24px);
+  height: 100%;
   display: inline-block;
   background: #303236;
-  border: 3px solid #000;
+  border: 3px solid #999;
 }
 .container-fluid .container-fluid-box .carve #tab_5 .audio_wrap li .audio_text {
-  color: #909091;
+  color: #fff;
   width: 100%;
   display: inline-block;
   text-align: center;
   height: 24px;
   line-height: 24px;
   font-size: 12px;
+  position: absolute;
+  left: 0;
+  bottom: 0px;
+  background: rgba(0, 0, 0, 0.3);
 }
 .container-fluid .container-fluid-box .carve #tab_5 .audio_wrap li.active .audio_list {
   border: 3px solid #33bbff;
-}
-.container-fluid .container-fluid-box .carve #tab_5 .audio_wrap li:nth-child(1) .audio_list {
-  background: url(../images/test_audio.jpg) center center no-repeat;
-  background-size: contain;
-}
-.container-fluid .container-fluid-box .carve #tab_5 .audio_wrap li:nth-child(2) .audio_list {
-  background: url(../images/test_audio.jpg) center center no-repeat;
-  background-size: contain;
 }
 .container-fluid .container-fluid-box .carve #tab_6 {
   display: none;
   height: calc(100% - 58px);
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox {
   border-bottom: 1px solid #000;
   height: calc(100% - 40px);
   position: relative;
   overflow: hidden;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box {
   overflow: hidden;
   width: 100%;
   height: 100%;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(1) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(1) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(4) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(4) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(5) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(5) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(8) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(8) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(9) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(9) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(12) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(12) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(13) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(13) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(16) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(16) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(17) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(17) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(20) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(20) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(21) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(21) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(24) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(24) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(25) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(25) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(28) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(28) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(29) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(29) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(32) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(32) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(33) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(33) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(36) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(36) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(37) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(37) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(40) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(40) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(41) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(41) {
   padding-left: 18px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3:nth-child(44) {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3:nth-child(44) {
   padding-right: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3 {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3 {
   padding-left: 6px;
   height: 36%;
   margin-top: 20px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3 .thumbnail {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3 .thumbnail {
   border: none;
   padding: 0;
   position: relative;
   height: 100%;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3 .thumbnail img {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3 .thumbnail img {
   width: 100%;
   height: 100%;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3 .thumbnail span {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3 .thumbnail span {
   display: block;
   position: absolute;
   bottom: 0;
@@ -2586,14 +2908,14 @@ h4 {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3 .thumbnail .mask_thumbnail {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3 .thumbnail .mask_thumbnail {
   position: absolute;
   width: 100%;
   height: 100%;
   opacity: .7;
   background: #fff;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .col-md-3 .thumbnail .mask_text_thumbnail {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .col-md-3 .thumbnail .mask_text_thumbnail {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -2609,10 +2931,28 @@ h4 {
   z-index: 8;
   font-family: 'Verdana';
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_box .active .thumbnail {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .active .thumbnail {
   border: 3px solid #33bbff;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_track {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .mymeterial_plus .thumbnail {
+  background: #333;
+  text-align: center;
+  font-size: 50px;
+  font-family: '微软雅黑';
+  color: #4b5056;
+  position: relative;
+  font-weight: 100;
+}
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_box .mymeterial_plus .thumbnail i {
+  position: absolute;
+  line-height: 50px;
+  height: 50px;
+  top: 50%;
+  left: 50%;
+  margin-left: -25px;
+  margin-top: -25px;
+}
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_track {
   display: none;
   position: absolute;
   right: 6px;
@@ -2622,7 +2962,7 @@ h4 {
   background: #000;
   border-radius: 8px;
 }
-.container-fluid .container-fluid-box .carve #tab_6 .carve_body_packageList .packageList_thumbnail_track .packageList_thumbnail_scroll {
+.container-fluid .container-fluid-box .carve #tab_6 .carve_body_mymeterialBox .mymeterial_thumbnail_track .mymeterial_thumbnail_scroll {
   position: absolute;
   right: 0px;
   width: 6px;
@@ -2708,7 +3048,7 @@ h4 {
   list-style: none;
 }
 .container-fluid .container-fluid-box .player_wrap .player_header .player_bar li a {
-  color: #3d3e40;
+  color: #999;
   text-decoration: none;
 }
 .container-fluid .container-fluid-box .player_wrap .player_header .player_bar li a:hover {
@@ -2730,6 +3070,45 @@ h4 {
   height: calc(100% - 91px);
   position: relative;
 }
+.container-fluid .container-fluid-box .player_wrap .player_box .player #js_dragger_subtitle_wrap {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #js_dragger_subtitle_wrap #js_dragger_subtitle {
+  position: absolute;
+  border: 1px solid #d78136;
+  cursor: move;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #js_dragger_subtitle_wrap #js_dragger_subtitle span {
+  position: absolute;
+  border: 1px solid #fff;
+  width: 6px;
+  height: 6px;
+  background: #000;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #js_dragger_subtitle_wrap #js_dragger_subtitle span.coverLT {
+  left: -4px;
+  top: -4px;
+  cursor: nw-resize;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #js_dragger_subtitle_wrap #js_dragger_subtitle span.coverRT {
+  right: -4px;
+  top: -4px;
+  cursor: ne-resize;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #js_dragger_subtitle_wrap #js_dragger_subtitle span.coverLB {
+  left: -4px;
+  bottom: -4px;
+  cursor: sw-resize;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #js_dragger_subtitle_wrap #js_dragger_subtitle span.coverRB {
+  right: -4px;
+  bottom: -4px;
+  cursor: se-resize;
+}
 .container-fluid .container-fluid-box .player_wrap .player_box .player #ocx {
   height: 100%;
   background: #000;
@@ -2744,6 +3123,34 @@ h4 {
   position: absolute;
   border: 1px solid yellow;
   z-index: 100;
+  cursor: move;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #ocx #move_box span {
+  position: absolute;
+  border: 1px solid #fff;
+  width: 6px;
+  height: 6px;
+  background: #000;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #ocx #move_box span.coverLT {
+  left: -4px;
+  top: -4px;
+  cursor: nw-resize;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #ocx #move_box span.coverRT {
+  right: -4px;
+  top: -4px;
+  cursor: ne-resize;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #ocx #move_box span.coverLB {
+  left: -4px;
+  bottom: -4px;
+  cursor: sw-resize;
+}
+.container-fluid .container-fluid-box .player_wrap .player_box .player #ocx #move_box span.coverRB {
+  right: -4px;
+  bottom: -4px;
+  cursor: se-resize;
 }
 .container-fluid .container-fluid-box .player_wrap .player_box .player #ocx .textarea_bg {
   position: relative;
@@ -3246,122 +3653,7 @@ h4 {
 .container-fluid .container-fluid-box .carve_edit .carve_edit_body {
   height: calc(100% - 50px);
 }
-.container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_subtitle {
-  display: block;
-  height: 100%;
-  position: relative;
-  /* .subtitle_h_toolbar{
-      height: 40px;
-      padding-top: 10px;
-      span{
-          float: left;
-          height: 30px;
-          width: 30px;   
-      }
-      span.choosebtn{
-          background:url(../images/editor/choose.png) center center no-repeat;  
-      }
-      span.choosebtn.active{
-          background:url(../images/editor/choose_a.png) center center no-repeat;  
-      }
-      span.unchoosebtn{
-          background:url(../images/editor/unchoose.png) center center no-repeat;  
-      }
-      span.unchoosebtn.active{
-          background:url(../images/editor/unchoose_a.png) center center no-repeat;  
-      }
-      span.bbtn{
-          background:url(../images/editor/bold.png) center center no-repeat;  
-      }
-      span.bbtn.active{
-          background:url(../images/editor/bold_a.png) center center no-repeat;  
-      }
-      span.ubtn{
-          background:url(../images/editor/underline.png) center center no-repeat;  
-      }
-      span.ubtn.active{
-          background:url(../images/editor/underline_a.png) center center no-repeat;  
-      }
-      span.ibtn{
-          background:url(../images/editor/italic.png) center center no-repeat;  
-      }
-      span.ibtn.active{
-          background:url(../images/editor/italic_a.png) center center no-repeat;  
-      }
-      span.jstlbtn{
-          background:url(../images/editor/justifyleft.png) center center no-repeat;  
-      }
-      span.jstlbtn.active{
-          background:url(../images/editor/justifyleft_a.png) center center no-repeat;  
-      }
-      span.jstcbtn{
-          background:url(../images/editor/justifycenter.png) center center no-repeat;  
-      }
-      span.jstcbtn.active{
-          background:url(../images/editor/justifycenter_a.png) center center no-repeat;  
-      }
-      span.jstrbtn{
-          background:url(../images/editor/justifyright.png) center center no-repeat;  
-      } 
-      span.jstrbtn.active{
-          background:url(../images/editor/justifyright_a.png) center center no-repeat;  
-      }   
-  } */
-}
-.container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_subtitle .subtitle_h_form_wrap {
-  width: 96%;
-  height: 100%;
-  overflow: hidden;
-}
-.container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_subtitle .subtitle_h_form_wrap .subtitle_h_form label {
-  color: #999;
-  font-size: 12px;
-  text-align: left;
-  padding-left: 20px;
-}
-.container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_subtitle .subtitle_h_form_wrap .subtitle_h_form .form-group {
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: -10px;
-}
-.container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_subtitle .subtitle_h_form_wrap .subtitle_h_form .form-group .form-control {
-  background: #000;
-  border: none;
-  border-radius: 5px;
-  color: #888;
-  height: 28px;
-  font-size: 12px;
-  margin-left: -15px;
-  margin-right: 2px;
-  text-indent: 2px;
-}
-.container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_subtitle .subtitle_h_form_wrap .subtitle_h_form .form-group .form-control[type='range'] {
-  padding: 0;
-}
-.container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_subtitle .subtitle_h_form_wrap .subtitle_h_form button {
-  background: #3f424b;
-  color: #fff;
-}
-.container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_subtitle .subtitle_edit_track {
-  display: none;
-  position: absolute;
-  right: 6px;
-  width: 6px;
-  height: calc(100% - 2px);
-  top: 2px;
-  background: #000;
-  border-radius: 8px;
-}
-.container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_subtitle .subtitle_edit_track .subtitle_edit_scroll {
-  position: absolute;
-  right: 0px;
-  width: 6px;
-  height: 100px;
-  background: #323338;
-  border-radius: 8px;
-}
 .container-fluid .container-fluid-box .carve_edit .carve_edit_body .edit_effect {
-  display: none;
   position: relative;
   height: 100%;
 }
@@ -3434,6 +3726,13 @@ h4 {
 .container-fluid .toolbar_wrap span.toolbar_icon_ungroup {
   background: url("../images/icon_broken.png") center center no-repeat;
   margin-left: 5px;
+}
+.container-fluid .toolbar_wrap span.toolbar_icon_zsp {
+  background: url("../images/icon_zsp.png") center center no-repeat;
+  margin-left: 15px;
+}
+.container-fluid .toolbar_wrap span.toolbar_icon_zsp.active {
+  background: url("../images/icon_zsp_action.png") center center no-repeat;
 }
 .container-fluid .toolbar_wrap span.toolbar_icon_ungroup.active {
   background: url("../images/icon_broken_action.png") center center no-repeat;
@@ -3685,7 +3984,7 @@ h4 {
   margin-left: 1px;
   top: 50px;
   border-left: 1px solid #0077b2;
-  z-index: 300;
+  z-index: 60;
   cursor: move;
 }
 .time_ruler_container .time_ruler_wrap .time_ruler .time_ruler_header .time_ruler_cursor .time_ruler_cursor_top {
@@ -3694,7 +3993,7 @@ h4 {
   width: 13px;
   height: 14px;
   background: url("../images/cursor.png") no-repeat;
-  z-index: 300;
+  z-index: 60;
 }
 .time_ruler_container .time_ruler_wrap .time_ruler .time_ruler_body {
   background: #212121;
@@ -3758,6 +4057,8 @@ h4 {
   text-indent: 5px;
   color: #333;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   top: 0;
   background: #33bbff;
 }
@@ -4050,7 +4351,6 @@ h4 {
   background: #000;
 }
 
-/*---------------------------------------模拟拖拽的图片样式--------------------------------------------*/
 /*---------------------------------------日期选择器 css--------------------------------------------*/
 .date_selector, .date_selector * {
   width: auto;
@@ -4201,24 +4501,69 @@ h4 {
   color: #fff;
 }
 
-/*-----------------------------------------------------------------------------------*/
 /*---------------------------------------颜色取色器 css--------------------------------------------*/
-.minicolors {
+.sp-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  display: inline;
+  zoom: 1;
+  z-index: 9999994;
+  overflow: hidden;
+}
+
+.sp-container.sp-flat {
   position: relative;
 }
 
-.minicolors-swatch {
-  position: absolute;
-  vertical-align: middle;
-  background: url(../images/jquery.minicolors.png) -80px 0;
-  border: solid 1px #ccc;
-  cursor: text;
-  padding: 0;
-  margin: 0;
+.sp-container,
+.sp-container * {
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+.sp-top {
+  position: relative;
+  width: 100%;
   display: inline-block;
 }
 
-.minicolors-swatch-color {
+.sp-top-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.sp-color {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 20%;
+}
+
+.sp-hue {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 84%;
+  height: 100%;
+}
+
+.sp-clear-enabled .sp-hue {
+  top: 33px;
+  height: 77.5%;
+}
+
+.sp-fill {
+  padding-top: 80%;
+}
+
+.sp-sat, .sp-val {
   position: absolute;
   top: 0;
   left: 0;
@@ -4226,234 +4571,460 @@ h4 {
   bottom: 0;
 }
 
-.minicolors input[type=hidden] + .minicolors-swatch {
-  width: 28px;
-  position: static;
+.sp-alpha-enabled .sp-top {
+  margin-bottom: 18px;
+}
+
+.sp-alpha-enabled .sp-alpha {
+  display: block;
+}
+
+.sp-alpha-handle {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 6px;
+  left: 50%;
   cursor: pointer;
-}
-
-/* Panel */
-.minicolors-panel {
-  position: absolute;
-  width: 173px;
-  height: 152px;
+  border: 1px solid black;
   background: white;
-  border: solid 1px #CCC;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  z-index: 99999;
-  -moz-box-sizing: content-box;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
+  opacity: .8;
+}
+
+.sp-alpha {
   display: none;
-}
-
-.minicolors-panel.minicolors-visible {
-  display: block;
-}
-
-/* Panel positioning */
-.minicolors-position-top .minicolors-panel {
-  top: -154px;
-}
-
-.minicolors-position-right .minicolors-panel {
+  position: absolute;
+  bottom: -14px;
   right: 0;
-}
-
-.minicolors-position-bottom .minicolors-panel {
-  top: auto;
-}
-
-.minicolors-position-left .minicolors-panel {
-  left: -60px;
-}
-
-.minicolors-with-opacity .minicolors-panel {
-  width: 194px;
-}
-
-.minicolors .minicolors-grid {
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  width: 150px;
-  height: 150px;
-  background: url(../images/jquery.minicolors.png) -120px 0;
-  cursor: crosshair;
-}
-
-.minicolors .minicolors-grid-inner {
-  position: absolute;
-  top: 0;
   left: 0;
-  width: 150px;
-  height: 150px;
-  background: none;
+  height: 8px;
 }
 
-.minicolors-slider-saturation .minicolors-grid {
-  background-position: -420px 0;
+.sp-alpha-inner {
+  border: solid 1px #333;
 }
 
-.minicolors-slider-saturation .minicolors-grid-inner {
-  background: url(../images/jquery.minicolors.png) -270px 0;
-}
-
-.minicolors-slider-brightness .minicolors-grid {
-  background-position: -570px 0;
-}
-
-.minicolors-slider-brightness .minicolors-grid-inner {
-  background: black;
-}
-
-.minicolors-slider-wheel .minicolors-grid {
-  background-position: -720px 0;
-}
-
-.minicolors-slider,
-.minicolors-opacity-slider {
-  position: absolute;
-  top: 1px;
-  left: 152px;
-  width: 20px;
-  height: 150px;
-  background: white url(../images/jquery.minicolors.png) 0 0;
-  cursor: row-resize;
-}
-
-.minicolors-slider-saturation .minicolors-slider {
-  background-position: -60px 0;
-}
-
-.minicolors-slider-brightness .minicolors-slider {
-  background-position: -20px 0;
-}
-
-.minicolors-slider-wheel .minicolors-slider {
-  background-position: -20px 0;
-}
-
-.minicolors-opacity-slider {
-  left: 173px;
-  background-position: -40px 0;
+.sp-clear {
   display: none;
 }
 
-.minicolors-with-opacity .minicolors-opacity-slider {
+.sp-clear.sp-clear-display {
+  background-position: center;
+}
+
+.sp-clear-enabled .sp-clear {
   display: block;
-}
-
-/* Pickers */
-.minicolors-grid .minicolors-picker {
   position: absolute;
-  top: 70px;
-  left: 70px;
-  width: 12px;
-  height: 12px;
-  border: solid 1px black;
-  border-radius: 10px;
-  margin-top: -6px;
-  margin-left: -6px;
-  background: none;
+  top: 0px;
+  right: 0;
+  bottom: 0;
+  left: 84%;
+  height: 28px;
 }
 
-.minicolors-grid .minicolors-picker > div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 8px;
-  border: solid 2px white;
-  -moz-box-sizing: content-box;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
+/* Don't allow text selection */
+.sp-container, .sp-replacer, .sp-preview, .sp-dragger, .sp-slider, .sp-alpha, .sp-clear, .sp-alpha-handle, .sp-container.sp-dragging .sp-input, .sp-container button {
+  -webkit-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-.minicolors-picker {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 18px;
-  height: 2px;
-  background: white;
-  border: solid 1px black;
-  margin-top: -2px;
-  -moz-box-sizing: content-box;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
+.sp-container.sp-input-disabled .sp-input-container {
+  display: none;
 }
 
-/* Inline controls */
-.minicolors-inline {
-  display: inline-block;
+.sp-container.sp-buttons-disabled .sp-button-container {
+  display: none;
 }
 
-.minicolors-inline .minicolors-input {
+.sp-palette-only .sp-picker-container {
+  display: none;
+}
+
+.sp-palette-disabled .sp-palette-container {
+  display: none;
+}
+
+.sp-initial-disabled .sp-initial {
+  display: none;
+}
+
+/* Gradients for hue, saturation and value instead of images.  Not pretty... but it works */
+.sp-sat {
+  background-image: -webkit-gradient(linear, left top, right top, from(#fff), to(rgba(204, 154, 129, 0)));
+  background-image: linear-gradient(to right, #fff, rgba(204, 154, 129, 0));
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType = 1, startColorstr=#FFFFFFFF, endColorstr=#00CC9A81)";
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType = 1, startColorstr='#FFFFFFFF', endColorstr='#00CC9A81');
+}
+
+.sp-val {
+  background-image: -webkit-gradient(linear, left bottom, left top, from(#000), to(rgba(204, 154, 129, 0)));
+  background-image: linear-gradient(to top, #000, rgba(204, 154, 129, 0));
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#00CC9A81, endColorstr=#FF000000)";
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00CC9A81', endColorstr='#FF000000');
+}
+
+.sp-hue {
+  background: -webkit-linear-gradient(top, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
+}
+
+/* IE filters do not support multiple color stops.
+   Generate 6 divs, line them up, and do two color gradients for each.
+   Yes, really.
+ */
+.sp-1 {
+  height: 17%;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0000', endColorstr='#ffff00');
+}
+
+.sp-2 {
+  height: 16%;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffff00', endColorstr='#00ff00');
+}
+
+.sp-3 {
+  height: 17%;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ff00', endColorstr='#00ffff');
+}
+
+.sp-4 {
+  height: 17%;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffff', endColorstr='#0000ff');
+}
+
+.sp-5 {
+  height: 16%;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0000ff', endColorstr='#ff00ff');
+}
+
+.sp-6 {
+  height: 17%;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff00ff', endColorstr='#ff0000');
+}
+
+.sp-hidden {
   display: none !important;
 }
 
-.minicolors-inline .minicolors-panel {
-  position: relative;
-  top: auto;
-  left: auto;
-  box-shadow: none;
-  z-index: auto;
-  display: inline-block;
+/* Clearfix hack */
+.sp-cf:before, .sp-cf:after {
+  content: "";
+  display: table;
 }
 
-/* Default theme */
-.minicolors-theme-default .minicolors-swatch {
-  top: 5px;
-  left: 5px;
-  width: 18px;
-  height: 18px;
+.sp-cf:after {
+  clear: both;
 }
 
-.minicolors-theme-default.minicolors-position-right .minicolors-swatch {
-  left: auto;
-  right: 5px;
+.sp-cf {
+  *zoom: 1;
 }
 
-.minicolors-theme-default.minicolors {
-  width: auto;
-  display: inline-block;
+/* Mobile devices, make hue slider bigger so it is easier to slide */
+@media (max-device-width: 480px) {
+  .sp-color {
+    right: 40%;
+  }
+
+  .sp-hue {
+    left: 63%;
+  }
+
+  .sp-fill {
+    padding-top: 60%;
+  }
+}
+.sp-dragger {
+  border-radius: 5px;
+  height: 5px;
+  width: 5px;
+  border: 1px solid #fff;
+  background: #000;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.minicolors-theme-default .minicolors-input {
-  height: 20px;
-  width: auto;
-  display: inline-block;
-  padding-left: 26px;
+.sp-slider {
+  position: absolute;
+  top: 0;
+  cursor: pointer;
+  height: 3px;
+  left: -1px;
+  right: -1px;
+  border: 1px solid #000;
+  background: white;
+  opacity: .8;
 }
 
-.minicolors-theme-default.minicolors-position-right .minicolors-input {
-  padding-right: 26px;
-  padding-left: inherit;
+/*
+Theme authors:
+Here are the basic themeable display options (colors, fonts, global widths).
+See http://bgrins.github.io/spectrum/themes/ for instructions.
+*/
+.sp-container {
+  border-radius: 0;
+  background-color: #333;
+  border: solid 1px #000;
+  padding: 0;
 }
 
-/* Bootstrap theme */
-.minicolors-theme-bootstrap .minicolors-swatch {
-  top: 3px;
-  left: 3px;
-  width: 20px;
-  height: 20px;
+.sp-container, .sp-container button, .sp-container input, .sp-color, .sp-hue, .sp-clear {
+  font: normal 12px "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.sp-top {
+  margin-bottom: 3px;
+}
+
+.sp-color, .sp-hue, .sp-clear {
+  border: solid 1px #666;
+}
+
+/* Input */
+.sp-input-container {
+  float: right;
+  width: 100px;
+  margin-bottom: 4px;
+}
+
+.sp-initial-disabled .sp-input-container {
+  width: 100%;
+}
+
+.sp-input {
+  font-size: 12px !important;
+  border: 1px inset;
+  padding: 4px 5px;
+  margin: 0;
+  width: 100%;
+  background: transparent;
   border-radius: 3px;
+  color: #fff;
 }
 
-.minicolors-theme-bootstrap.minicolors-position-right .minicolors-swatch {
-  left: auto;
-  right: 3px;
+.sp-input:focus {
+  border: 1px solid orange;
 }
 
-.minicolors-theme-bootstrap .minicolors-input {
-  padding-left: 44px;
+.sp-input.sp-validation-error {
+  border: 1px solid red;
+  background: #fdd;
 }
 
-.minicolors-theme-bootstrap.minicolors-position-right .minicolors-input {
-  padding-right: 44px;
-  padding-left: 12px;
+.sp-picker-container, .sp-palette-container {
+  float: left;
+  position: relative;
+  padding: 10px;
+  padding-bottom: 300px;
+  margin-bottom: -290px;
+}
+
+.sp-picker-container {
+  width: 172px;
+  border-left: solid 1px #000;
+}
+
+/* Palettes */
+.sp-palette-container {
+  border-right: solid 1px #000;
+}
+
+.sp-palette .sp-thumb-el {
+  display: block;
+  position: relative;
+  float: left;
+  width: 24px;
+  height: 15px;
+  margin: 3px;
+  cursor: pointer;
+  border: solid 2px transparent;
+}
+
+.sp-palette .sp-thumb-el:hover, .sp-palette .sp-thumb-el.sp-thumb-active {
+  border-color: orange;
+}
+
+.sp-thumb-el {
+  position: relative;
+}
+
+/* Initial */
+.sp-initial {
+  float: left;
+  border: solid 1px #333;
+}
+
+.sp-initial span {
+  width: 30px;
+  height: 25px;
+  border: none;
+  display: block;
+  float: left;
+  margin: 0;
+}
+
+.sp-initial .sp-clear-display {
+  background-position: center;
+}
+
+/* Buttons */
+.sp-button-container {
+  float: right;
+}
+
+/* Replacer (the little preview div that shows up instead of the <input>) */
+.sp-replacer {
+  margin: 0;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 4px;
+  display: inline-block;
+  *zoom: 1;
+  *display: inline;
+  border: solid 1px #91765d;
+  background: #000;
+  color: #333;
+  vertical-align: middle;
+}
+
+.sp-replacer:hover, .sp-replacer.sp-active {
+  border-color: #F0C49B;
+  color: #111;
+}
+
+.sp-replacer.sp-disabled {
+  cursor: default;
+  border-color: silver;
+  color: silver;
+}
+
+.sp-dd {
+  padding: 2px 0;
+  height: 16px;
+  line-height: 16px;
+  float: left;
+  font-size: 10px;
+}
+
+.sp-preview {
+  position: relative;
+  width: 25px;
+  height: 20px;
+  border: solid 1px #222;
+  margin-right: 5px;
+  float: left;
+  z-index: 0;
+}
+
+.sp-palette {
+  *width: 220px;
+  max-width: 220px;
+}
+
+.sp-palette .sp-thumb-el {
+  width: 16px;
+  height: 16px;
+  margin: 2px 1px;
+  border: solid 1px #d0d0d0;
+}
+
+.sp-container {
+  padding-bottom: 0;
+}
+
+/* Buttons: http://hellohappy.org/css3-buttons/ */
+.sp-container button {
+  background-color: #eeeeee;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#cccccc));
+  background-image: linear-gradient(to bottom, #eeeeee, #cccccc);
+  border: 1px solid #ccc;
+  border-bottom: 1px solid #bbb;
+  border-radius: 3px;
+  color: #333;
+  font-size: 14px;
+  line-height: 1;
+  padding: 5px 4px;
+  text-align: center;
+  text-shadow: 0 1px 0 #eee;
+  vertical-align: middle;
+}
+
+.sp-container button:hover {
+  background-color: #dddddd;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#dddddd), to(#bbbbbb));
+  background-image: linear-gradient(to bottom, #dddddd, #bbbbbb);
+  border: 1px solid #bbb;
+  border-bottom: 1px solid #999;
+  cursor: pointer;
+  text-shadow: 0 1px 0 #ddd;
+}
+
+.sp-container button:active {
+  border: 1px solid #aaa;
+  border-bottom: 1px solid #888;
+  -webkit-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
+  -ms-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
+  -o-box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
+  box-shadow: inset 0 0 5px 2px #aaaaaa, 0 1px 0 0 #eeeeee;
+}
+
+.sp-cancel {
+  font-size: 11px;
+  color: #d93f3f !important;
+  margin: 0;
+  padding: 2px;
+  margin-right: 5px;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+.sp-cancel:hover {
+  color: #d93f3f !important;
+  text-decoration: underline;
+}
+
+.sp-palette span:hover, .sp-palette span.sp-thumb-active {
+  border-color: #000;
+}
+
+.sp-preview, .sp-alpha, .sp-thumb-el {
+  position: relative;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAIAAADZF8uwAAAAGUlEQVQYV2M4gwH+YwCGIasIUwhT25BVBADtzYNYrHvv4gAAAABJRU5ErkJggg==);
+}
+
+.sp-preview-inner, .sp-alpha-inner, .sp-thumb-inner {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.sp-palette .sp-thumb-inner {
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+}
+
+.sp-palette .sp-thumb-light.sp-thumb-active .sp-thumb-inner {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAIVJREFUeNpiYBhsgJFMffxAXABlN5JruT4Q3wfi/0DsT64h8UD8HmpIPCWG/KemIfOJCUB+Aoacx6EGBZyHBqI+WsDCwuQ9mhxeg2A210Ntfo8klk9sOMijaURm7yc1UP2RNCMbKE9ODK1HM6iegYLkfx8pligC9lCD7KmRof0ZhjQACDAAceovrtpVBRkAAAAASUVORK5CYII=);
+}
+
+.sp-palette .sp-thumb-dark.sp-thumb-active .sp-thumb-inner {
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRyoQAAAMdJREFUOE+tkgsNwzAMRMugEAahEAahEAZhEAqlEAZhEAohEAYh81X2dIm8fKpEspLGvudPOsUYpxE2BIJCroJmEW9qJ+MKaBFhEMNabSy9oIcIPwrB+afvAUFoK4H0tMaQ3XtlrggDhOVVMuT4E5MMG0FBbCEYzjYT7OxLEvIHQLY2zWwQ3D+9luyOQTfKDiFD3iUIfPk8VqrKjgAiSfGFPecrg6HN6m/iBcwiDAo7WiBeawa+Kwh7tZoSCGLMqwlSAzVDhoK+6vH4G0P5wdkAAAAASUVORK5CYII=);
+}
+
+.sp-clear-display {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(data:image/gif;base64,R0lGODlhFAAUAPcAAAAAAJmZmZ2dnZ6enqKioqOjo6SkpKWlpaampqenp6ioqKmpqaqqqqurq/Hx8fLy8vT09PX19ff39/j4+Pn5+fr6+vv7+wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAP8ALAAAAAAUABQAAAihAP9FoPCvoMGDBy08+EdhQAIJCCMybCDAAYUEARBAlFiQQoMABQhKUJBxY0SPICEYHBnggEmDKAuoPMjS5cGYMxHW3IiT478JJA8M/CjTZ0GgLRekNGpwAsYABHIypcAgQMsITDtWJYBR6NSqMico9cqR6tKfY7GeBCuVwlipDNmefAtTrkSzB1RaIAoXodsABiZAEFB06gIBWC1mLVgBa0AAOw==);
 }
 
 /*# sourceMappingURL=player.css.map */

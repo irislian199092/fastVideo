@@ -388,7 +388,6 @@
 	}
 	return Paging;
 });
-
 /*--------------------------------------------滚动条--------------------------------------------*/
 (function(win,doc,$){
 	function Scrollbar(options){
@@ -567,7 +566,7 @@
 		_init:function(options){
 			var self=this;
 			self.options={
-				cssName:'facial',		
+				cssName:'facial',
 				headerTitle:'视频分析',
 				data:[]
 			};
@@ -606,9 +605,9 @@
 				+'</iframe>'
 			+'</div>');
 
-			dom.insertAfter($('.container-fluid'));	
+			dom.insertAfter($('.container-fluid'));
 			self._initStyle();
-			return self;	
+			return self;
 		},
 		_initStyle:function(){
 			var self=this;
@@ -656,7 +655,7 @@
 				});
 			});
 		},
-		
+
 		_operateInit:function(){
 			var self=this;
 			//点击取消和X
@@ -667,9 +666,9 @@
 				PLAYER.model=null;
 			});
 			return self;
-		}	
+		}
 
-	});	
+	});
 	player.CreateFacialModal=CreateFacialModal;
 })(window,PLAYER,jQuery,document);
 
@@ -685,103 +684,9 @@ $.ajaxSetup({
   	console.log('失败XMLHttpRequest',errorThrown);
   }
 });
-document.onselectstart=function(e){
-	if(e.srcElement.tagName==='input'||e.srcElement.tagName==='INPUT'||e.srcElement.tagName==="textarea" || e.srcElement.tagName==="TEXTAREA"||e.srcElement.tagName==='span'||e.srcElement.tagName==='SPAN'){
-		return true;
-	}else{
-		return false;
-	}	
-};
 
 /*----------------------初始化模态框开始----------------------*/
-//初始化工程模态框
-var createInitModal=PLAYER.singelton(function(){
-	var s1=$('<div id="js_initProjectModal" class="init_pro_modal">'
-			+'<div class="fast_content">'
-				+'<div class="fast_header">'
-					+'<h4>打开工程</h4>'
-				+'</div>'
-				+'<div class="fast_body row">'
-					+'<div class="col-md-12 left">'
-						+'<ul class="project_list" id="js_init_project_list" onselectstart="return false">'
-						+'</ul>'
-						+'<div class="project_list_track">'
-							+'<div class="project_list_scroll"></div>'
-						+'</div>'
-					+'</div>'
-					+'<div class="col-md-12 project_pagination">'
-						+'<ul class="pager" id="js_pro_pager">'
-						+'</ul>'
-					+'</div>'
-				+'</div>'
-				+'<div class="fast_footer">'
-					+'<button type="button" class="fast_btn" id="js_modal_initOpenNew">打开</button>'
-					+'<button type="button" class="fast_btn" id="js_modal_initNew">新建</button>'
-				+'</div>'
-			+'</div>'
-			+'<iframe  src="" frameBorder="0" style="position: absolute;top: 0px; left: 0px; width: 100%; height: 100%; z-index: -1; filter: alpha(opacity = 0);">'
-			+'</iframe>'
-		+'</div>');
-	s1.insertAfter($('.container-fluid'));
-	return s1;
-});
-//初始化新建工程模态框
-var createInitNewModal=PLAYER.singelton(function(){
-	var s1=$('<div id="js_createProjectModal" class="create_pro_modal">'
-			+'<div class="fast_content">'
-				+'<div class="fast_header">'
-					+'<span class="icojam_delete"></span>'
-					+'<h4>创建工程</h4>'
-				+'</div>'
-				+'<div class="fast_body row">'
-					+'<div class="col-md-12 right">'
-						+'<form id="js_create_form">'
-							+'<div class="form-group">'
-							    +'<input type="text" class="form-control" name="name" placeholder="未命名" id="js_create_form_name">'
-							+'</div>'
-							+'<div class="form-group" id="js_create_pro_type">'
-							+'</div>'
-						+'</form>'
-					+'</div>'
-				+'</div>'
-				+'<div class="fast_footer">'
-					+'<button type="button" class="fast_btn" id="js_modal_createNew">新建</button>'
-				+'</div>'
-			+'</div>'
-			+'<iframe  src="" frameBorder="0" style="position: absolute;top: 0px; left: 0px; width: 100%; height: 100%; z-index: -1; filter: alpha(opacity = 0);">'
-			+'</iframe>'
-		+'</div>');
-	s1.insertAfter($('.container-fluid'));
-	return s1;
-});
-//保存后编辑工程模态框
-var createSaveOpenModal=PLAYER.singelton(function(){
-	var s1=$('<div id="js_editProjectModal" class="edit_pro_modal">'
-			+'<div class="fast_content">'
-				+'<div class="fast_header">'
-					+'<span class="icojam_delete"></span>'
-					+'<h4>编辑工程</h4>'
-				+'</div>'
-				+'<div class="fast_body row">'
-					+'<div class="col-md-12 left">'
-						+'<ul class="project_list" id="js_edit_project_list">'
-						+'</ul>'
-						+'<div class="project_edit_list_track">'
-							+'<div class="project_edit_list_scroll"></div>'
-						+'</div>'
-					+'</div>'
-					+'<div class="col-md-12 project_edit_pagination">'
-						+'<ul class="pager" id="js_pro_edit_pager">'
-						+'</ul>'
-					+'</div>'
-				+'</div>'
-			+'</div>'
-			+'<iframe  src="" frameBorder="0" style="position: absolute;top: 0px; left: 0px; width: 100%; height: 100%; z-index: -1; filter: alpha(opacity = 0);">'
-			+'</iframe>'
-		+'</div>');
-	s1.insertAfter($('.container-fluid'));
-	return s1;
-});
+
 //创建单例保存模态框
 var createSaveModal=PLAYER.singelton(function(){
 	var s1=$('<div id="js_saveProjectModal" class="save_pro_modal">'
@@ -795,8 +700,6 @@ var createSaveModal=PLAYER.singelton(function(){
 						+'<button type="button" class="fast_btn" id="js_modal_cancelPro">取消</button>'
 					+'</div>'
 				+'</div>'
-				+'<iframe  src="" frameBorder="0" style="position: absolute;top: 0px; left: 0px; width: 100%; height: 100%; z-index: -1; filter: alpha(opacity = 0);">'
-				+'</iframe>'
 			+'</div>');
 	s1.insertAfter($('.container-fluid'));
 	return s1;
@@ -843,12 +746,10 @@ var createExportModal=PLAYER.singelton(function(){
 					+'</div>'
 				+'</div>'
 			+'</div>'
-			+'<iframe  src="" frameBorder="0" style="position: absolute;top: 0px; left: 0px; width: 100%; height: 100%; z-index: -1; filter: alpha(opacity = 0);">'
-			+'</iframe>'
 		+'</div>');
 	s1.insertAfter($('.container-fluid'));
 
-	
+
 	return s1;
 });
 //创建网络素材工程
@@ -862,7 +763,7 @@ var createAddProgramModal=PLAYER.singelton(function(){
 				+'<div class="fast_body row">'
 					+'<div class="col-md-12">'
 						+'<form id="js_create_form" class="form-horizontal">'
-							
+
 							+'<div class="form-group">'
 								+'<label for="name" class="col-md-3 control-label">文件名称</label>'
 								+'<div class="col-md-9">'
@@ -885,8 +786,6 @@ var createAddProgramModal=PLAYER.singelton(function(){
 					+'</div>'
 				+'</div>'
 			+'</div>'
-			+'<iframe  src="" frameBorder="0" style="position: absolute;top: 0px; left: 0px; width: 100%; height: 100%; z-index: -1; filter: alpha(opacity = 0);">'
-			+'</iframe>'
 		+'</div>');
 	s1.insertAfter($('.container-fluid'));
 	return s1;
@@ -921,39 +820,59 @@ var createVolumeModal=PLAYER.singelton(function(){
 					+'<button type="button" class="fast_btn" id="js_volume_cancel">取消</button>'
 				+'</div>'
 			+'</div>'
-			+'<iframe  src="" frameBorder="0" style="position: absolute;top: 0px; left: 0px; width: 100%; height: 100%; z-index: -1; filter: alpha(opacity = 0);">'
-			+'</iframe>'
+		+'</div>');
+	s1.insertAfter($('.container-fluid'));
+	return s1;
+});
+//文章转视频
+var createLogoModel=PLAYER.singelton(function(){
+	var s1=$('<div id="js_titleTovideoModal" class="add_titleTovideo_modal">'
+			+'<div class="fast_content">'
+				+'<div class="fast_header">'
+					+'<span class="icojam_delete"></span>'
+					+'<h4>文章转视频</h4>'
+				+'</div>'
+				+'<div class="fast_body">'
+					+'<div class="edit_area_wrap">'
+						+'<div class="edit_area" id="js_edit_area" contenteditable="true"></div>'
+					+'</div>'
+				+'</div>'
+				+'<div class="fast_footer">'
+					+'<button type="button" class="fast_btn" id="js_modal_titleTovideo">确定</button>'
+				+'</div>'
+			+'</div>'
 		+'</div>');
 	s1.insertAfter($('.container-fluid'));
 	return s1;
 });
 
-createInitModal();
-createInitNewModal();
-createSaveOpenModal();
 createVolumeModal();
-
+createLogoModel();
 
 PLAYER.observer.listen('webrtcPlayer',function(){
-	
+
 	if(window.location.search.length>0 &&window.location.search.indexOf('tools')>-1){
 		PLAYER.jobId=window.location.search.substring(7);
+		//PLAYER.jobId='26db8eaf-9822-40eb-aa82-1b5cc9617b8e'; //测试ID
 	}
-	
+	// if(window.location.search.length>0 &&window.location.search.indexOf('projectid')){
+	// 	//let str='?projectid=3f36bd84-197b-41c3-9342-57cf326c7a15';
+	// 	PLAYER.proId=window.location.search.slice(11);
+	// }
+	PLAYER.proId='a770e2e0-13df-48a3-831b-17523664b1d9';//测试ID
 	if(PLAYER.jobId!==''){
 		$('#js_pageCover').hide();
+		//素材库隐藏
+		//$('#tab_1 .carve_body_meterialBox_yueyin').show();
+		$('#tab_1 .carve_body_meterialBox').hide();
 		$('#tab_1 .carve_body_chooseBox').hide();
-
+		$('#tab_1 .carve_footer_pagination').hide();
 		$.ajax({
 			url:serverUrl+'job/info',
 			data:{
 				jobId:PLAYER.jobId
 			},
 			success:function(msg){
-				//获取素材信息
-				var materilaData=msg.data.material;
-				PLAYER.observer.trigger('getProgramList',materilaData);
-
 				//获取工程信息
 				var projectData=msg.data.projecthtml;
 				if(projectData.rootBin.sequence[0].tracks.length===0){
@@ -972,167 +891,110 @@ PLAYER.observer.listen('webrtcPlayer',function(){
 				}else if(projectData.height==='1080'){
 					proType='HD';
 				}
-				PLAYER.OCX.sendProType(proType);
-				PLAYER.observer.trigger('projectData',JSON.stringify(projectData)); //发布工程数据
+				//获取素材信息
+				var materilaData=msg.data.material;
+				var videoData=materilaData.filter(data=>data.type===0);
+				var audioData=materilaData.filter(data=>data.type===3);
+				var imageData=materilaData.filter(data=>data.type===1);
+
+				PLAYER.observer.trigger('getProgramListYueYin',videoData);
+				PLAYER.observer.trigger('getAudioListYueYin',audioData);
+				PLAYER.observer.trigger('getImagesListYueYin',imageData);
+
+				setTimeout(function(){
+					PLAYER.OCX.sendProType(proType);
+					PLAYER.observer.trigger('projectData',JSON.stringify(projectData)); //发布工程数据
+				},500);
 			}
 		});
-	}else{
+	}else if(PLAYER.proId){
 		$('#tab_1 .carve_body_chooseBox').show();
-		$('#js_initProjectModal').show();
-		$('#js_pageCover').show();
-		
-		//初始化发布工程列表
+		$('#tab_1 .carve_body_meterialBox').show();
+		$('#tab_1 .carve_footer_pagination').show();
+		//获取工程
 		$.ajax({
-			url:serverUrl+'proj/list',
+			url:serverUrl+'proj/info',
 			data:{
-				currentPage:1,
-				pageSize:20
+				projectid:PLAYER.proId
 			},
 			success:function(msg){
 				if(msg.code===0&&msg.data!==null){
-					PLAYER.observer.trigger('proList',msg.data);
-				}else{
-					console.log('error');
-				}
+				  	$('.player_title').html($('#js_init_project_list li.active .project_list_name').html());
+
+				  	var obj=JSON.parse(msg.data.projectcontent);
+					if(obj.rootBin.sequence[0].tracks.length===0){
+						$.each($('#js_time_ruler_bar_box .time_ruler_bar'),function(i,n){
+							var attr={
+								type:$(n).attr('data-type'),
+								index:parseInt($(n).attr('data-index')),
+								subclip:[]
+							};
+							obj.rootBin.sequence[0].tracks.push(attr);
+						});
+					}
+					var proType;
+					if(obj.height==='576'){
+						proType='SD';
+					}else if(obj.height==='1080'){
+						proType='HD';
+					}
+					setTimeout(function(){
+						PLAYER.OCX.sendProType(proType);
+						PLAYER.observer.trigger('projectData',JSON.stringify(obj)); //发布工程数据
+					},500);
+
+					}else{
+						console.log('error');
+					}
 			}
 		});
-		//初始化发布工程高标清模板
-		$.ajax({
-			url:serverUrl+'proj/template',
-			success:function(msg){
-				if(msg.code===0&&msg.data!==null){
-					PLAYER.observer.trigger('proTemplate',msg.data);
-				}else{
-					console.log('error');
-				}
-			}
-		});
-		//初始化点击打开按钮发布工程数据
-		$('#js_modal_initOpenNew').on('click',function(){
-			if(!$('#js_init_project_list li.active').length){
-			alert('您必须选中一个');
-			}else{
-				//获取json
-				$.ajax({
-			  		url:serverUrl+'proj/info',
-			  		data:{
-			  			projectid:$('#js_init_project_list li.active').attr('data-id')
-			  		},
-			  		success:function(msg){
-			  			if(msg.code===0&&msg.data!==null){
-			  				$('#js_initProjectModal').hide();
-							$('#js_pageCover').hide();
-							$('.player_title').html($('#js_init_project_list li.active .project_list_name').html());
-							
-							var obj=JSON.parse(msg.data.projectcontent);
-							if(obj.rootBin.sequence[0].tracks.length===0){
-								$.each($('#js_time_ruler_bar_box .time_ruler_bar'),function(i,n){
-				  					var attr={
-				  						type:$(n).attr('data-type'),
-					  					index:parseInt($(n).attr('data-index')),
-					  					subclip:[]
-				  					};
-				  					obj.rootBin.sequence[0].tracks.push(attr);
-				  				});
-							}
-
-							var proType;
-							if(obj.height==='576'){
-								proType='SD';
-							}else if(obj.height==='1080'){
-								proType='HD';
-							}
-							PLAYER.OCX.sendProType(proType);
-							PLAYER.observer.trigger('projectData',JSON.stringify(obj)); //发布工程数据
-							
-			  			}else{
-			  				console.log('error');
-			  			}
-			  		}
-			  	});
-			}
-		});	
-		//初始化点击新建按钮,发布工程数据
-		$('#js_modal_initNew').on('click',function(){
-			$('#js_initProjectModal').hide();
-			$('#js_createProjectModal').show();
-			//点击新建按钮
-			$('#js_modal_createNew').on('click',function(){
-				if($('#js_create_form_name').val()===''){
-					$('#js_create_form_name').val('未命名');
-				}
-				var nameValue=$('#js_create_form_name').val();
-				$.ajax({
-			  		url:serverUrl+'proj/create',
-			  		data:{
-			  			name:nameValue,
-			  			templateid:$('#js_create_pro_type .form-control').val()
-			  		},
-			  		success:function(msg){
-			  			if(msg.code===0&&msg.data!==null){
-			  				//新建工程初始化轨道和json
-			  				$('#js_createProjectModal').hide();
-			  				$('#js_pageCover').hide();
-			  				$('.player_title').html($('#js_create_form_name').val());
-
-			  				var obj=JSON.parse(msg.data);
-			  				$.each($('#js_time_ruler_bar_box .time_ruler_bar'),function(i,n){
-			  					var attr={
-			  						type:$(n).attr('data-type'),
-				  					index:parseInt($(n).attr('data-index')),
-				  					subclip:[]
-			  					};
-			  					obj.rootBin.sequence[0].tracks.push(attr);
-			  				});
-			  				var proType=parseInt($('#js_create_pro_type .form-control').val());
-							if(proType===1){
-								proType='SD';
-							}else if(proType===2){
-								proType='HD';
-							}
-							PLAYER.OCX.sendProType(proType);
-
-			  				PLAYER.observer.trigger('projectData',JSON.stringify(obj)); //发布工程数据
-			  			}else{
-			  				console.log('error');
-			  			}
-			  		}
-			  	});
-			});
-			//点击X按钮,返回打开工程按钮
-			$('#js_createProjectModal .icojam_delete').on('click',function(){
-				$('#js_initProjectModal').show();
-				$('#js_pageCover').show();
-				$('#js_createProjectModal').hide();
-			});
-		});
-		//初始化获取全部节目列表	
+		//初始化获取全部节目列表
 		$.ajax({
 			url:serverUrl+'program/list',
 			data:{
 				"currentPage":1,
 				"pageSize":36,
 				"name":($('#js_programForm_name .form-control').val()||''),
-				"provider":($('#js_programForm_cpspcode .form-control').val()||''),
-				"programType":($('#js_programForm_type .form-control').val()||''),
+				"provider":"",
+				"programType":"",
 				"from":($('#js_programForm_stime .form-control').val()||''),
 				"to":($('#js_programForm_etime .form-control').val()||'')
 			},
 			success:function(msg){
 				if(msg.code===0&&msg.data!==null){
-					PLAYER.observer.trigger('getProgramList',msg.data.list);
+
+					var materilaData=msg.data.list;
+					var videoData=materilaData.filter(data=>data.type===0);
+					var audioData=materilaData.filter(data=>data.type===3);
+					var imageData=materilaData.filter(data=>data.type===1);
+
+					PLAYER.observer.trigger('getProgramList',videoData);
+					PLAYER.observer.trigger('getAudioListYueYin',audioData);
+					PLAYER.observer.trigger('getImagesListYueYin',imageData);
 				}else{
 					console.log('error');
 				}
 			}
 		});
 	}
-}); 
+});
 
-
+/*----------------------点击添加素材----------------------*/
+$('#js_mymeterial_plus').on('click',function(){
+	$.ajax({
+		url:'',
+		data:{},
+		success:function(msg){
+			if(msg.code===0&&msg.data!==null){
+				PLAYER.observer.trigger('getMyProgramList',msg.data.list);
+			}else{
+				console.log('error');
+			}
+		}
+	});
+})
 /*----------------------发布数据----------------------*/
-
-//初始化获获取打包素材列表	
+//初始化获获取打包素材列表
 $.ajax({
 	url:serverUrl+'resource/listpage',
 	data:{
@@ -1179,41 +1041,6 @@ $('#js_programForm_btn').on('click',function(){
 	});
 });
 
-//初始化发布打包列表数据
-$.ajax({
-	url:serverUrl+'task/list',
-	data:{
-		"status":parseInt($('#js_status_select').val()),
-		"currentPage":1,
-		"pageSize":20
-	},
-	success:function(msg){
-		if(msg.code===0&&msg.data!==null){
-			PLAYER.observer.trigger('packbagList',msg.data);
-		}else{
-			console.log('error');
-		}
-	}
-});
-//点击打包刷新按钮
-$('#js_status_btn').on('click',function(){
-	$.ajax({
-		url:serverUrl+'task/list',
-		data:{
-			"status":parseInt($('#js_status_select').val()),
-			"currentPage":1,
-			"pageSize":20
-		},
-		success:function(msg){
-			if(msg.code===0&&msg.data!==null){
-				PLAYER.observer.trigger('packbagList',msg.data);
-			}else{
-				console.log('error');
-			}
-		}
-	});
-});
-
 //点击添加网络素材
 $('#js_addProgram_btn').on('click',function(){
 	createAddProgramModal();
@@ -1224,128 +1051,7 @@ $('#js_addProgram_btn').on('click',function(){
 		$('#js_pageCover').hide();
 	});
 });
-//初始化发布字幕列表数据
-$.ajax({
-	url:serverUrl+'subtitle/list',
-	success:function(msg){
-		if(msg.code===0&&msg.data!==null){
-			PLAYER.observer.trigger('getSubtitleList',msg.data);
-		}else{
-			alert('获取字幕失败');
-		}
-	}
-});
-//初始化发布特技列表数据
-$.ajax({
-	url:serverUrl+'effect/list',
-	success:function(msg){
-		if(msg.code===0&&msg.data!==null){
-			PLAYER.observer.trigger('getEffectList',msg.data);
-		}else{
-			alert('获取特技失败');
-		}
-	}
-});
-//点击视频分析按钮
-$('#js_finding').on('click',function(){
-	if(PLAYER.isPlaying){
-        PLAYER.OCX.doPause();
-        PLAYER.isPlaying=false; 
-        $("#js_play").removeClass("stop")
-        $("#js_play").attr("title", "播放");       
-    }
-	if(PLAYER.model===null&&PLAYER.dbClick&&$('#js_finding').attr('data-id')!==undefined){
-		PLAYER.model=new PLAYER.CreateFacialModal();
-		//人脸识别
-		$.ajax({
-	  		'url':faceUrl+'/service/getFaceResult',
-	  		'type': "GET",
-	  		'data':{
-	  			"assetid":$('#js_finding').attr('data-id')
-	  		},
-	  		'success':function(msg){
-	  			if(msg.code===0&&msg.data!==null){
-	  				PLAYER.observer.trigger('facialList',msg.data.data);
-	  			}else{
-	  				alert('获取人脸失败');
-	  			}
-	  		}
-	  	});
-	}else if($('#js_finding').attr('data-id')===undefined){
-		alert('您必选先双击素材！')
-	}else if(PLAYER.model!==null){
-		alert('您不能重复点击！')
-	}
-});
-/*----------------------初始化获取工程列表模块--------------------------*/
-var getInitProListModule=(function(){
-	PLAYER.observer.listen('proList',function(data){
-		list(data.list);
-		//创建工程列表
-		function list(data){
-			$('#js_init_project_list').empty();
-			var h='<li class="header">'+
-						'<span>工程名称</span>'+
-						'<span>上次编辑时间</span>'+
-						'<span>版本</span>'+
-						'<span></span>'+
-					'</li>';
-			$('#js_init_project_list').append(h);
-			$.each(data,function(i,n){
-				var s=$('<li data-id="'+n.projectid+'"></li>');
-				var option=$('<span class="project_list_name">'+n.projectname+'</span><span>'+PLAYER.getLocalTime(n.createtime)+'</span><span>v-'+n.version+'</span></span>');
-				s.append(option);
-				$('#js_init_project_list').append(s);
-			});
-		}
-		//添加滚动条
-		if(data.list.length>5){
-			$('.project_list_track').show();
-			var s1=new Scrollbar({
-				dirSelector:'y',
-				contSelector:$('#js_init_project_list'),
-				barSelector:$('.project_list_track'),
-				sliderSelector:$('.project_list_scroll')
-			});
-		}
-		//添加分页
-		$('#js_pro_pager').empty();
-		$('#js_pro_pager').Paging({
-			pagesize:20,
-			count:data.totalLines,
-			prevTpl:'&laquo;',
-			nextTpl:'&raquo;',
-			callback:function(page,size,count){
-				console.log('当前第 ' +page +'页,每页 '+size+'条,总页数：'+count+'页');
-				$.ajax({
-			  		url:serverUrl+'proj/list',
-			  		data:{
-			  			currentPage:page,
-			  			pageSize:20
-			  		},
-			  		success:function(msg){
-			  			if(msg.code===0&&msg.data!==null){
-			  				list(msg.data);
-			  			}else{
-			  				console.log('error');
-			  			}
-			  		}
-			  	});
-			}
-		});
-	});
-})();
-/*----------------------初始化获取工程高标清模块------------------------*/
-var getCreateProTemplateModule=(function(){
-	PLAYER.observer.listen('proTemplate',function(data){
-		var s=$('<select class="form-control" name="templateid">');
-		$.each(data,function(i,n){
-			var option=$('<option value="'+n.templateid+'">'+n.name+'</option>')
-			s.append(option);
-		});
-		$('#js_create_pro_type').append(s);	
-	});
-})();
+
 /*----------------------初始化获取高标清播放器宽高模块------------------*/
 var drawPlayerModule=(function(){
 	PLAYER.observer.listen('projectData',function(data){
@@ -1356,48 +1062,27 @@ var drawPlayerModule=(function(){
 		var oStyle = elem.currentStyle?elem.currentStyle:window.getComputedStyle(elem, null);
 		var height = parseFloat(oStyle.height);
 
-		if(data.height==='576'&&data.width==='720'){
-			playerWidth=parseFloat(1.25*height);
-			$('#ocx').width(playerWidth);
-		}else{
-			playerWidth=parseFloat((16*height/9));
-			$('#ocx').width(playerWidth);
-		}
+		// if(data.height==='576'&&data.width==='720'){
+		// 	playerWidth=parseFloat(1.25*height);
+		// 	$('#ocx').width(playerWidth);
+		// }else{
+		// 	playerWidth=parseFloat((16*height/9));
+		// 	$('#ocx').width(playerWidth);
+		// }
 
+		//不管高清标清都是16/9，底层处理
+		playerWidth=parseFloat((16*height/9));
+		$('#ocx').width(playerWidth);
+		$('#js_dragger_subtitle_wrap').width(playerWidth);
 		var _ml=($('.player').width()-playerWidth)/2;
 		if(_ml<0){
 			_ml=0;
 		}
 		$('#ocx').css('margin-left', _ml);
+		$('#js_dragger_subtitle_wrap').css('margin-left', _ml);
 
 		$('#js_mask').width(playerWidth);
 		$('#js_mask').css('left', _ml);
-	});
-})();
-/*----------------------初始化获取全部供应商模块------------------------*/
-var getAllCpspcodeModule=(function(){
-	PLAYER.observer.listen('getAllCpspcode',function(data){
-		var s=$('<select class="form-control" name="cpspcode" >');
-		var all=$('<option value="">全部</option>');
-		s.append(all);
-		$.each(data,function(i,n){
-			var option=$('<option value="'+n.cpspcode+'">'+n.name+'</option>');
-			s.append(option);
-		});
-		$('.program_cpspcode').append(s);
-	});
-})();
-/*----------------------初始化获取全部节目类型模块----------------------*/
-var getProgramTypeModule=(function(){
-	PLAYER.observer.listen('getProgramType',function(data){
-		var s=$('<select class="form-control" name="type">');
-		var all=$('<option value="">全部</option>');
-		s.append(all);
-		$.each(data,function(i,n){
-			var option=$('<option value="'+n.name+'">'+n.name+'</option>')
-			s.append(option);
-		});
-		$('.program_type').append(s);
 	});
 })();
 /*----------------------初始化获取全部节目列表模块----------------------*/
@@ -1445,78 +1130,95 @@ var getProgramListModule=(function(){
 			  	});
 			}
 		});
-		
-		//获取列表内容
-		/*$('.meterial_list_box ul').empty();
-		var h='<li class="header">'+
-					'<span>项目名称</span>'+
-					'<span>供应商</span>'+
-					'<span>媒体开始</span>'+
-					'<span>媒体结束</span>'+
-					'<span>媒体结束</span>'+
-					'<span>媒体持续时间</span>'+
-					'<span>视频出点</span>'+
-				'</li>';
-		$('.meterial_list_box ul').append(h);
-		$.each(data.list,function(i,n){
-			var _li=$('<li draggable="true" data-id="'+n.assetid+'">');
-			var d=$('<span class="meterial_list_name" title="'+n.name+'" draggable="false">'+n.name+'</span>'
-					+'<span draggable="false">'+n.provider+'</span>'
-					+'<span draggable="false">00:00:00:00</span>'
-					+'<span draggable="false">'+PLAYER.getDurationToString(n.duration)+'</span>'
-					+'<span draggable="false">'+PLAYER.getDurationToString(n.duration)+'</span>'
-					+'<span draggable="false">00:00:00:00</span>'
-					+'<span draggable="false">'+PLAYER.getDurationToString(n.duration)+'</span>');
-			_li.append(d);
-			$('.meterial_list_box ul').append(_li);
-		});*/
 	});
 })();
-/*----------------------初始化获取全部打包列表模块----------------------*/
-var getPackageListModule=(function(){
-	PLAYER.observer.listen('getPageList',function(data){
+/*----------------------初始化获取悦影视频模块----------------------*/
+var getProgramListYueYinModule=(function(){
+	PLAYER.observer.listen('getProgramListYueYin',function(data){
 		drawList(data);
-		
 		function drawList(data){
-			$('#js_packageList_box').empty();
-			$.each(data.list,function(i,n){
-				var h=$('<div class="col-md-3 col-sm-3 col-lg-3" draggable="true" data-id="'+n.projid+'" data-test="m'+i+'"><a class="thumbnail"><img  alt=""  draggable="false"><span class="thumbnail_name" style="bottom:0px;">'+n.title+'</span></a></div>');
-				$('#js_packageList_box').append(h);
+			if($('.meterial_thumbnail_box_yueying .col-md-3').attr('draggable')==='true'){
+				$('.meterial_thumbnail_box_yueying .col-md-3').attr('draggable').remove();
+			}
+			let wrap=$(`<div class="row carve_body_meterialBox_yueyin"></div>`);
+			let wrap2=$(`<div class="meterial_thumbnail_box_yueying" id="js_thumbnail_box_yueying"></div>`);
+			$.each(data,function(i,n){
+				var elem=$('<div class="col-md-3 col-sm-3 col-lg-3" draggable="true" data-id="'+n.assetid+'" ><a class="thumbnail"><img src="'+n.thumbnail+'" alt=""  draggable="false"><span class="thumbnail_name" style="bottom:22px;">'+n.name+'</span><span>'+PLAYER.getDurationToString(parseInt(n.duration))+'</span></a></div>');
+				wrap2.append(elem);
+			});
+			wrap.append(wrap2);
+			$('#tab_1').append(wrap);
+		}
+	});
+})();
+/*----------------------初始化获取悦影图片模块----------------------*/
+var getImagesListYueYinModule=(function(){
+	PLAYER.observer.listen('getImagesListYueYin',function(data){
+		drawList(data);
+		function drawList(data){
+			$('#js_images_wrap').empty();
+			$.each(data,function(i,n){
+				var h=$('<li><span class="images_list" draggable="true" data-id="'+n.assetid+'" data-duration="'+n.duration+'" data-http="'+n.filePath+'" style="background:url('+n.filePath+')center center no-repeat"></span><span class="images_text">'+n.name+'</span></li>');
+				$('#js_images_wrap').append(h);
 			});
 		}
+	});
+})();
+/*----------------------初始化获取悦影音频模块----------------------*/
+var getAudioListYueYinModule=(function(){
+	PLAYER.observer.listen('getAudioListYueYin',function(data){
+		drawList(data);
+		function drawList(data){
+			$('#js_audio_wrap').empty();
+			$.each(data,function(i,n){
+				var h=$('<li><span class="audio_list" draggable="true" data-id="'+n.assetid+'" data-duration="'+n.duration+'" data-http="'+n.filePath+'" style="background:url('+n.thumbnail+')center center no-repeat"></span><span class="audio_text">'+n.name+'</span></li>');
+				$('#js_audio_wrap').append(h);
+			});
+		}
+	});
+})();
+/*----------------------点击添加我的素材----------------------*/
+var getMyProgramListModule=(function(){
+	PLAYER.observer.listen('getMyProgramList',function(data){
+		const videoData=data.filter(data=>data.name==='视频');
+		console.log('videoData',videoData);
+		drawList(data);
+		function drawList(data){
+			if($('.mymeterial_thumbnail_box .col-md-3').attr('draggable')==='true'){
+				$('.mymeterial_thumbnail_box .col-md-3').attr('draggable').remove();
+			}
 
-		if(data.totalLines>8){
-			$('.packageList_thumbnail_box').show();
-			$('.packageList_thumbnail_track').show();
+			$.each(data,function(i,n){
+				var h=$('<div class="col-md-3 col-sm-3 col-lg-3" draggable="true" data-id="'+n.assetid+'" ><a class="thumbnail"><img src="'+n.thumbnail+'" alt=""  draggable="false"><span class="thumbnail_name" style="bottom:22px;">'+n.name+'</span><span>'+PLAYER.getDurationToString(n.duration)+'</span></a></div>');
+				$('#js_mythumbnail_box').append(h);
+			});
+		}
+		if(data.length>8){
+			$('.mymeterial_thumbnail_box').show();
+			$('.mymeterial_thumbnail_track').show();
 			var s1=new Scrollbar({
 				dirSelector:'y',
-				contSelector:$('.packageList_thumbnail_box'),
-				barSelector:$('.packageList_thumbnail_track'),
-				sliderSelector:$('.packageList_thumbnail_scroll')
+				contSelector:$('.mymeterial_thumbnail_box'),
+				barSelector:$('.mymeterial_thumbnail_track'),
+				sliderSelector:$('.mymeterial_thumbnail_scroll')
 			});
 		}
-		
-		$('#js_pager2').empty();
-
-
-		$('#js_pager2').Paging({
+		$('#js_my_pager').empty();
+		$('#js_my_pager').Paging({
 			pagesize:36,
-			count:data.totalLines,
+			count:data.length,
 			prevTpl:'&laquo;',
 			nextTpl:'&raquo;',
 			callback:function(page,size,count){
 				$.ajax({
-			  		url:serverUrl+'resource/listpage',
+			  		url:serverUrl+'program/list',
 			  		data:{
 			  			"currentPage":page,
-			  			"pageSize":36,
-			  			"name":'',
-						"from":'',
-						"to":''
+			  			"pageSize":36
 			  		},
 			  		success:function(msg){
 			  			if(msg.code===0&&msg.data!==null){
-			  				drawList(msg.data);
+			  				drawList(msg.data.list);
 			  				PLAYER.observer.trigger('projectData',PLAYER.json);
 			  			}else{
 			  				console.log('error');
@@ -1525,8 +1227,7 @@ var getPackageListModule=(function(){
 			  	});
 			}
 		});
-		
-		
+
 	});
 })();
 
@@ -1559,7 +1260,7 @@ var getEditProListModule=(function(){
 				contSelector:$('#js_edit_project_list'),
 				barSelector:$('.project_edit_list_track'),
 				sliderSelector:$('.project_edit_list_scroll')
-			});	
+			});
 		}
 		//添加分页
 		$('#js_pro_edit_pager').empty();
@@ -1588,79 +1289,6 @@ var getEditProListModule=(function(){
 		});
 	});
 })();
-/*----------------------初始化打包列表模块------------------------------*/
-var getPackbagListModule=(function(){
-	PLAYER.observer.listen('packbagList',function(data){
-		getWorkList(data);
-		function checkState(flag){
-			var flag;
-			if(flag===0){
-				flag='待处理';
-			}else if(flag===1){
-				flag='处理中';
-			}
-			else if(flag===2){
-				flag='完成';
-			}
-			else if(flag===3){
-				flag='出错';
-			}
-			return flag;
-		}
-		function getWorkList(data){
-			$('#js_export_list').empty();
-			var oH=$('<li class="header">'
-		        			+'<span>名称</span>'
-		        			+'<span>创建时间</span>'
-		        			+'<span>结束时间</span>'
-		        			+'<span>进度</span>'
-		        			+'<span>状态</span>'
-		        			+'<span>备注</span>'
-		        		+'</li>');
-			$('#js_export_list').append(oH);
-
-			$.each(data,function(i,n){
-				var oLi=$('<li>');
-				var oA=$('<a href="javascript:;"  class="name"><span>'+n.title+'</span></a>'
-						+'<a href="javascript:;"  class="createTime"><span>'+PLAYER.getLocalTime(n.createtime)+'</span></a>'
-						+'<a href="javascript:;"  class="createTime"><span>'+PLAYER.getLocalTime(n.stoptime)+'</span></a>'
-						+'<a href="javascript:;"  class="progressBox"><span><div class="progress progress-mini" title="当前进度'+n.progress+'%">'
-			                +'<div style="width:'+n.progress+'%;" class="progress-bar"></div>'
-			            +'</div></span></a>'
-			        +'<a href="javascript:;"  class="state"><span>'+checkState(n.flag)+'</span></a>'
-			        +'<a href="javascript:;" ><span>'+n.last_err+'</span></a>'
-					);
-				oLi.append(oA);
-				$('#js_export_list').append(oLi);
-			});
-		}
-		//创建分页
-		$('#js_pager_export').empty();
-		$('#js_pager_export').Paging({
-			pagesize:20,
-			count:data.length,
-			prevTpl:'&laquo;',
-			nextTpl:'&raquo;',
-			callback:function(page,size,count){
-				$.ajax({
-			  		url:serverUrl+'program/list',
-			  		data:{
-			  			"currentPage":page,
-			  			"pageSize":20,
-			  			"status":parseInt($('#js_status_select').val())
-			  		},
-			  		success:function(msg){
-			  			if(msg.code===0&&msg.data!==null){
-			  				getWorkList(msg.data);
-			  			}else{
-			  				console.log('error');
-			  			}
-			  		}
-			  	});
-			}
-		});
-	});
-})();
 
 /*----------------------视频分析人脸识别模块-----------------------------*/
 var facialListModule=(function(){
@@ -1680,7 +1308,7 @@ var facialListModule=(function(){
 					$('#js_createfacialModal #js_facial_box').append(s);
 				});
 			}
-			
+
 			//显示滚动条
 			$('.facial_list_track').show();
 			var s1=new Scrollbar({
@@ -1694,9 +1322,9 @@ var facialListModule=(function(){
 			$('.facial_list').on('click',function(e){
 				if(PLAYER.isPlaying){
 			        PLAYER.OCX.doPause();
-			        PLAYER.isPlaying=false; 
+			        PLAYER.isPlaying=false;
 			        $("#js_play").removeClass("stop")
-			        $("#js_play").attr("title", "播放");       
+			        $("#js_play").attr("title", "播放");
 			    }
 				if($(e.target).attr('data-frame')!==undefined){
 					$(e.target).addClass('active');
@@ -1709,10 +1337,9 @@ var facialListModule=(function(){
 		}else{
 			alert('视频分析失败！')
 		}
-		
+
 	});
 })();
-
 /*----------------------点击工具条按钮----------------------------------*/
 //显示保存工程模态框
 var showSaveModal=function(type){
@@ -1735,6 +1362,13 @@ var showSaveModal=function(type){
 	});
 	//点击确定按钮
 	$('#js_modal_savePro').off().click(function(){
+		$('.zsp_pagecover').show();
+		$('.zsp_pagecover .zsp_title').html('保存工程中...');
+
+		$('#js_saveProjectModal').hide();
+		$('#js_pageCover').hide();
+
+		PLAYER.operateJson.clearMaterial(PLAYER.jsonObj);//整理下material
 		var projStr = PLAYER.operateJson.translateFfpToMS(JSON.stringify(PLAYER.jsonObj));
 
 		$.ajax({
@@ -1746,8 +1380,7 @@ var showSaveModal=function(type){
 	  		},
 	  		success:function(msg){
 	  			if(msg.code===0&&msg.data!==null){
-	  				$('#js_saveProjectModal').hide();
-					$('#js_pageCover').hide();
+					$('.zsp_pagecover').hide();
 					PLAYER.observer.trigger('saveProModal',true,$('#js_modal_savePro').attr('data-type'));
 	  			}else{
 	  				console.log('error');
@@ -1767,87 +1400,6 @@ $('#js_saveProject').click(function(){
 		}
 	});
 });
-//点击工具条新建工程按钮
-$('#js_newProject').on('click',function(){
-	showSaveModal('newpro');
-	PLAYER.observer.listen('saveProModal',function(data,type){
-		if(data && (type==="newpro")){
-			$('#js_saveProjectModal').hide();
-			$('#js_pageCover').hide();
-			$('#js_modal_savePro').attr('data-type','');
-			location.href=enterUrl;
-		}
-	});
-});
-//点击工具条编辑工程按钮
-$('#js_openProject').on('click',function(){
-	showSaveModal('editpro');
-	PLAYER.observer.listen('saveProModal',function(data,type){
-		if(data && (type==="editpro")){
-			createSaveOpenModal();
-			$('#js_modal_savePro').attr('data-type','');
-			$('#js_saveProjectModal').hide();
-			$('#js_pageCover').show();
-			$('#js_editProjectModal').show();
-
-			//点击X按钮
-			$('#js_editProjectModal .icojam_delete').on('click',function(){
-				$('#js_editProjectModal').hide();
-				$('#js_pageCover').hide();
-			});
-			//取消选择
-			$('#js_edit_project_list').delegate($('#js_edit_project_list').children(),'selectstart',function(){
-				return false;
-			});
-			//点击删除工程按钮
-			$('#js_edit_project_list').delegate('.project_delete','click',function(){
-				var r=confirm('确定删除吗?');
-				if(r){
-					var assetId=$(this).parent('li').attr('data-id');
-					var assetName=$(this).parent('li').find('.project_list_name').html();
-					
-					if(assetId===PLAYER.jsonObj.id){
-						alert('您不能删除当前工程！');
-					}else{
-						
-				  		$(this).parent('li').remove();
-				  		$.ajax({
-					  		url:serverUrl+'proj/delete',
-					  		data:{
-					  			id:assetId
-					  		},
-					  		success:function(msg){
-					  			if(msg.code===0&&msg.data!==null){
-					  				$.ajax({
-								  		url:serverUrl+'proj/list',
-								  		data:{
-								  			currentPage:1,
-								  			pageSize:20
-								  		},
-								  		success:function(msg){
-								  			if(msg.code===0&&msg.data!==null){
-								  				alert('删除:'+assetName+'成功!');
-								  				PLAYER.observer.trigger('proList',msg.data);
-								  			}else{
-								  				console.log('error');
-								  			}
-								  		}
-								  	});
-
-					  			}else{
-					  				console.log('error');
-					  			}
-					  		}
-					  	});
-					}
-					
-				}else{
-					return false;
-				}	
-			});
-		}
-	});
-});
 //点击工具条打包输出按钮
 $('#js_exportProject').on('click',function(){
 	showSaveModal('exportpro');
@@ -1862,7 +1414,7 @@ $('#js_exportProject').on('click',function(){
 				PLAYER.TR.DragDrop.disable();
 				PLAYER.PTR.DragDrop.disable();
 				PLAYER.documentEvent.enable();
-				
+
 				//获取打包任务模板
 				$.ajax({
 					url:serverUrl+'task/schema',
@@ -1888,7 +1440,7 @@ $('#js_exportProject').on('click',function(){
 					PLAYER.PTR.DragDrop.enable();
 					PLAYER.documentEvent.enable();
 				});
-				//点击取消	
+				//点击取消
 				$('#js_export_modal_cancelPro').off().click(function(){
 					$('#js_exportProjectModal').hide();
 					$('#js_pageCover').hide();
@@ -1896,7 +1448,7 @@ $('#js_exportProject').on('click',function(){
 					PLAYER.PTR.DragDrop.enable();
 					PLAYER.documentEvent.enable();
 				});
-				
+
 				//点击打包
 				$('#js_modal_export').off().click(function(){
 					var schemaValue=$('#js_export_form_schema').val();
@@ -1936,22 +1488,7 @@ $('#js_exportProject').on('click',function(){
 				  				console.log('打包成功',msg.data);
 				  				$('#js_exportProjectModal').hide();
 								$('#js_pageCover').hide();
-								//打包任务列表
-							  	$.ajax({
-							  		url:serverUrl+'task/list',
-							  		data:{
-							  			"status":parseInt($('#js_status_select').val()),
-										"currentPage":1,
-										"pageSize":20
-							  		},
-							  		success:function(msg){
-							  			if(msg.code===0&&msg.data!==null){
-							  				PLAYER.observer.trigger('packbagList',msg.data);
-							  			}else{
-							  				console.log('error');
-							  			}
-							  		}
-							  	});
+
 				  			}else{
 				  				console.log('error');
 				  			}
@@ -1965,26 +1502,6 @@ $('#js_exportProject').on('click',function(){
 		}
 	});
 });
-
-$('#js_status_select').on('change',function(){
-	console.log('ggg',$(e.target).val());
-	$.ajax({
-		url:serverUrl+'task/list',
-		data:{
-			"status":parseInt($('#js_status_select').val()),
-			"currentPage":1,
-			"pageSize":20
-		},
-		success:function(msg){
-			if(msg.code===0&&msg.data!==null){
-				PLAYER.observer.trigger('packbagList',msg.data);
-			}else{
-				console.log('error');
-			}
-		}
-	});
-});
-
 //快捷键工程函数
 PLAYER.EventUtil.addHandler(document,'keydown',function(){
 	var e=PLAYER.EventUtil.getEvent(e);
@@ -1996,85 +1513,6 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 			if(data){
 				$('#js_saveProjectModal').hide();
 				$('#js_pageCover').hide();
-			}
-		});
-    }
-    else if(e.ctrlKey&&code===78){//ctrl+n
-    	PLAYER.EventUtil.preventDefault(e);
-    	showSaveModal();
-    	PLAYER.observer.listen('saveProModal',function(data){
-			if(data){
-				$('#js_saveProjectModal').hide();
-				$('#js_pageCover').hide();
-				location.href=enterUrl;
-			}
-		});
-    }
-    else if(e.ctrlKey&&code===79){//ctrl+o
-    	PLAYER.EventUtil.preventDefault(e);
-    	showSaveModal();
-    	PLAYER.observer.listen('saveProModal',function(data){
-			if(data){
-				createSaveOpenModal();
-				$('#js_saveProjectModal').hide();
-				$('#js_pageCover').show();
-				$('#js_editProjectModal').show();
-
-				//点击X按钮
-				$('#js_editProjectModal .icojam_delete').on('click',function(){
-					$('#js_editProjectModal').hide();
-					$('#js_pageCover').hide();
-				});
-				//取消选择
-				$('#js_edit_project_list').delegate($('#js_edit_project_list').children(),'selectstart',function(){
-					return false;
-				});
-				//点击删除工程按钮
-				$('#js_edit_project_list').delegate('.project_delete','click',function(){
-					var r=confirm('确定删除吗?');
-					if(r){
-						var assetId=$(this).parent('li').attr('data-id');
-						var assetName=$(this).parent('li').find('.project_list_name').html();
-						
-						if(assetId===PLAYER.jsonObj.id){
-							alert('您不能删除当前工程！');
-						}else{
-							
-					  		$(this).parent('li').remove();
-					  		$.ajax({
-						  		url:serverUrl+'proj/delete',
-						  		data:{
-						  			id:assetId
-						  		},
-						  		success:function(msg){
-						  			if(msg.code===0&&msg.data!==null){
-						  				$.ajax({
-									  		url:serverUrl+'proj/list',
-									  		data:{
-									  			currentPage:1,
-									  			pageSize:20
-									  		},
-									  		success:function(msg){
-									  			if(msg.code===0&&msg.data!==null){
-									  				alert('删除:'+assetName+'成功!');
-									  				PLAYER.observer.trigger('proList',msg.data);
-									  			}else{
-									  				console.log('error');
-									  			}
-									  		}
-									  	});
-
-						  			}else{
-						  				console.log('error');
-						  			}
-						  		}
-						  	});
-						}
-						
-					}else{
-						return false;
-					}	
-				});
 			}
 		});
     }
@@ -2092,7 +1530,7 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 					PLAYER.TR.DragDrop.disable();
 					PLAYER.PTR.DragDrop.disable();
 					PLAYER.documentEvent.enable();
-					
+
 					//获取打包任务模板
 					$.ajax({
 						url:serverUrl+'task/schema',
@@ -2118,7 +1556,7 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 						PLAYER.PTR.DragDrop.enable();
 						PLAYER.documentEvent.enable();
 					});
-					//点击取消	
+					//点击取消
 					$('#js_export_modal_cancelPro').on('click',function(){
 						$('#js_exportProjectModal').hide();
 						$('#js_pageCover').hide();
@@ -2166,22 +1604,7 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 					  				console.log('打包成功',msg.data);
 					  				$('#js_exportProjectModal').hide();
 									$('#js_pageCover').hide();
-									//打包任务列表
-								  	$.ajax({
-								  		url:serverUrl+'task/list',
-								  		data:{
-								  			"status":parseInt($('#js_status_select').val()),
-											"currentPage":1,
-											"pageSize":20
-								  		},
-								  		success:function(msg){
-								  			if(msg.code===0&&msg.data!==null){
-								  				PLAYER.observer.trigger('packbagList',msg.data);
-								  			}else{
-								  				console.log('error');
-								  			}
-								  		}
-								  	});
+
 					  			}else{
 					  				console.log('error');
 					  			}
@@ -2195,17 +1618,16 @@ PLAYER.EventUtil.addHandler(document,'keydown',function(){
 			}
 		});
     }
-}); 
-
+});
 /*----------------------拖拽特技素材模块------------------------------------*/
 var dragEffectModule=(function(){
 	PLAYER.observer.listen('projectData',function(data){
 		document.onselectstart=function(e){
-			if(e.srcElement.tagName==='input'||e.srcElement.tagName==='INPUT'||e.srcElement.tagName==="textarea" || e.srcElement.tagName==="TEXTAREA"){
+			if(e.srcElement.tagName==='input'||e.srcElement.tagName==='INPUT'||e.srcElement.tagName==="textarea" || e.srcElement.tagName==="TEXTAREA" || $(e.target).hasClass('edit_area')|| $(e.target).parent().hasClass('edit_area')){
 				return true;
 			}else{
 				return false;
-			}	
+			}
 		};
 		var curr_subclip,		//特技移入当前的切片
 			onOff,				//判断是否拖拽
@@ -2214,34 +1636,34 @@ var dragEffectModule=(function(){
 		if(PLAYER.jsonObj===null){
 			PLAYER.jsonObj=JSON.parse(data);
 		}
-		
+
 		//拖拽素材
 		$('#js_effect_wrap').delegate('.effect_fadeInOut,.effect_flashBlack,.effect_flashWhite,.effect_mosaic', 'mousedown', function(e) {
-			
+
 			e.preventDefault();
 			PLAYER.checkPlaying();
 			$(e.target).parent('li').siblings().children('.effect_list').removeClass('active');
 			$(e.target).addClass('active');
 			onOff=false;
 			type=$(e.target).attr('data-effect');
-			
+
 			curr_subclip=null;
 
 			$(document)[0].onmousemove = function(e) {
                 var e = e || window.event;
-            	onOff=true; 
+            	onOff=true;
             	console.log('e',type);
             	if(type==='mosaic'){
-            		PLAYER.observer.trigger('move_effect_mosaic',e); 
+            		PLAYER.observer.trigger('move_effect_mosaic',e);
             	}else{
-            		PLAYER.observer.trigger('move_effect',e); 
-            	}	
+            		PLAYER.observer.trigger('move_effect',e);
+            	}
             };
             $(document)[0].onmouseup = function(e) {
             	if(onOff){
             		PLAYER.observer.trigger('up_effect',e,type);
 
-            		onOff=false; 
+            		onOff=false;
             	}
                 $(document)[0].onmousemove = null;
                 curr_subclip=null;
@@ -2273,7 +1695,7 @@ var dragEffectModule=(function(){
 			function calTimerRulerRrea(x,y){
 				if($('#js_time_ruler_bar_box').find('.edit_box_v').length<=0){
 					return false;
-				} 
+				}
 				$('#js_time_ruler_bar_box').find('.edit_box_v').each(function(i,n){
 					var _self=$(this);
 					l=_self.offset().left;
@@ -2282,7 +1704,7 @@ var dragEffectModule=(function(){
 					t=_self.offset().top+3;
 					sIn=parseInt(_self.attr('data-sequencetrimin'));
 					sOut=parseInt(_self.attr('data-sequencetrimout'));
-					
+
 
 					//判断没有与他相邻的切片
 					if(x>=l && x<=(l+15) && y>=t &&y<=(y+h)) {
@@ -2319,19 +1741,19 @@ var dragEffectModule=(function(){
 						}
 					}
 				});
-			}	
+			}
 
 			function calTimerRulerRreaMosaic(x,y){
 				if($('#js_time_ruler_bar_box').find('.edit_box_v').length<=0){
 					return false;
-				} 
+				}
 				$('#js_time_ruler_bar_box').find('.edit_box_v').each(function(i,n){
 					var _self=$(this);
 					l=_self.offset().left;
 					w=_self.width();
 					h=_self.height();
 					t=_self.offset().top+3;
-					
+
 					//判断没有与他相邻的切片
 					if(x>=l && x<=(l+w) && y>=t &&y<=(y+h)) {
 						if(_self.find('.effect_box_all').length>0){
@@ -2377,7 +1799,7 @@ var dragEffectModule=(function(){
 
 				var _trimin=parseInt(curr_subclip.attr('data-trimin'));
 				var _trimout=parseInt(curr_subclip.attr('data-trimout'));
-				
+
 				function getEffectAttr(type,trimIn,trimOut,duration,pos){
 					var effectAttr={
 						type:type,
@@ -2554,53 +1976,42 @@ var dragEffectModule=(function(){
 			}
 
 		})();
-		
+
 	});
 })();
 /*----------------------重新渲染轨道素材模块--------------------------------*/
 var drawClipModule=(function(){
 	PLAYER.observer.listen('projectData',function(data,freshList){
-		
 		if(!freshList){
 			if(JSON.parse(data).reference.material.length===0){
 				return false;
 			}else{
-
 				var data=PLAYER.operateJson.translateMsToFfp(data);//把毫秒转成帧数
-
 				var elem = document.getElementById("ocx");
 				var oStyle = elem.currentStyle?elem.currentStyle:window.getComputedStyle(elem, null);
 				var new_height = parseFloat(oStyle.height);
 				var new_width;
-				if(data.height==='576'&&data.width==='720'){
-					new_width=parseFloat(1.25*new_height);
-					$('#ocx').width(new_width);
-				}else{
-					new_width=parseFloat((16*new_height/9));
-					$('#ocx').width(new_width);
-				}
-				
+				new_width=parseFloat((16*new_height/9));
+				$('#ocx').width(new_width);
 				var _ml=($('.player').width()-new_width)/2;
 				if(_ml<0){
 					_ml=0;
 				}
 				$('#ocx').css('margin-left', _ml);
 
-
 				PLAYER.jsonObj=PLAYER.operateJson.checkNewWindow(JSON.stringify(data),new_height,new_width);
 				PLAYER.jsonObj.pHeight=new_height;
 				PLAYER.jsonObj.pWidth=new_width;
-				
 
-				console.log('重新打开工程',PLAYER.jsonObj);
 				PLAYER.TR.config.maxTime=PLAYER.jsonObj.rootBin.sequence[0].maxDuration;
 			    PLAYER.TR.updateEvent(PLAYER.jsonObj.rootBin.sequence[0].maxDuration,true);
 
+				//console.log('新打开的PLAYER.jsonObj',PLAYER.jsonObj)
 				for (var i = 0; i<PLAYER.jsonObj.rootBin.sequence[0].tracks.length;i++) {
 					var track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i];
 					var type=track.type;
 					var index=track.index;
-						
+
 					//如果工程已经有clip，则更新下工程
 					PLAYER.operateJson.sortClipAttr();
 					//获取当前轨道
@@ -2610,27 +2021,26 @@ var drawClipModule=(function(){
 						$.each(track.subclip,function(i,n){
 							var duration;
 							var name;
-							var _id=n.assetID||n.id;
+							var _id=n.assetid||n.id;
 
-					        PLAYER.operateJson.getMaterialDuration(_id,function(msg){
+					        PLAYER.operateJson.getMaterialInfo(_id,function(msg){
 					        	duration=parseInt(msg.duration);
 					        	name=msg.name;
 					        });
-							
+
 					        var initWidth=(n.trimOut-n.trimIn)/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
 				        	var _left=n.sequenceTrimIn/PLAYER.TR.config.framePerPixel;
 
 				        	var subclipBox=$('<div class="edit_box draggable" data-trimin="'+n.trimIn+'" data-trimout="'+n.trimOut+'" data-sequencetrimin="'+n.sequenceTrimIn+'" data-sequencetrimout="'+n.sequenceTrimOut+'">'+name+'</div>');
 				        	subclipBox.attr('data-duration',duration || 2000);
 				        	subclipBox.attr('data-name',name);
-				        	subclipBox.attr('data-id',n.assetID || n.id);
+				        	subclipBox.attr('data-id',n.assetid || n.id);
 				        	subclipBox.attr('data-type',n.type);
 				        	subclipBox.attr('data-interleaved',n.interleaved);
-				        	subclipBox.attr('data-time',n.createTime);
+				        	subclipBox.attr('data-time',n.subclipId);
 							subclipBox.css('width',initWidth);
 							subclipBox.css('left',_left);
 							subclipBox.attr('data-intid',n.interleaved_id);
-
 
 							var className='edit_box_'+current_track.attr('data-type');
 							subclipBox.addClass(className);
@@ -2662,7 +2072,7 @@ var drawClipModule=(function(){
 							current_track.append(subclipBox);
 						});
 					}
-		        } 
+		        }
 				PLAYER.operateJson.sendJson();
 			}
 		}
@@ -2671,26 +2081,70 @@ var drawClipModule=(function(){
 /*----------------------选中素材模块上轨------------------------------------*/
 var chooseClipModule=(function(){
 	PLAYER.observer.listen('projectData',function(data){
-		
 		var materialAttr=null; //保存单个视频素材属性
 		if(PLAYER.jsonObj===null){
 			PLAYER.jsonObj=JSON.parse(data);
 		}
+		/*----------------------点击文稿转视频----------------------------*/
+		$('#js_toolbar_icon_zsp').on('click',function(){
+			$('#js_titleTovideoModal').show();
+			$('#js_pageCover').show();
+			PLAYER.PTR.DragDrop.disable();
+			PLAYER.TR.DragDrop.disable();
+			PLAYER.documentEvent.disable();
 
+		    $('.zsp_pagecover').show();
+			$('.zsp_pagecover .zsp_title').html('资源加载中...');
+			//点击X按钮
+			$('#js_titleTovideoModal .icojam_delete').on('click',function(){
+				$('#js_titleTovideoModal').hide();
+				$('#js_pageCover').hide();
+				$('.zsp_pagecover').hide();
+			});
+			//点击确定按钮
+			$('#js_modal_titleTovideo').off().on('click',function(){
+				$('#js_titleTovideoModal').hide();
+				$('#js_pageCover').hide();
+				//发送请求
+				var sendData=$('#js_edit_area').html();
+
+				$.ajax({
+					url:serverUrl+'vod/searchVods',
+					data:{
+						text:sendData
+					},
+					success:function(msg){
+						if(msg && msg.data.length===0){
+							$('.zsp_pagecover').find('.zsp_title').html('没有找到相应的视频');
+							setTimeout(function(){
+								$('.zsp_pagecover').hide();
+							},1500);
+						}
+						if(msg&&msg.data.length!==0){
+							$('.zsp_pagecover').hide();
+							addClip(msg.data);
+							updateJson();
+						}
+					}
+				});
+			});
+		});
+		/*----------------------点击选取素材上轨----------------------------*/
 		$('#js_add_groupProgram').on('click',function(){
 			PLAYER.checkPlaying();
 			var arr_attr=[];
 			for (var i = 0; i < PLAYER.chooseArray.length; i++) {
+				console.log('PLAYER.chooseArray[i]',PLAYER.chooseArray[i])
 				$.ajax({
 					url:serverUrl+'program/info',
 					async:false,
 					data:{
-						assetId:PLAYER.chooseArray[i],
+						assetid:PLAYER.chooseArray[i],
 						jobId:PLAYER.jobId
 					},
 					success:function(msg){
 						if(msg.code===0&&msg.data!==null){
-							msg.data.assetId=PLAYER.chooseArray[i];
+							msg.data.assetid=PLAYER.chooseArray[i];
 							msg.data.duration=parseInt(msg.data.duration);
 							arr_attr.push(msg.data);
 							if(arr_attr.length===PLAYER.chooseArray.length){
@@ -2703,133 +2157,132 @@ var chooseClipModule=(function(){
 					}
 				});
 			}
-			function calcWidth(duration){
-				var self=this;
-	            var res;
-	            for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
-	                if(track.subclip.length===0){
-	                    PLAYER.TR.config.maxTime=duration+15000;
-	                    PLAYER.TR.updateEvent(duration+15000,true);//更新时间轴
-	                    res=duration/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
-	                }else{
-	                    res=duration/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
-	                }
-	            }
-	            return res;
-			}
-			function addClip(program_info){
-				var _left,
-					_index=1,
-					_width,
-					int_id,
-					_duration,
-					initTrimin,
-					initTrimout,
-					initSequencetrimin,
-					initSequencetrimout=PLAYER.TR.currTime,
-					_name,
-					_createTime_v,
-					_createTime_a;
-					console.log('program_info',program_info)
-				for (var i = 0; i < program_info.length; i++) {
-					_createTime_v='video_'+i+PLAYER.genNonDuplicateID(12);
-					_createTime_a='audio_'+i+PLAYER.genNonDuplicateID(12);
-					int_id='interleaved_id_'+i+PLAYER.genNonDuplicateID(12);
 
-					initTrimin=0;
-					initTrimout=program_info[i].duration;
-					initSequencetrimout+=program_info[i].duration;
-					initSequencetrimin=initSequencetrimout-program_info[i].duration;
-					_duration=program_info[i].duration;
-					_name=program_info[i].name;
-					_left=initSequencetrimin/PLAYER.TR.config.framePerPixel;
-					_id=program_info[i].assetId;
-					_width=program_info[i].duration/PLAYER.TR.config.framePerPixel;
-
-					//更新切片参数
-					var videoEdit=$('<div class="edit_box edit_box_v draggable" data-trimin="'+initTrimin+'" data-trimout="'+initTrimout+'" data-sequencetrimin="'+initSequencetrimin+'" data-sequencetrimout="'+initSequencetrimout+'">'+_name+'</div>');
-					var audioEdit=$('<div class="edit_box edit_box_a draggable" data-trimin="'+initTrimin+'" data-trimout="'+initTrimout+'" data-sequencetrimin="'+initSequencetrimin+'" data-sequencetrimout="'+initSequencetrimout+'">'+_name+'</div>');
-					
-					videoEdit.attr('data-time',_createTime_v);
-					videoEdit.attr('data-interleaved','true');
-					videoEdit.attr('data-type','video_and_audio');
-					videoEdit.attr('data-intid',int_id);
-					videoEdit.attr('data-duration',_duration);
-					videoEdit.attr('data-id',_id);
-					videoEdit.attr('data-name',_name);
-					videoEdit.css('left',_left);
-					videoEdit.css('width',_width);
-
-					audioEdit.attr('data-time',_createTime_a);
-					audioEdit.attr('data-interleaved','true');
-					audioEdit.attr('data-type','video_and_audio');
-					audioEdit.attr('data-intid',int_id);
-					audioEdit.attr('data-duration',_duration);
-					audioEdit.attr('data-id',_id);
-					audioEdit.attr('data-name',_name);
-					audioEdit.css('left',_left);
-					audioEdit.css('width',_width);
-
-					$('.bar_v[data-index="1"]').append(videoEdit);
-					$('.bar_a[data-index="1"]').append(audioEdit);	
-
-					var clipObj={
-			            "assetID": _id,
-			            "name": _name,
-			            "trimIn": initTrimin,
-			            "trimOut":initTrimout,
-			            "sequenceTrimIn": initSequencetrimin,
-			            "sequenceTrimOut":initSequencetrimout,
-			            "createTime":_createTime_v,
-			            "interleaved":true,
-						"interleaved_id":int_id,
-			            "effect":[]
-					}
-					var clipObj2={
-			            "assetID":_id,
-			            "name": _name,
-			            "trimIn": initTrimin,
-			            "trimOut":initTrimout,
-			            "createTime":_createTime_a,
-			            "sequenceTrimIn": initSequencetrimin,
-			            "sequenceTrimOut":initSequencetrimout,
-			            "interleaved":true,
-			            "interleaved_id":int_id,
-			            "volume":100
-					}
-					//判断覆盖
-					if($('.bar_v').children().length>=1){
-						PLAYER.operateJson.checkCoverEvent(videoEdit);
-					}
-					if($('.bar_a').children().length>=1){
-						PLAYER.operateJson.checkCoverEvent(audioEdit);
-					}
-
-					PLAYER.operateJson.addVideoClipAttr(clipObj,_index);
-					PLAYER.operateJson.addAudioClipAttr(clipObj2,_index);
-					PLAYER.operateJson.addProjectMaterial(program_info[i]);	
-				}
-			};
-			function updateJson(){
-				//更新播放器时常
-	            $('#js_player_totalTime').html(PLAYER.getDurationToString(PLAYER.operateJson.getLastFrame()));
-	            //更新轨道时间线
-	            var n=Math.max(PLAYER.TR.config.maxTime,PLAYER.operateJson.getLastFrame()+15000);
-	            PLAYER.TR.updateEvent(n);
-	            PLAYER.TR.fixClipWidth();
-
-	            //更新播放器时间线
-	            PLAYER.PTR.config.maxTime=PLAYER.operateJson.getLastFrame();
-	            PLAYER.PTR.updateEvent(PLAYER.PTR.config);
-
-	            PLAYER.operateJson.sendJson();
-				
-				//置空
-				PLAYER.chooseArray=[];	
-				$('#js_thumbnail_box .col-md-3').removeClass('active');
-			}
 		});
+		function calcWidth(duration){
+			var self=this;
+			var res;
+			for (var i = 0,track; track=PLAYER.jsonObj.rootBin.sequence[0].tracks[i++];) {
+				if(track.subclip.length===0){
+					PLAYER.TR.config.maxTime=duration+15000;
+					PLAYER.TR.updateEvent(duration+15000,true);//更新时间轴
+					res=duration/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
+				}else{
+					res=duration/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
+				}
+			}
+			return res;
+		}
+		function addClip(program_info){
+			var _left,
+				_index=1,
+				_width,
+				int_id,
+				_duration,
+				initTrimin,
+				initTrimout,
+				initSequencetrimin,
+				initSequencetrimout=PLAYER.TR.currTime,
+				_name,
+				subclipId_v,
+				subclipId_a;
+				console.log('program_info',program_info)
+			for (var i = 0; i < program_info.length; i++) {
+				subclipId_v='video_'+i+PLAYER.genNonDuplicateID(12);
+				subclipId_a='audio_'+i+PLAYER.genNonDuplicateID(12);
+				int_id='interleaved_id_'+i+PLAYER.genNonDuplicateID(12);
 
+				initTrimin=0;
+				initTrimout=program_info[i].duration;
+				initSequencetrimout+=program_info[i].duration;
+				initSequencetrimin=initSequencetrimout-program_info[i].duration;
+				_duration=program_info[i].duration;
+				_name=program_info[i].name;
+				_left=initSequencetrimin/PLAYER.TR.config.framePerPixel;
+				_id=program_info[i].assetid;
+				_width=program_info[i].duration/PLAYER.TR.config.framePerPixel;
+
+				//更新切片参数
+				var videoEdit=$('<div class="edit_box edit_box_v draggable" data-trimin="'+initTrimin+'" data-trimout="'+initTrimout+'" data-sequencetrimin="'+initSequencetrimin+'" data-sequencetrimout="'+initSequencetrimout+'">'+_name+'</div>');
+				var audioEdit=$('<div class="edit_box edit_box_a draggable" data-trimin="'+initTrimin+'" data-trimout="'+initTrimout+'" data-sequencetrimin="'+initSequencetrimin+'" data-sequencetrimout="'+initSequencetrimout+'">'+_name+'</div>');
+
+				videoEdit.attr('data-time',subclipId_v);
+				videoEdit.attr('data-interleaved','true');
+				videoEdit.attr('data-type','video_and_audio');
+				videoEdit.attr('data-intid',int_id);
+				videoEdit.attr('data-duration',_duration);
+				videoEdit.attr('data-id',_id);
+				videoEdit.attr('data-name',_name);
+				videoEdit.css('left',_left);
+				videoEdit.css('width',_width);
+
+				audioEdit.attr('data-time',subclipId_a);
+				audioEdit.attr('data-interleaved','true');
+				audioEdit.attr('data-type','video_and_audio');
+				audioEdit.attr('data-intid',int_id);
+				audioEdit.attr('data-duration',_duration);
+				audioEdit.attr('data-id',_id);
+				audioEdit.attr('data-name',_name);
+				audioEdit.css('left',_left);
+				audioEdit.css('width',_width);
+
+				$('.bar_v[data-index="1"]').append(videoEdit);
+				$('.bar_a[data-index="1"]').append(audioEdit);
+
+				var clipObj={
+					"assetid": _id,
+					"name": _name,
+					"trimIn": initTrimin,
+					"trimOut":initTrimout,
+					"sequenceTrimIn": initSequencetrimin,
+					"sequenceTrimOut":initSequencetrimout,
+					"subclipId":subclipId_v,
+					"interleaved":true,
+					"interleaved_id":int_id,
+					"effect":[]
+				}
+				var clipObj2={
+					"assetid":_id,
+					"name": _name,
+					"trimIn": initTrimin,
+					"trimOut":initTrimout,
+					"subclipId":subclipId_a,
+					"sequenceTrimIn": initSequencetrimin,
+					"sequenceTrimOut":initSequencetrimout,
+					"interleaved":true,
+					"interleaved_id":int_id,
+					"volume":100
+				}
+				//判断覆盖
+				if($('.bar_v').children().length>=1){
+					PLAYER.operateJson.checkCoverEvent(videoEdit);
+				}
+				if($('.bar_a').children().length>=1){
+					PLAYER.operateJson.checkCoverEvent(audioEdit);
+				}
+
+				PLAYER.operateJson.addVideoClipAttr(clipObj,_index);
+				PLAYER.operateJson.addAudioClipAttr(clipObj2,_index);
+				PLAYER.operateJson.addProjectMaterial(program_info[i]);
+			}
+		};
+		function updateJson(){
+			//更新播放器时常
+			$('#js_player_totalTime').html(PLAYER.getDurationToString(PLAYER.operateJson.getLastFrame()));
+			//更新轨道时间线
+			var n=Math.max(PLAYER.TR.config.maxTime,PLAYER.operateJson.getLastFrame()+15000);
+			PLAYER.TR.updateEvent(n);
+			PLAYER.TR.fixClipWidth();
+
+			//更新播放器时间线
+			PLAYER.PTR.config.maxTime=PLAYER.operateJson.getLastFrame();
+			PLAYER.PTR.updateEvent(PLAYER.PTR.config);
+
+			PLAYER.operateJson.sendJson();
+			//置空
+			PLAYER.chooseArray=[];
+			$('#js_thumbnail_box .col-md-3').removeClass('active');
+		}
 	});
 })();
 
@@ -2842,7 +2295,7 @@ var chooseClipModule=(function(){
         _init:function(options){
             var self=this;
             self.options={
-                type:'', 
+                type:'',
                 cont:''
             }
             $.extend(true,self.options,options||{});
@@ -2890,10 +2343,10 @@ var chooseClipModule=(function(){
             var onOff=false;
             if(self.$cont){
             	self.$cont.delegate(self.$cont.children(),'mousedown',function(e){
-					
+
 				 	e.preventDefault();
                     PLAYER.checkPlaying();
-                    
+
                     PLAYER.hideSubititleEdit();
                     PLAYER.hideEffectEdit();
 
@@ -2902,28 +2355,24 @@ var chooseClipModule=(function(){
                     }else{
                     	PLAYER.initDrag=false;
                     }
-                    
 					onOff=false;
-					
                     if(self.$type==='video_and_audio'){
-
-                    	
                     	if(!$(e.target).parents().hasClass('col-md-3')){
                     		return false;
                     	}
                     	var target=$(e.target).parents('.col-md-3');
-                        var _id=target.attr('data-id');
+						var _id=target.attr('data-id');
                         $.ajax({
                             url:serverUrl+'program/info',
                             data:{
-                                assetId:_id,
+                                assetid:_id,
                                 jobId:PLAYER.jobId
                             },
                             success:function(msg){
                                 if(msg.code===0&&msg.data!==null){
                                     materialAttr=msg.data;
-                                   	materialAttr.assetId=_id;
-                                   	materialAttr.duration=parseInt(msg.data.duration);
+                                   	materialAttr.assetid=_id;
+									materialAttr.duration=parseInt(msg.data.duration);
                                     PLAYER.observer.trigger('_down_'+self.$type,e,materialAttr);
                                 }else{
                                     console.log('error');
@@ -2932,12 +2381,12 @@ var chooseClipModule=(function(){
                         });
                     }else if(self.$type==='video'){
                         var target=$(e.target);
-                        
+
                         target.addClass('active');
                         target.siblings().removeClass('active');
                         materialAttr={
-                            assetId:"e"+Math.random(),
-                            duration:50,
+                            assetid:target.attr('data-id'),
+                            duration:parseInt(target.attr('data-duration')),
                             filePath:target.attr('data-http'),
                             name:target.siblings('span').html()
                         }
@@ -2947,8 +2396,8 @@ var chooseClipModule=(function(){
                     	target.addClass('active');
                         target.siblings().removeClass('active');
                         materialAttr={
-                            assetId:"e"+Math.random(),
-                            duration:1000,
+                            assetid:target.attr('data-id'),
+                            duration:parseInt(target.attr('data-duration')),
                             filePath:target.attr('data-http'),
                             name:target.siblings('span').html()
                         }
@@ -2967,16 +2416,16 @@ var chooseClipModule=(function(){
                     doc.on('mousemove.slider',mousemoveHandler).on('mouseup.slider',function(e){
                         doc.off('.slider');
                         PLAYER.observer.trigger('_up_'+self.$type,e,onOff);//拖拽抬起的事件,防止与click冲突
-                        onOff=false;  
+                        onOff=false;
                     });
 
                     function mousemoveHandler(e){
-						onOff=true; 
-                        PLAYER.observer.trigger('_move_'+self.$type,e,onOff); 
+						onOff=true;
+                        PLAYER.observer.trigger('_move_'+self.$type,e,onOff);
                     }
             	})
             }
-            
+
             return self;
         },
         _down_video_and_audio:function(){
@@ -2988,9 +2437,8 @@ var chooseClipModule=(function(){
                     self._addVideoClip(e,materialInfo);
                     self._addAudioClip(e,materialInfo);
                 };
-
                 PLAYER.singelton(createSingleDragElem)();
-            }); 
+            });
             return self;
         },
         _move_video_and_audio:function(){
@@ -2998,7 +2446,7 @@ var chooseClipModule=(function(){
             PLAYER.observer.listen('_move_video_and_audio',function(e,onOff){
                 var x=e.clientX;
                 var y=e.clientY;
-                
+
                 self.moveObj=self._calTimerRulerRrea(x,y,'video_and_audio');            //区域轨道
             });
             return self;
@@ -3022,7 +2470,7 @@ var chooseClipModule=(function(){
 	                    }
 	                }
 				}
-                
+
             });
             return self;
         },
@@ -3034,7 +2482,7 @@ var chooseClipModule=(function(){
                     self._addVideoClip(e,materialInfo);
                 };
                 var dragElem=PLAYER.singelton(createSingleDragElem)();
-            }); 
+            });
             return self;
         },
         _move_video:function(){
@@ -3073,7 +2521,7 @@ var chooseClipModule=(function(){
                     self._addAudioClip(e,materialInfo);
                 };
                 var dragElem=PLAYER.singelton(createSingleDragElem)();
-            }); 
+            });
             return self;
         },
         _move_audio:function(){
@@ -3101,20 +2549,20 @@ var chooseClipModule=(function(){
 	                    }
 	                }
 				}
-                
+
             });
             return self;
         },
         _down_subtitle:function(){
             var self=this;
             PLAYER.observer.listen('_down_subtitle',function(e,materialInfo){
-                
+
                 self.materialAttr=materialInfo;
                 var createSingleDragElem=function(){
                     self._addSubtitleClip(e,materialInfo);
                 };
                 var dragElem=PLAYER.singelton(createSingleDragElem)();
-            }); 
+            });
             return self;
         },
         _move_subtitle:function(){
@@ -3122,7 +2570,7 @@ var chooseClipModule=(function(){
             PLAYER.observer.listen('_move_subtitle',function(e){
                 var x=e.clientX;
                 var y=e.clientY;
-                
+
                 self.moveObj=self._calTimerRulerRrea(x,y,'subtitle');           //区域轨道
             });
             return self;
@@ -3158,7 +2606,7 @@ var chooseClipModule=(function(){
                 dragElem_v=$('<div class="edit_box edit_box_v draggable draghelper">'+materialInfo.name+'</div>');
                 dragElem_v.attr('data-duration',materialInfo.duration);
                 dragElem_v.attr('data-name',materialInfo.name);
-                dragElem_v.attr('data-id',materialInfo.assetId);
+                dragElem_v.attr('data-id',materialInfo.assetid);
                 dragElem_v.css('left',e.clientX);
                 dragElem_v.css('width',_w);
 
@@ -3171,14 +2619,13 @@ var chooseClipModule=(function(){
 
                 _duration=parseInt($(n).children('.draghelper').attr('data-duration'));
                 _left=parseInt($(n).children('.draghelper').css('left'));
-                
+
             });
             return self;
         },
         _addAudioClip:function(e,materialInfo){
             var self=this;
             var dragElem_a;
-
             var initTrimin=0;
             var initTrimout=materialInfo.duration;
             var initSequencetrimin=parseInt(e.clientX*PLAYER.TR.config.framePerPixel);
@@ -3189,7 +2636,7 @@ var chooseClipModule=(function(){
                 dragElem_a=$('<div class="edit_box edit_box_a draggable draghelper">'+materialInfo.name+'</div>');
                 dragElem_a.attr('data-duration',materialInfo.duration);
                 dragElem_a.attr('data-name',materialInfo.name);
-                dragElem_a.attr('data-id',materialInfo.assetId);
+                dragElem_a.attr('data-id',materialInfo.assetid);
                 dragElem_a.css('left',e.clientX);
                 dragElem_a.css('width',_w);
 
@@ -3205,22 +2652,19 @@ var chooseClipModule=(function(){
         _addSubtitleClip:function(e,materialInfo){
             var self=this;
             var dragElem;
-
-            var initTrimin=0;
+			var initTrimin=0;
             var initTrimout=materialInfo.duration;
             var initSequencetrimin=parseInt(e.clientX*PLAYER.TR.config.framePerPixel);
             var initSequencetrimout=materialInfo.duration+initSequencetrimin;
 
             var _w=self._calculateWidth(materialInfo.duration);
-
             $.each($('#js_time_ruler_bar_box .bar_t'),function(i,n){
                 dragElem=$('<div class="edit_box edit_box_t draggable draghelper">'+materialInfo.name+'</div>');
                 dragElem.attr('data-duration',materialInfo.duration);
                 dragElem.attr('data-name',materialInfo.name);
-                dragElem.attr('data-id',materialInfo.id);
+                dragElem.attr('data-id',materialInfo.assetid);
                 dragElem.css('left',e.clientX);
                 dragElem.css('width',_w);
-
                 dragElem.attr('data-trimin',initTrimin);
                 dragElem.attr('data-trimout',initTrimout);
                 dragElem.attr('data-sequencetrimin',initSequencetrimin);
@@ -3240,7 +2684,7 @@ var chooseClipModule=(function(){
             }else{
             	res=duration/PLAYER.TR.config.framePerPixel;//获取轨道切片宽度
             }
-            
+
             return res;
         },
         _calTimerRulerRrea:function(x,y,type){
@@ -3257,12 +2701,12 @@ var chooseClipModule=(function(){
                 $('.bar_v').each(function(i,n){
                     var _top=parseInt($(this).offset().top);
                     var _left=parseInt($(this).offset().left);
-                    
+
                     that=$(this);
                     _index=that.attr('data-index');
 
                     if(y>=_top && y<=_top+35 && (x>=_left||Math.abs(x-_left)<=15) ){
-                        
+
                         that.addClass('overActive');
                         that.siblings('.bar_v').removeClass('overActive');
                         $('.bar_a[data-index="'+_index+'"]').addClass('overActive');
@@ -3278,10 +2722,10 @@ var chooseClipModule=(function(){
                         nowLeft=parseInt(nowLeft*config.framePerPixel)/config.framePerPixel;
             			sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
             			sequenceTrimOut=sequenceTrimIn+(dragging.attr('data-trimout')-dragging.attr('data-trimin'));
-                        
+
                         if(dragging.siblings().length!==0){
                             var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging);//获取所有切片的吸附点
-							
+
 							console.log('adhere_point',adhere_point)
 		                    var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
 		                    if(offset<=5){
@@ -3290,13 +2734,13 @@ var chooseClipModule=(function(){
 
 								var _d=dragging.attr('data-trimout')-dragging.attr('data-trimin');
 		                        sequenceTrimOut=sequenceTrimIn+_d;
-		                        show(dragging,'forward'); 
+		                        show(dragging,'forward');
 		                    }else{
 		                        hide(dragging);
 		                    }
 
                         }
-                        
+
                         that.children('.draghelper').css('left',nowLeft);
                         that.children('.draghelper').attr('data-sequencetrimin',sequenceTrimIn);
             			that.children('.draghelper').attr('data-sequencetrimout',sequenceTrimOut);
@@ -3304,7 +2748,7 @@ var chooseClipModule=(function(){
                         $('.bar_a[data-index="'+_index+'"]').children('.draghelper').css('left',nowLeft);
                         $('.bar_a[data-index="'+_index+'"]').children('.draghelper').attr('data-sequencetrimin',sequenceTrimIn);
                         $('.bar_a[data-index="'+_index+'"]').children('.draghelper').attr('data-sequencetrimout',sequenceTrimOut);
-                        
+
                     }else{
                         that.children('.draghelper').hide();
                         $('.bar_a[data-index="'+_index+'"]').children('.draghelper').hide();
@@ -3312,7 +2756,7 @@ var chooseClipModule=(function(){
                         $('.bar_a[data-index="'+_index+'"]').removeClass('overActive');
                     }
 
-                    
+
                 });
             }else if(type==='video'){
             	var nowLeft;
@@ -3333,20 +2777,20 @@ var chooseClipModule=(function(){
                         if(nowLeft-_marginLeft<=0){
                             nowLeft=_marginLeft;
                         }
-                        
+
                         nowLeft=parseInt(nowLeft*config.framePerPixel)/config.framePerPixel;
             			sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
             			sequenceTrimOut=sequenceTrimIn+(dragging.attr('data-trimout')-dragging.attr('data-trimin'));
-                        
+
                         if(dragging.siblings().length!==0){
-                            var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging);//获取所有切片的吸附点 
+                            var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging);//获取所有切片的吸附点
 		                    var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
 		                    if(offset<=5){
 		                        nowLeft=adhere_point/config.framePerPixel;
 		                        sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
 		                        var _d=dragging.attr('data-trimout')-dragging.attr('data-trimin');
 		                        sequenceTrimOut=sequenceTrimIn+_d;
-		                        show(dragging,'forward'); 
+		                        show(dragging,'forward');
 		                    }else{
 		                        hide(dragging);
 		                    }
@@ -3385,16 +2829,16 @@ var chooseClipModule=(function(){
                         nowLeft=parseInt(nowLeft*config.framePerPixel)/config.framePerPixel;
             			sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
             			sequenceTrimOut=sequenceTrimIn+(dragging.attr('data-trimout')-dragging.attr('data-trimin'));
-                        
+
                         if(dragging.siblings().length!==0){
-                            var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging);//获取所有切片的吸附点 
+                            var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging);//获取所有切片的吸附点
 		                    var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
 		                    if(offset<=5){
 		                        nowLeft=adhere_point/config.framePerPixel;
 		                        sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
 		                        var _d=dragging.attr('data-trimout')-dragging.attr('data-trimin');
 		                        sequenceTrimOut=sequenceTrimIn+_d;
-		                        show(dragging,'forward'); 
+		                        show(dragging,'forward');
 		                    }else{
 		                        hide(dragging);
 		                    }
@@ -3432,25 +2876,25 @@ var chooseClipModule=(function(){
 						nowLeft=parseInt(nowLeft*config.framePerPixel)/config.framePerPixel;
             			sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
             			sequenceTrimOut=sequenceTrimIn+(dragging.attr('data-trimout')-dragging.attr('data-trimin'));
-                        
+
                         if(dragging.siblings().length!==0){
-                            var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging);//获取所有切片的吸附点 
+                            var adhere_point=PLAYER.operateJson.getAllsequenceTrimIn(dragging);//获取所有切片的吸附点
 		                    var offset=Math.abs(sequenceTrimIn-adhere_point)/config.framePerPixel;
 		                    if(offset<=5){
 		                        nowLeft=adhere_point/config.framePerPixel;
 		                        sequenceTrimIn=Math.round(nowLeft*config.framePerPixel);
 		                        var _d=dragging.attr('data-trimout')-dragging.attr('data-trimin');
 		                        sequenceTrimOut=sequenceTrimIn+_d;
-		                        show(dragging,'forward'); 
+		                        show(dragging,'forward');
 		                    }else{
 		                        hide(dragging);
 		                    }
                         }
-                        
+
                         that.children('.draghelper').css('left',nowLeft);
                         that.children('.draghelper').attr('data-sequencetrimin',sequenceTrimIn);
             			that.children('.draghelper').attr('data-sequencetrimout',sequenceTrimOut);
-                        
+
                     }else{
                         that.children('.draghelper').hide();
                         that.removeClass('overActive');
@@ -3473,7 +2917,7 @@ var chooseClipModule=(function(){
             $.each($('.bar_v'),function(i,n){
                 if($(n).hasClass('overActive')){
                     _index=parseInt($(n).attr('data-index'));
-                    var createTime=type+'_'+PLAYER.genNonDuplicateID(12);
+                    var subclipId=type+'_'+PLAYER.genNonDuplicateID(12);
                     var _left,
                         _id,
                         _name,
@@ -3485,27 +2929,27 @@ var chooseClipModule=(function(){
                     _id=$(n).children('.draghelper').attr('data-id');
                     _name=$(n).children('.draghelper').attr('data-name');
                     _duration=parseInt($(n).children('.draghelper').attr('data-duration'));
-                    
-                    
+
+
                     initTrimin=parseInt($(n).children('.draghelper').attr('data-trimin'));
                     initTrimout=parseInt($(n).children('.draghelper').attr('data-trimout'));
                     initSequencetrimin=parseInt($(n).children('.draghelper').attr('data-sequencetrimin'));
                     initSequencetrimout=parseInt($(n).children('.draghelper').attr('data-sequencetrimout'));
 
-                    
+
                     $(n).children('.draghelper').css('background','#33bbff');
                     $(n).children('.draghelper').attr('data-type',type);
-                    $(n).children('.draghelper').attr('data-time',createTime);
-                    
+                    $(n).children('.draghelper').attr('data-time',subclipId);
+
                     clipAttr={
-                        "assetID": _id,
+                        "assetid": _id,
                         "trimIn": initTrimin,
                         "trimOut":initTrimout,
                         "sequenceTrimIn": initSequencetrimin,
                         "sequenceTrimOut":initSequencetrimout,
                         "effect":[],
                         "type":type,
-                        "createTime":createTime
+                        "subclipId":subclipId
                     }
                     if(type==='video_and_audio'){
                         $(n).children('.draghelper').attr('data-interleaved',true);
@@ -3523,7 +2967,7 @@ var chooseClipModule=(function(){
                         $(n).children('.draghelper').attr('data-intid',_id);
                         clipAttr.interleaved_id=_id;
                     }
-                    
+
                     //判断覆盖
                     if($(n).children().length>=2){
                         PLAYER.operateJson.checkCoverEvent($(n).children('.draghelper'),checkId);
@@ -3531,7 +2975,7 @@ var chooseClipModule=(function(){
 
                     $(n).removeClass('overActive');
                     $(n).children('.draghelper').removeClass('draghelper');
-                    
+
                 }else{
                     $(n).children('.draghelper').remove();
                     return;
@@ -3552,7 +2996,7 @@ var chooseClipModule=(function(){
             $.each($('.bar_a'),function(i,n){
                 if($(n).hasClass('overActive')){
                     _index=parseInt($(n).attr('data-index'));
-                    var createTime=type+'_'+PLAYER.genNonDuplicateID(12);
+                    var subclipId=type+'_'+PLAYER.genNonDuplicateID(12);
                     var _left,
                         _id,
                         _name,
@@ -3573,17 +3017,17 @@ var chooseClipModule=(function(){
 
                     $(n).children('.draghelper').css('background','#33bbff');
                     $(n).children('.draghelper').attr('data-type',type);
-                    $(n).children('.draghelper').attr('data-time',createTime);
-                    
+                    $(n).children('.draghelper').attr('data-time',subclipId);
+
                     clipAttr={
-                        "assetID":_id,
+                        "assetid":_id,
                         "trimIn": initTrimin,
                         "trimOut":initTrimout,
                         "sequenceTrimIn": initSequencetrimin,
                         "sequenceTrimOut":initSequencetrimout,
                         "volume":100,
                         "type":type,
-                        "createTime":createTime
+                        "subclipId":subclipId
                     }
                     if(type==='video_and_audio'){
                         $(n).children('.draghelper').attr('data-interleaved',true);
@@ -3601,7 +3045,7 @@ var chooseClipModule=(function(){
                         $(n).children('.draghelper').attr('data-intid',_id);
                         clipAttr.interleaved_id=_id;
                     }
-                    
+
                     //判断覆盖
                     if($(n).children().length>=2){
                         PLAYER.operateJson.checkCoverEvent($(n).children('.draghelper'),checkId);
@@ -3616,7 +3060,7 @@ var chooseClipModule=(function(){
                 }
                 PLAYER.operateJson.hideAdhere($(n));
             });
-            
+
 
             if(clipAttr){
                 return  {
@@ -3636,7 +3080,7 @@ var chooseClipModule=(function(){
                         _id,
                         _name,
                         _duration,
-                        _createTime,
+                        subclipId,
                         initTrimin,
                         initTrimout,
                         initSequencetrimin,
@@ -3644,15 +3088,14 @@ var chooseClipModule=(function(){
                     _id=$(n).children('.draghelper').attr('data-id');
                     _name=$(n).children('.draghelper').attr('data-name');
                     _duration=parseInt($(n).children('.draghelper').attr('data-duration'));
-                    _createTime=type+'_'+PLAYER.genNonDuplicateID(12);
-
+                    subclipId=type+'_'+PLAYER.genNonDuplicateID(12);
 
                     initTrimin=parseInt($(n).children('.draghelper').attr('data-trimin'));
                     initTrimout=parseInt($(n).children('.draghelper').attr('data-trimout'));
                     initSequencetrimin=parseInt($(n).children('.draghelper').attr('data-sequencetrimin'));
                     initSequencetrimout=parseInt($(n).children('.draghelper').attr('data-sequencetrimout'));
 
-                    $(n).children('.draghelper').attr('data-time',_createTime);
+                    $(n).children('.draghelper').attr('data-time',subclipId);
                     $(n).children('.draghelper').css('background','#ea3af5');
                     $(n).children('.draghelper').attr('data-type',type);
                     $(n).children('.draghelper').attr('data-interleaved',false);
@@ -3660,24 +3103,25 @@ var chooseClipModule=(function(){
                     var int_id='no_interleaved_id_'+PLAYER.genNonDuplicateID(12);
                     $(n).children('.draghelper').attr('data-intid',int_id);
 
-                    clipAttr= JSON.parse(PLAYER.operateJson.getSubtitleTemp(_id));
+					clipAttr= JSON.parse(PLAYER.operateJson.getSubtitleTemp(_id));
+
                     var subAttr={
-                        "trimIn": 0,
-                        "trimOut":2000,
+                        "trimIn": initTrimin,
+                        "trimOut":initTrimout,
                         "sequenceTrimIn":initSequencetrimin,        //字体默认入点 0
                         "sequenceTrimOut":initSequencetrimout,      //字体默认出点 2000
-                        "createTime":_createTime,
+                        "subclipId":subclipId,
                         "type":type,
                         "interleaved":false,
                         "interleaved_id":int_id
                     }
                     $.extend(clipAttr,subAttr);
-                    
+
                     //判断覆盖
                     if($(n).children().length>=2){
                         PLAYER.operateJson.checkCoverEvent($(n).children('.draghelper'),checkId);
                     }
-					
+
                 }else{
                     $(n).children('.draghelper').remove();
                     return;
@@ -3707,16 +3151,13 @@ var chooseClipModule=(function(){
 
             //更新播放器时间线
             PLAYER.PTR.config.maxTime=PLAYER.operateJson.getLastFrame();
-
             PLAYER.PTR.updateEvent(PLAYER.PTR.config);
-
             //更新material,json
             PLAYER.operateJson.addProjectMaterial(self.materialAttr);
-
             PLAYER.operateJson.sendJson();
         }
     });
-        
+
     win.DragObj=DragObj;
 })(window,document,jQuery);
 
@@ -3739,18 +3180,29 @@ PLAYER.observer.listen('projectData',function(data){
 	if(PLAYER.jsonObj===null){
 		PLAYER.jsonObj=JSON.parse(data);
 	}
-	//拖拽视频
-	FlyFactory.create("video_and_audio",$('#js_thumbnail_box'));
+	if(PLAYER.jobId!==''){
+		//拖拽视频
+		FlyFactory.create("video_and_audio",$('#js_thumbnail_box_yueying'));
+	}else{
+		//拖拽视频
+		FlyFactory.create("video_and_audio",$('#js_thumbnail_box'));
+	}
+
 	//拖拽字幕
 	FlyFactory.create("subtitle",$('#js_subtitle_wrap'));
 	//拖拽图片
 	FlyFactory.create("video",$('#js_images_wrap'));
 	//拖拽音频
 	FlyFactory.create("audio",$('#js_audio_wrap'));
-	
+
 });
 
 });
+
+
+
+
+
 
 
 

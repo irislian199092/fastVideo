@@ -1,0 +1,138 @@
+{
+
+        "templateId":"subtitle_01",			//模板ID
+        "name":"subtitle_01",  				//模板名称
+        "duration":2000,    				//模板总时长默认值（单位毫秒）
+        "tempWidth":1920,                   //字幕模板设计宽高
+        "tempHeight":1080,                  //字幕模板设计宽高
+        "frame":{							//字幕整体矩形线框
+            "x":0,							//线框左上角x坐标
+            "y":0,                          //线框左上角y坐标
+            "width":1920,					//线框宽度
+            "height":1080,					//线框高度
+            "orientation":0					//线框方向。取值：0、90、180、270
+        },
+        "object":[                          //包含的元素
+			{
+                "objectId":"000",
+                "type":"text",            //text：文字
+                "title":null,
+				"z-index":0,             //渲染的层：0为最上层，+1依次为下一层
+                "x1":-100,               //针对move类型的文字，移动过程中三点的坐标（左上点）
+                "y1":50,
+                "x2":100,
+                "y2":50,
+                "x3":800,
+                "y3":50,
+                "clipStart":0,         //相对时间（单位毫秒）
+                "clipDuraiton":100,    //（单位毫秒）
+                "attr":{               //具体属性的描述
+				    "type":"move",
+                    "text":"this is a subtitle",
+                    "fontFamily": "PingFang Heavy",
+                    "fontSize":12,
+                    "fillStyle":"#ffffff",
+                    "align":"left",
+                    "vertical-align":"top",
+					"moveInTime":1000,
+                    "moveOutTime":1010
+                }
+            },
+			{
+                "objectId":"001",
+                "type":"text",
+                "title":null,
+				"z-index":0,
+                "x1":100,
+                "y1":50,
+                "clipStart":282,
+                "clipDuraiton":100,
+                "attr":{
+				    "type":"fade",
+                    "text":"this is a subtitle",
+                    "fontFamily": "PingFang Heavy",
+                    "fontSize":12,
+                    "fillStyle":"#ffffff",
+                    "align":"left",
+                    "vertical-align":"top",
+					"fadeInTime":1000,
+                    "fadeOutTime":1000
+                }
+            },
+			{
+                "objectId":"002",
+                "type":"text",
+                "title":null,
+				"z-index":0,
+                "x1":100,
+                "y1":50,
+                "clipStart":282,
+                "clipDuraiton":100,
+                "attr":{
+				    "type":"still",
+                    "text":"this is a subtitle",
+                    "fontFamily": "PingFang Heavy",
+                    "fontSize":12,
+                    "fillStyle":"#ffffff",
+                    "align":"left",
+                    "vertical-align":"top"
+                }
+            },
+            {
+                "objectId":"003",
+                "type":"video",
+                "title":"piantou",   //piantou：片头
+                "x": 10,            //线框左上角x坐标
+                "y": 10,            //线框左上角y坐标
+                "width": 100,
+                "height": 100,
+                "z-index":1,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":282,
+                "clipDuraiton":100,
+                "filePath":"http://112.126.71.150:82/FastCarve/s1_01.mp4"
+            },
+            {
+                "objectId":"004",
+                "type":"images",    //images:图片
+                "title":"哈哈哈",
+                "x": 10,
+                "y": 10,
+                "width": 100,
+                "height": 100,
+                "z-index":1,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":282,
+                "clipDuraiton":100,
+                "filePath":"http://112.126.71.150:82/FastCarve/s1_01.png"
+            }，
+			{
+                "objectId":"003",
+                "type":"video",
+                "title":"pianwei",   //pianwei：片尾
+                "x": 10,            //线框左上角x坐标
+                "y": 10,            //线框左上角y坐标
+                "width": 100,
+                "height": 100,
+                "z-index":1,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":282,
+                "clipDuraiton":100,
+                "filePath":"http://112.126.71.150:82/FastCarve/s1_02.mp4"
+            }
+        ]
+    }
+
+
+    {
+        trackType:"t",
+        trackIndex:1,
+        subClipId:"subtitle_on6q3bjccuo00000",
+        name:"subtitle01"
+        params:{
+            object:object    //或者为frame：frame
+        }
+    }

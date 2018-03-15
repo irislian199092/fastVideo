@@ -1,0 +1,440 @@
+{
+    "subtitle_01":{
+        "assetid":"subtitle_01",
+        "name":"subtitle_01",
+        "duration":125, //帧数
+        "tempWidth":1920,
+        "tempHeight":1080,
+        "frame":{
+            "x":0,
+            "y":0,
+            "width":player_w,
+            "height":player_h,
+            "orientation":0
+        },
+        "object":[
+            {
+                "objectId": "000",
+                "type": "text",
+                "z-index": 0,
+                "x1": 545,
+                "y1": 873,
+                "clipStart": 600,
+                "clipDuraiton": 6640,
+                "attr": {
+                  "type": "fade",
+                  "text": "Title",
+                  "fontFamily": "PingFang Heavy",
+                  "fontSize": 100,
+                  "fillStyle": "#ffffff",
+                  "align": "left",
+                  "vertical-align": "top",
+                  "fadeInTime": 240,
+                  "fadeOutTime": 240
+                }
+            },
+            {
+                "objectId": "001",
+                "type": "piantou",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index": 1,
+                "actionIn": null,
+                "actionOut": null,
+                "clipStart": 0,
+                "clipDuraiton": 4040,
+                "filePath": `${subtitleServer}/test01/01-1.mov`
+            },
+            {
+                "objectId": "002",
+                "type": "remain",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index": 1,
+                "actionIn": null,
+                "actionOut": null,
+                "clipStart": 4040,
+                "clipDuraiton": 2960,
+                "filePath": `${subtitleServer}/test01/01-2.png`
+            },
+            {
+                "objectId": "003",
+                "type": "pianwei",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index": 1,
+                "actionIn": null,
+                "actionOut": null,
+                "clipStart": 7000,
+                "clipDuraiton": 240,
+                "filePath":`${subtitleServer}/test01/01-3.mov`
+            }
+        ]
+    },
+    "subtitle_02":{
+        "assetid":"subtitle_02",
+        "name":"subtitle_02",
+        "duration":101, //帧数
+        "tempWidth":1920,
+        "tempHeight":1080,
+        "frame":{
+            "x":0,
+            "y":0,
+            "width":player_w,
+            "height":player_h,
+            "orientation":0
+        },
+        "object":[
+            {
+                "objectId":"000",
+                "type":"text",
+                "z-index":0,
+                "x1":-1000 ,
+                "y1":862,
+                "x2":0 ,
+                "y2":860,
+                "x3":1970,
+                "y3":862,
+                "clipStart":560,
+                "clipDuraiton":3480,
+                "attr":{
+                    "type":"move",
+                    "text":"与时间赛跑-湖北开启‘飞的’救援",
+                    "fontFamily": "PingFang Heavy",
+                    "fontSize":100,
+                    "fillStyle":"#ffffff",
+                    "align":"left",
+                    "vertical-align":"top",
+                    "moveInTime":120,
+                    "moveOutTime":40
+                }
+            },
+            {
+                "objectId":"001",
+                "type":"piantou",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index":1,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":0,
+                "clipDuraiton":1000,
+                "filePath":`${subtitleServer}/test02/02-1.mov`
+            },
+            {
+                "objectId":"003",
+                "type":"remain",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index":1,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":1000,
+                "clipDuraiton":2800,
+                "filePath":`${subtitleServer}/test02/02-2.png`
+            },
+            {
+                "objectId":"004",
+                "type":"pianwei",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index":1,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":3800,
+                "clipDuraiton":240,
+                "filePath":`${subtitleServer}/test02/02-3.mov`
+            }
+        ]
+    },
+    "subtitle_04":{
+        "assetid":"subtitle_04",
+        "name":"subtitle_04",
+        "duration":139, //帧数
+        "tempWidth":1920,
+        "tempHeight":1080,
+        "frame":{
+            "x":0,
+            "y":0,
+            "width":player_w,
+            "height":player_h,
+            "orientation":0
+        },
+        "object":[
+            {
+                "objectId":"000",
+                "type":"text",
+                "z-index":0,
+                "x1":393,
+                "y1":835,
+                "clipStart":680,
+                "clipDuraiton":4520,
+                "attr":{
+                    "type":"fade",
+                    "text":"探测能力超越‘慧眼’100倍",
+                    "fontFamily": "PingFang Heavy",
+                    "fontSize":100,
+                    "fillStyle":"#000000",
+                    "align":"left",
+                    "vertical-align":"top",
+                    "fadeInTime":160,
+                    "fadeOutTime":160
+                }
+            },
+            {
+                "objectId":"001",
+                "type":"text",
+                "title":null,
+                "z-index":1,
+                "x1":397,
+                "y1":929,
+                "clipStart":680,
+                "clipDuraiton":4520,
+                "attr":{
+                    "type":"fade",
+                    "text":"中科院启动下一代X射线空间天文站项目",
+                    "fontFamily": "PingFang Heavy",
+                    "fontSize":70,
+                    "fillStyle":"#ffffff",
+                    "align":"left",
+                    "vertical-align":"top",
+                    "fadeInTime":160,
+                    "fadeOutTime":160
+                }
+            },
+            {
+                "objectId":"002",
+                "type":"piantou",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index":2,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":0,
+                "clipDuraiton":3040,
+                "filePath":`${subtitleServer}/test04/04-1.mov`
+            },
+            {
+                "objectId":"003",
+                "type":"remain",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index":2,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":3040,
+                "clipDuraiton":2000,
+                "filePath":`${subtitleServer}/test04/04-2.png`
+            },
+            {
+                "objectId":"004",
+                "type":"pianwei",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index":2,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":5040,
+                "clipDuraiton":520,
+                "filePath":`${subtitleServer}/test04/04-3.mov`
+            }
+        ]
+    },
+    "subtitle_05":{
+        "assetid":"subtitle_05",
+        "name":"subtitle_05",
+        "duration":106,     //帧数,其他为ms
+        "tempWidth":1920,
+        "tempHeight":1080,
+        "frame":{
+            "x":0,
+            "y":0,
+            "width":player_w,
+            "height":player_h,
+            "orientation":0
+        },
+        "object":[
+            {
+                "objectId":"000",
+                "type":"text",
+                "title":null,
+                "z-index":0,
+                "x1":81,
+                "y1":837,
+                "clipStart":450,
+                "clipDuraiton":3840,
+                "attr":{
+                    "type":"fade",
+                    "text":"3月18日",
+                    "fontFamily": "PingFang Heavy",
+                    "fontSize":100,
+                    "fillStyle":"#ffffff",
+                    "align":"left",
+                    "vertical-align":"top",
+                    "fadeInTime":160,
+                    "fadeOutTime":160
+                }
+            },
+            {
+                "objectId":"001",
+                "type":"text",
+                "title":null,
+                "z-index":1,
+                "x1":77,
+                "y1":951,
+                "clipStart":450,
+                "clipDuraiton":3840,
+                "attr":{
+                    "type":"fade",
+                    "text":"北京 石景山",
+                    "fontFamily": "PingFang Heavy",
+                    "fontSize":100,
+                    "fillStyle":"#ffffff",
+                    "align":"left",
+                    "vertical-align":"top",
+                    "fadeInTime":160,
+                    "fadeOutTime":160
+                }
+            },
+
+            {
+                "objectId":"002",
+                "type":"piantou",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index":2,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":0,
+                "clipDuraiton":1000,
+                "filePath":`${subtitleServer}/test05/05-1.mov`
+            },
+            {
+                "objectId":"003",
+                "type":"remain",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index":2,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":1000,
+                "clipDuraiton":3040,
+                "filePath":`${subtitleServer}/test05/05-2.png`
+            },
+            {
+                "objectId":"004",
+                "type":"pianwei",
+                "x": 0,
+                "y": 0,
+                "width": 1920,
+                "height": 1080,
+                "z-index":2,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":4040,
+                "clipDuraiton":200,
+                "filePath":`${subtitleServer}/test05/05-3.mov`
+            }
+        ]
+    },
+    "subtitle_09":{
+        "assetid":"subtitle_09",
+        "name":"subtitle_09",
+        "duration":166,     //帧数,其他为ms
+        "tempWidth":1920,
+        "tempHeight":1080,
+        "frame":{
+            "x":0,
+            "y":0,
+            "width":player_w,
+            "height":player_h,
+            "orientation":0
+        },
+        "object":[
+            {
+                "objectId":"000",
+                "type":"text",
+                "z-index":0,
+                "x1":99,
+                "y1":853,
+                "clipStart":1320,
+                "clipDuraiton":5160,
+                "attr":{
+                    "type":"fade",
+                    "text":"司机张某将车停在",
+                    "fontFamily": "PingFang Heavy",
+                    "fontSize":100,
+                    "fillStyle":"#ffffff",
+                    "align":"left",
+                    "vertical-align":"top",
+                    "fadeInTime":40,
+                    "fadeOutTime":200
+                }
+            },
+            {
+                "objectId":"001",
+                "type":"piantou",
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 100,
+                "z-index":1,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":0,
+                "clipDuraiton":2400,
+                "filePath":`${subtitleServer}/test09/09-1.mov`
+            },
+            {
+                "objectId":"002",
+                "type":"remain",
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 100,
+                "z-index":1,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":2400,
+                "clipDuraiton":3840,
+                "filePath":`${subtitleServer}/test09/09-2.png`
+            },
+            {
+                "objectId":"003",
+                "type":"pianwei",
+                "x": 0,
+                "y": 0,
+                "width": 100,
+                "height": 100,
+                "z-index":1,
+                "actionIn":null,
+                "actionOut":null,
+                "clipStart":6240,
+                "clipDuraiton":400,
+                "filePath":`${subtitleServer}/test09/09-3.mov`
+            }
+        ]
+    }
+};

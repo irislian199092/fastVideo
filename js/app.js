@@ -3,30 +3,25 @@ $(function(){
 	PLAYER.player= new PLAYER.playerFunction();
 	PLAYER.documentEvent.enable();
 
-	/*-----------登出-----------*/
-	$('#js_loginout').on('click',function(){
-		PLAYER.checkPlaying();
-		location.href=loginUrl;
-	});
 	/*-----------日期选择器-----------*/
 	$('.date_picker').date_input();
 	/*-----------初始化声音画布宽高-----------*/
-	var c1 = document.getElementById("js_voCanvas"); 
+	var c1 = document.getElementById("js_voCanvas");
     c1.width ='70';
-    c1.height =$("#js_time_ruler_voiceBox").height()-21; 
+    c1.height =$("#js_time_ruler_voiceBox").height()-21;
 
 	/*----------------------切换侧边栏的left值----------------------*/
-	$('#js_logo_toggle').on('click',function(){
-		$('.slider_context').animate({left: '-1080px'}, "slow");
-		clearInterval(PLAYER.timer);
-	});
-	$('#js_notifications .header_box li').on('click',function(){
-		$(this).addClass('active');
-		$(this).siblings().removeClass('active');
-		var _id=$(this).index();
-		$('#js_tab_content').children().eq(_id).show();
-		$('#js_tab_content').children().eq(_id).siblings().hide();
-	});
+	// $('#js_logo_toggle').on('click',function(){
+	// 	$('.slider_context').animate({left: '-1080px'}, "slow");
+	// 	clearInterval(PLAYER.timer);
+	// });
+	// $('#js_notifications .header_box li').on('click',function(){
+	// 	$(this).addClass('active');
+	// 	$(this).siblings().removeClass('active');
+	// 	var _id=$(this).index();
+	// 	$('#js_tab_content').children().eq(_id).show();
+	// 	$('#js_tab_content').children().eq(_id).siblings().hide();
+	// });
 
 	$('#js_init_project_list').delegate('li:not(".header")','click',function(){
 		$(this).addClass('active');
@@ -36,16 +31,16 @@ $(function(){
 		$(this).addClass('active');
 		$(this).siblings('li').removeClass('active');
   	});
-  	
-  	/*----------------------切换右侧编辑框----------------------*/
-  	$('#js_carve_edit .list li').on('click',function(){
-  		$(this).addClass('active');
-  		$(this).siblings('li').removeClass('active');
 
-  		var index=$(this).index();
-  		$('.carve_edit_body').children().eq(index).show();
-  		$('.carve_edit_body').children().eq(index).siblings().hide();
-  	});
+  	/*----------------------切换右侧编辑框----------------------*/
+  	// $('#js_carve_edit .list li').on('click',function(){
+  	// 	$(this).addClass('active');
+  	// 	$(this).siblings('li').removeClass('active');
+
+  	// 	var index=$(this).index();
+  	// 	$('.carve_edit_body').children().eq(index).show();
+  	// 	$('.carve_edit_body').children().eq(index).siblings().hide();
+  	// });
 	/*----------------------联动状态----------------------------*/
 	$('#js_toolbar_icon_ungroup').mousemove(function(){
 		$(this).addClass('active');
@@ -57,6 +52,25 @@ $(function(){
 	}).mouseout(function(){
 		$(this).removeClass('active');
 	});
+	$('#js_toolbar_icon_zsp').mousemove(function(){
+		$(this).addClass('active');
+	}).mouseout(function(){
+		$(this).removeClass('active');
+	});
+
+	/*----------------------字幕编辑窗口切换---------------------------------*/
+	// $('#js_subtitile_edit_wrap .subtitle_header_tabs1').on('click',function(){
+	// 	$(this).addClass('active');
+	// 	$('.subtitle_header_tabs2').removeClass('active');
+	// 	$('.conetent_tabs1').show();
+	// 	$('.conetent_tabs2').hide();
+	// });
+	// $('#js_subtitile_edit_wrap .subtitle_header_tabs2').on('click',function(){
+	// 	$(this).addClass('active');
+	// 	$('.subtitle_header_tabs1').removeClass('active');
+	// 	$('.conetent_tabs2').show();
+	// 	$('.conetent_tabs1').hide();
+	// });
 
 	/*----------------------添加轨道(以后待用)---------------------------------*/
 	/*$('#js_add_video_track').on('click',function(){
@@ -73,10 +87,10 @@ $(function(){
 				contSelector:$('#js_time_ruler_track_box'),
 				barSelector:$('.time_ruler_track'),
 				sliderSelector:$('.time_ruler_scroll')
-			}); 
+			});
 		}
 	});
-	*/
+
 	var initIndex=2;
 	$('#js_add_audio_track').on('click',function(){
 		initIndex++;
@@ -97,7 +111,7 @@ $(function(){
 				contSelector:$('#js_time_ruler_track_box'),
 				barSelector:$('.time_ruler_track'),
 				sliderSelector:$('.time_ruler_scroll')
-			}); 
+			});
 		}
   		var attr={
 			type:"a",
@@ -105,18 +119,15 @@ $(function(){
 			subclip:[]
 		};
 		PLAYER.jsonObj.rootBin.sequence[0].tracks.push(attr);
-	});
+	});*/
 
 	/*----------------------每大块选中蓝框状态----------------------*/
 	var maskElem=null;
 	var maskText=null;
-
 	var materialActive=false;
-
-
 	$('#js_thumbnail_box').delegate($('#js_thumbnail_box').children(),'click',function(e){
 		if($(e.target).parent().hasClass('thumbnail')){
-			
+
 			var s=$(e.target).parent().parent('.col-md-3');
 			if(s.hasClass('active')){
 				s.removeClass('active');
@@ -129,10 +140,8 @@ $(function(){
 				s.addClass('active');
 				PLAYER.chooseArray.push(s.attr('data-id'));
 			}
-			console.log('PLAYER.chooseArray',PLAYER.chooseArray);	
 		}
 	})
-	
 	$('.carve').delegate($('.carve').children(),'click',function(e){
 		$('.carve').addClass('choose');
 		$('.time_ruler_wrap').removeClass('choose');
@@ -142,7 +151,7 @@ $(function(){
 
 		PLAYER.PTR.DragDrop.disable();
 		PLAYER.TR.DragDrop.disable();
-		
+
 		//点击字幕列表
 		if($(e.target).parent('li').hasClass('subtitle')){
 			$(e.target).addClass('active');
@@ -152,10 +161,8 @@ $(function(){
 		//侧边栏
 		if(e.target.id==='js_logo'){
 			$('.slider_context').animate({left: '0'}, "slow");
-			PLAYER.timer= setInterval(checkPackbagProgress,2000);
+			PLAYER.timer= setInterval(checkPackbagProgress,1000);
 		}
-
-
 		//素材列表形式
 		if(e.target.id==='js_style_list'){
 			$('.meterial_list_box').show();
@@ -211,10 +218,10 @@ $(function(){
 			$('#tab_5').show();
 			$('#tab_5').siblings('.js_tab').hide();
 		}
-		//音频库
-		if(e.target.id==='tab_packageList'){
-			$('#tab_packageList').parent('li').addClass('active');
-			$('#tab_packageList').parent('li').siblings().removeClass('active');
+		//我的素材库
+		if(e.target.id==='tab_my_material'){
+			$('#tab_my_material').parent('li').addClass('active');
+			$('#tab_my_material').parent('li').siblings().removeClass('active');
 			$('#tab_6').show();
 			$('#tab_6').siblings('.js_tab').hide();
 		}
@@ -250,10 +257,9 @@ $(function(){
 		function checkProgress(allPro){
 			return allPro >= 100;
 		};
-	});	
-	
+	});
 	/*----------------------点击播放器工具条---------------------------------------------*/
-	$('.player_toolbar_list').css('marginLeft',($('.player_toolbar').width()-324)/2);//播放器工具条居中排列	
+	$('.player_toolbar_list').css('marginLeft',($('.player_toolbar').width()-324)/2);//播放器工具条居中排列
 	$('.player_box').delegate($('.player_box').children(),'click',function(e){
 		$('.player_box').addClass('choose');
 		$('.time_ruler_wrap').removeClass('choose');
@@ -262,7 +268,8 @@ $(function(){
 		$('.time_ruler_voiceBox').removeClass('choose');
 		PLAYER.PTR.DragDrop.enable();
 		PLAYER.TR.DragDrop.disable();
-		
+
+
 		//点击播放暂停
 		if(e.target.id==='js_play'){
 			var lastFrame=PLAYER.operateJson.getLastFrame();
@@ -285,7 +292,7 @@ $(function(){
 				$(e.target).parent('li').addClass('active');
 			}
 			PLAYER.player.setIntervalPlay();
-		}	
+		}
 		//点击设置入点
 		if(e.target.id==='js_setTrimIn'){
 			PLAYER.player.setTrimIn();
@@ -300,15 +307,15 @@ $(function(){
 		}
 		//点击移动到出点
 		if(e.target.id==='js_moveTrimOut'){
-			PLAYER.player.moveTrimOut();	
+			PLAYER.player.moveTrimOut();
 		}
 		//点击前一帧
 		if(e.target.id==='js_prevFrame'){
-			PLAYER.player.prevFrame();	
+			PLAYER.player.prevFrame();
 		}
 		//点击后一帧
 		if(e.target.id==='js_nextFrame'){
-			PLAYER.player.nextFrame();	
+			PLAYER.player.nextFrame();
 		}
 		//点击到序列头
 		if(e.target.id==='js_toFirstFrame'){
@@ -318,7 +325,11 @@ $(function(){
 		if(e.target.id==='js_toLastFrame'){
 			PLAYER.player.toLastFrame();
 		}
-		
+		//点击加辙台标
+		if(e.target.id==='js_tlogo'){
+			$('#js_addLogoModal').show();
+		}
+
 	});
 	/*----------------------特技字幕编辑框---------------------------------------------*/
 	$('#js_carve_edit').delegate($('#js_carve_edit').children(),'click',function(e){
@@ -326,7 +337,7 @@ $(function(){
 		PLAYER.TR.DragDrop.disable();
 	});
 	/*----------------------时间轨道---------------------------------------------*/
-	$('.time_ruler_wrap').delegate($('.time_ruler_wrap').children(),'click',function(e){	
+	$('.time_ruler_wrap').delegate($('.time_ruler_wrap').children(),'click',function(e){
 		//点击外面取消选中
 		if(e.target.className.indexOf('time_ruler_bar')>-1||e.target.className.indexOf('time_ruler_edit_box')>-1){
 			$('.time_ruler_bar').children().removeClass('onselected');
@@ -371,7 +382,6 @@ $(function(){
 		$('.time_ruler_toolbar').removeClass('choose');
 		$('.time_ruler_voiceBox').removeClass('choose');
 	});
-	
 	/*----------------------时间轴工具条---------------------------------------------*/
     $('.time_ruler_toolbar').delegate($('.time_ruler_toolbar span'),'click',function(e){
         $('.carve').removeClass('choose');
@@ -440,7 +450,6 @@ $(function(){
 		});
 	}
 	/*----------------------右击菜单马赛克---------------------------------------------*/
-
 	var contextOperate=(function(){
 		var time;
 		var index;
@@ -463,7 +472,7 @@ $(function(){
 	        var contextElem=contextElemModal();
 	        contextElem.css('left',e.clientX);
 	        contextElem.css('top',e.clientY);
-			
+
 	        if($(e.target).children('.effect_box_all').length>0){
 	        	contextElem.attr('data-edit',true);
 	        	contextElem.children('#js_edit_effect,#js_remove_effect').css('background','#212121');
@@ -489,14 +498,11 @@ $(function(){
 					for (var i = 0; i < effectAttr.length; i++) {
 						if(effectAttr[i].type==='mosaic' || effectAttr[i].type==='2D'){
 							attr=effectAttr[i].attr;
-
 						}
 					}
-
 					initEditDom();
-					
 					effectEditShow(JSON.stringify(attr),time,index,type,'mosaic');
-	            } 
+	            }
 	        }else if(e.target.id==='js_remove_effect'){
 				if($(e.target).parent('ul').attr('data-edit')==='false'){
 					var contextElem=contextElemModal();
@@ -506,7 +512,7 @@ $(function(){
 	            	PLAYER.operateJson.removeOtherEffectClip(time,'mosaic','all');
 	            	$('.edit_box_v.onselected').children('.effect_box_all').remove();
             		PLAYER.operateJson.sendJson();
-	            } 
+	            }
 	        }
 
 	        var contextElem=contextElemModal();
@@ -514,7 +520,6 @@ $(function(){
 	    });
 	})();
 	/*----------------------右击菜单---------------------------------------------*/
-	
 	$('#js_zoom').on('click',function(){
 		var s=$('.onselected').size();
 
@@ -530,7 +535,7 @@ $(function(){
 
 	        var effectArray=JSON.parse(PLAYER.operateJson.getEffectClip(time));
         	var effectAttr=null;
-			
+
 			if(effectArray.length===0){
 				effectAttr={
 					duration:duration,
@@ -572,23 +577,16 @@ $(function(){
 					}
 				}
 			}
-			
+
 	        initEditDom();
 			effectEditShow(JSON.stringify(effectAttr.attr),time,index,type,'2D');
 		}
 	});
-
 	function initEditDom(){
 		$('#js_effect_h_form').empty();
 		var elem=$(
 			'<div class="form-group">'
    					+'<label class="col-md-4 control-label" for="name" >左边距</label>'
-   					+'<div class="col-md-8">'
-   						+'<input type="range" class="form-control" id="js_effect_left" min="0" step="0.5" >'
-   					+'</div>'
-			    +'</div>'
-			    +'<div class="form-group">'
-   					+'<label class="col-md-4 control-label" for="name" ></label>'
    					+'<div class="col-md-8">'
    						+'<input type="text" class="form-control" id="js_effect_left_value"  disabled="disabled">'
    					+'</div>'
@@ -596,23 +594,11 @@ $(function(){
 			    +'<div class="form-group">'
    					+'<label class="col-md-4 control-label" for="name" >上边距</label>'
    					+'<div class="col-md-8">'
-   						+'<input type="range" class="form-control" id="js_effect_top" min="0" step="0.5">'
-   					+'</div>'
-			    +'</div>'
-			    +'<div class="form-group">'
-   					+'<label class="col-md-4 control-label" for="name" ></label>'
-   					+'<div class="col-md-8">'
    						+'<input type="text" class="form-control" id="js_effect_top_value" disabled="disabled">'
    					+'</div>'
 			    +'</div>'
 			    +'<div class="form-group">'
    					+'<label class="col-md-4 control-label" for="name" >宽度</label>'
-   					+'<div class="col-md-8">'
-   						+'<input type="range" class="form-control" id="js_effect_width" min="0" step="0.5">'
-   					+'</div>'
-			    +'</div>'
-			    +'<div class="form-group">'
-   					+'<label class="col-md-4 control-label" for="name" ></label>'
    					+'<div class="col-md-8">'
    						+'<input type="text" class="form-control" id="js_effect_width_value" disabled="disabled">'
    					+'</div>'
@@ -620,39 +606,9 @@ $(function(){
 			    +'<div class="form-group">'
    					+'<label class="col-md-4 control-label" for="name" >高度</label>'
    					+'<div class="col-md-8">'
-   						+'<input type="range" class="form-control" id="js_effect_height" min="0" step="0.5" >'
-   					+'</div>'
-			    +'</div>'
-			    +'<div class="form-group">'
-   					+'<label class="col-md-4 control-label" for="name" ></label>'
-   					+'<div class="col-md-8">'
    						+'<input type="text" class="form-control" id="js_effect_height_value" disabled="disabled">'
    					+'</div>'
 			    +'</div>'
-			    /*+'<div class="form-group">'
-   					+'<label class="col-md-4 control-label" for="name" >水平缩放</label>'
-   					+'<div class="col-md-8">'
-   						+'<input type="range" class="form-control" id="js_effect_sizex" min="0"  step="1">'
-   					+'</div>'
-			    +'</div>'
-			    +'<div class="form-group">'
-   					+'<label class="col-md-4 control-label" for="name" ></label>'
-   					+'<div class="col-md-8">'
-   						+'<input type="text" class="form-control" id="js_effect_sizex_value" >'
-   					+'</div>'
-			    +'</div>'
-			    +'<div class="form-group">'
-   					+'<label class="col-md-4 control-label" for="name" >垂直缩放</label>'
-   					+'<div class="col-md-8">'
-   						+'<input type="range" class="form-control" id="js_effect_sizey" min="0" step="1">'
-   					+'</div>'
-			    +'</div>'
-			    +'<div class="form-group">'
-   					+'<label class="col-md-4 control-label" for="name" ></label>'
-   					+'<div class="col-md-8">'
-   						+'<input type="text" class="form-control" id="js_effect_sizey_value" >'
-   					+'</div>'
-			    +'</div>'*/
 			    +'<div class="form-group">'
    					+'<label class="col-md-4 control-label" for="name" ></label>'
    					+'<div class="col-md-8">'
@@ -664,21 +620,25 @@ $(function(){
 		if($('#ocx').find('#move_box').length>0){
 			$('#move_box').remove();
 		}
-		var effectBox=$('<div id="move_box"></div>');
+		var effectBox=$(`<div id="move_box">
+			<span class="coverLT" data-type="LT"></span>
+			<span class="coverRT" data-type="RT"></span>
+			<span class="coverLB" data-type="LB"></span>
+			<span class="coverRB" data-type="RB"></span>
+		</div>`);
 		$('#ocx').append(effectBox);
 	}
 	function effectEditShow(effectAttr,id,index,type,effectType){
-		
+
 		$('#js_carve').removeClass('col-md-6').addClass('col-md-4');
         $('#js_carve_edit').show();
         $('#js_carve_edit .list li').eq(1).trigger('click');
-        
+
 		initEffectStyle(effectAttr);
 		initEffectOperate(effectAttr);
 
         //初始化effect的值
         function initEffectStyle(effectAttr){
-        	
         	//显示滚动条
         	if($('#js_effect_h_form').height()>$('.effect_h_form_wrap').height()){
         		$('.effect_edit_track').show();
@@ -687,28 +647,25 @@ $(function(){
 					contSelector:$('.effect_h_form_wrap'),
 					barSelector:$('.effect_edit_track'),
 					sliderSelector:$('.effect_edit_scroll')
-				}); 
+				});
         	}
-
         	var attr=JSON.parse(effectAttr);
         	$('#move_box').css('left',attr.x1);
         	$('#move_box').css('top',attr.y1);
         	$('#move_box').css('width',attr.width);
         	$('#move_box').css('height',attr.height);
-			
+
 			$('#js_effect_left').attr('max',$('#ocx').width());
         	$('#js_effect_width').attr('max',$('#ocx').width());
         	$('#js_effect_top').attr('max',$('#ocx').height());
         	$('#js_effect_height').attr('max',$('#ocx').height());
-        	
+
         	$('#js_effect_left,#js_effect_left_value').val(attr.x1);
         	$('#js_effect_top,#js_effect_top_value').val(attr.y1);
         	$('#js_effect_width,#js_effect_width_value').val(attr.width);
         	$('#js_effect_height,#js_effect_height_value').val(attr.height);
-
         }
-		
-		function initEffectOperate(effectAttr){
+		function initEffectOperate2(effectAttr){
 			var obj={
 				trackType:type,
 				trackIndex:index,
@@ -718,12 +675,10 @@ $(function(){
 			};
 			obj.attr.x1=parseFloat($('#js_effect_left').val());
 			obj.attr.y1=parseFloat($('#js_effect_top').val());
-			
+
 			obj.attr.x2=obj.attr.x1+parseFloat($('#js_effect_width').val());
 			obj.attr.y2=obj.attr.y1+parseFloat($('#js_effect_height').val());
 
-			
-			
 			$('#js_effect_left')[0].oninput=function(e){
 				var value=parseFloat($(e.target).val());
 				$('#js_effect_left_value').val(value);
@@ -731,17 +686,16 @@ $(function(){
 				$('#move_box').css('left',value);
 				updateJson(obj);
 			};
-			
 
 			$('#js_effect_top')[0].oninput=function(e){
 				var value=parseFloat($(e.target).val())
 				$('#js_effect_top_value').val(value);
 				obj.attr.y1=value;
-				
+
 				$('#move_box').css('top',value);
 				updateJson(obj);
 			};
-			
+
 			$('#js_effect_width')[0].oninput=function(e){
 				var value=parseFloat($(e.target).val())
 				$('#js_effect_width_value').val(value);
@@ -759,24 +713,12 @@ $(function(){
 				$('#move_box').css('height',value);
 				updateJson(obj);
 			};
-			
-			/*$('#js_effect_sizex')[0].oninput=function(e){
-				var value=parseFloat($(e.target).val());
-				$('#js_effect_sizex_value').val(value);
-				obj.attr.sizex=parseFloat(value);
-				var sizeValue=parseFloat($('#js_effect_width_value').val())*(value/100);
-				updateJson(obj);
-			};
-			$('#js_effect_sizey')[0].oninput=function(e){
-				var value=parseFloat($(e.target).val());
-				$('#js_effect_sizey_value').val($(e.target).val());
-				obj.attr.sizey=parseFloat($(e.target).val());
-				updateJson(obj);
-			};*/
 
 			function updateJson(obj){
+
+				console.log('obj',obj)
 				PLAYER.OCX.adjustEffect(obj);
-				PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime)); 
+				PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime));
 				PLAYER.operateJson.updateEffectClip(id,obj.attr);
 			}
 
@@ -785,7 +727,111 @@ $(function(){
 	            console.log('PLAYER',PLAYER.jsonObj)
 	        });
 		}
-		
+		function initEffectOperate(effectAttr){
+			let targetObj;
+			let initLeft=0;
+			let initTop=0;
+			let initWidth=0;
+			let initHeight=0;
+			let initClientX=0;
+			let initClientY=0;
+			let offsetLeft=0;
+			let offsetTop=0;
+
+			let nowLeft=0;
+			let nowTop=0;
+			let nowWidth=0;
+			let nowHeight=0;
+
+
+			var obj={
+				trackType:type,
+				trackIndex:index,
+				subClipId:id,
+				name:effectType,
+				attr:JSON.parse(effectAttr)
+			};
+			obj.attr.x1=parseFloat($('#js_effect_left').val());
+			obj.attr.y1=parseFloat($('#js_effect_top').val());
+
+			obj.attr.x2=obj.attr.x1+parseFloat($('#js_effect_width').val());
+			obj.attr.y2=obj.attr.y1+parseFloat($('#js_effect_height').val());
+
+        	$('#move_box')[0].onmousedown=function(e){
+				targetObj=$(e.target).attr('data-type');
+				initClientX=e.clientX;
+				initClientY=e.clientY;
+				initLeft=parseFloat($(this).position().left);
+				initTop=parseFloat($(this).position().top);
+				initWidth=parseFloat($(this).outerWidth());
+				initHeight=parseFloat($(this).outerHeight());
+				document.onmousemove=function(e){
+					e.preventDefault();
+					offsetLeft=e.clientX-initClientX;
+					offsetTop=e.clientY-initClientY;
+					if(targetObj==='LT'){
+						nowLeft=initLeft+offsetLeft;
+						nowTop=initTop+offsetTop;
+						nowWidth=initWidth-offsetLeft;
+						nowHeight=initHeight-offsetTop;
+					}
+					else if(targetObj==='LB'){
+						nowTop=initTop;
+						nowLeft=initLeft+offsetLeft;
+						nowWidth=initWidth-offsetLeft;
+						nowHeight=initHeight+offsetTop;
+
+					}
+					else if(targetObj==='RT'){
+						nowLeft=initLeft;
+						nowTop=initTop+offsetTop;
+						nowWidth=initWidth+offsetLeft;
+						nowHeight=initHeight-offsetTop;
+					}
+					else if(targetObj==='RB'){
+						nowTop=initTop;
+						nowLeft=initLeft;
+						nowWidth=initWidth+offsetLeft;
+						nowHeight=initHeight+offsetTop;
+					}else{
+						nowLeft=initLeft+offsetLeft;
+						nowTop=initTop+offsetTop;
+						nowWidth=initWidth;
+						nowHeight=initHeight;
+					}
+					$('#move_box').css('left',nowLeft);
+					$('#move_box').css('top',nowTop);
+					$('#move_box').css('width',nowWidth)
+					$('#move_box').css('height',nowHeight);
+
+					$('#js_effect_left_value').val(nowLeft);
+					$('#js_effect_top_value').val(nowTop);
+					$('#js_effect_width_value').val(nowWidth);
+					$('#js_effect_height_value').val(nowHeight);
+
+					obj.attr.x1=nowLeft;
+					obj.attr.y1=nowTop;
+					obj.attr.width=nowWidth;
+					obj.attr.height=nowHeight;
+
+					updateJson(obj);
+				};
+				document.onmouseup=function(){
+					document.onmousemove=null;
+					document.onmouseup=null;
+				}
+			}
+			function updateJson(obj){
+				PLAYER.OCX.adjustEffect(obj);
+				PLAYER.OCX.seek(parseInt(PLAYER.TR.currTime));
+				PLAYER.operateJson.updateEffectClip(id,obj.attr);
+			}
+
+	        $('#js_effect_btn').on('click',function(){
+	            PLAYER.hideEffectEdit();
+	            console.log('PLAYER',PLAYER.jsonObj)
+	        });
+		}
 	}
 });
 

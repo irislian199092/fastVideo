@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta HTTP-EQUIV="pragma"CONTENT="no-cache">
-<meta HTTP-EQUIV="Cache-Control"CONTENT="no-cache, must-revalidate">
-<meta HTTP-EQUIV="expires"CONTENT="0">
-<title>Document</title>
+<meta HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+<meta HTTP-EQUIV="expires" CONTENT="0">
+<title>快编</title>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <link href="css/fonts.css" rel="stylesheet" type="text/css">
 <link href="css/player.css" rel="stylesheet" type="text/css">
@@ -37,95 +37,34 @@
 	PLAYER.cutIndex=0;              //存储游标处切割的index+ID
 	PLAYER.help_index=null;			//存储上下拖拽时的助手index
 	PLAYER.timer=null;				//存储打包任务的定时器
-
+	PLAYER.buffHas=false;
 	PLAYER.jobId="";//存储越影路径
+	PLAYER.proId=""; //存储工程id
 
 	PLAYER.pos=[];
 </script>
 </head>
 <body id="body">
 <div class="container-fluid">
-	<!-- 侧边栏后续开发开始 -->
-	<div class="slider_context">
-		<div class="logo" >
-	 		<a href="javaScript:;" class="icojam_honey" id="js_logo_toggle"></a>
-	 	</div>
-
-		<div class="notifications" id="js_notifications">
-            <ul class="header_box">
-            	<li class="active">
-                	<a href="javascript:;" title="任务列表" data-id="tab-1">
-                		<i class="fa fa-th-list"></i>
-                	</a>
-                </li>
-                <!-- <li class="">
-                	<a href="javascript:;" title="邮件" data-id="tab-2">
-                		<i class="fa fa-envelope"></i>
-                	</a>
-                </li>
-                <li class="">
-                	<a href="javascript:;" title="消息" data-id="tab-3">
-                		<i class="fa fa-bell"></i>
-                	</a>
-                </li> -->
-            </ul>
-            <div class="tab_content" id="js_tab_content">
-                <div id="tab-1">
-                	<div class="select_box">
-            			<form class="form-inline" onclick="return false">
-							<div class="form-group">
-							    <label for="status">状态</label>
-                				<select name="status"  class="form-control" id="js_status_select">
-                					<option value="-1">全部</option>
-                					<option value="0">待处理</option>
-                					<option value="1">处理中</option>
-                					<option value="2">已完成</option>
-                					<option value="3">出错</option>
-                				</select>
-							</div>
-							<button class="btn btn-default fr btn-sm" id="js_status_btn">刷新</button>
-						</form>	
-                	</div>
-                	<ul id="js_export_list">
-                	</ul>
-
-					<div class="export_footer_pagination">
-						<nav class="pull-right">
-						  	<ul class="pager fr" id="js_pager_export">
-						  	</ul>
-						</nav>
-					</div>
-                </div>
-                <div id="tab-2">
-                    <p>信息后续开发</p>
-                </div>
-                <div id="tab-3">
-                    <p>消息后续开发</p>
-                </div>
-            </div>
-	        <iframe  src="" frameBorder="0" style="position: absolute;top: 0px; left: 0px; width: 100%; height: 100%; z-index: -1; filter: alpha(opacity = 0);">
-			</iframe>
-        </div>
-	</div>
 	<!-- 上部分开始 -->
 	<div class="row container-fluid-box">
 		<!-- 素材模板选择开始 -->
 		<div class="col-md-6  carve" id="js_carve">
 			<div class="row carve_header">
 			 	<div class="logo" title="任务详情">
-			 		<a href="javaScript:;" class="icojam_honey" id="js_logo"></a>
+			 		<a href="javaScript:;"></a>
 			 	</div>
-	          	<div class="user"> 
-	          		<!-- <span class="user-avatar"><img src="images/14.jpg"></span>  -->
+	          	<!-- <div class="user">
+	          		<span class="user-avatar"><img src="images/14.jpg"></span>
 	          		<span class="user-name">Sherlock<a href="#" class="icojam_enter" id="js_loginout" title="登出"></a></span>
-	          	</div>
+	          	</div> -->
 	          	<ul class="list clearfix">
-	            	<li class="active"><a id="tab_material">视频库</a></li>
+	          		<!-- <li><a id="tab_my_material">我的素材</a></li> -->
+					<li class="active"><a id="tab_material">视频</a></li>
+					<!-- <li><a id="tab_images">图片</a></li>
+	            	<li><a id="tab_audio">音频</a></li> -->
 	            	<li><a id="tab_subtitle">字幕</a></li>
 	            	<li><a id="tab_effect">特技</a></li>
-	            	<!-- <li><a id="tab_images">图片库</a></li>
-	            	<li><a id="tab_audio">音频库</a></li> -->
-	            	<!-- <li><a id="tab_packageList">素材库</a></li> -->
 	          	</ul>
 			</div>
 			<div id="tab_1" class="js_tab">
@@ -135,11 +74,6 @@
 							<div class="form-group" id="js_programForm_name">
 							    <input type="text" class="form-control" name="name" placeholder="名称" value="">
 							</div>
-							<!-- <div class="form-group program_cpspcode" id="js_programForm_cpspcode">
-							</div>
-							<div class="form-group program_type" id="js_programForm_type">
-							</div>
-							<br/> -->
 							<div class="form-group" id="js_programForm_stime">
 							    <input type="text" class="form-control date_picker" name="startTime" placeholder="开始(yyyy-MM-dd)" value="">
 							</div>
@@ -150,33 +84,16 @@
 						</form>
 						<button class="btn btn-xs btn-primary pull-right" id="js_add_groupProgram">批量上轨素材</button>
 					</div>
-					
-					<!-- <div class="col-sm-2 col-md-2 carve_body_tabs">
-						<ul class="nav nav-pills pull-right" style="padding-top: 55px">
-							<button type="button" class="btn btn-primary pull-right btn-xs" id="js_addProgram_btn" >添加网络素材</button>
-						   	<li class="active"><a href="#" class="icojam_preview_matrix" title="缩略图" id="js_style_thumbnail"></a></li> 
-						   							  	<li><a href="#" class="icojam_preview_list" title="列表" id="js_style_list"></a></li>
-						</ul>
-					</div> -->
 				</div>
+				<!-- 快编-->
 				<div class="row carve_body_meterialBox">
-					<!-- 缩略图 -->
-					<div class="meterial_thumbnail_box" id="js_thumbnail_box"></div>
-					<!-- 缩略图滚动条 -->
+					<div class="meterial_thumbnail_box" id="js_thumbnail_box">
+						<h2 class="meterial_loading">资源加载中...</h2>
+					</div>
 					<div class="meterial_thumbnail_track">
 						<div class="meterial_thumbnail_scroll"></div>
 					</div>
-					<!-- 列表 -->
-					<!-- <div class="meterial_list_box">
-						<ul id="js_list_box"></ul>
-					</div> -->
-
-					<!-- 列表滚动条开始 -->
-					<!-- <div class="meterial_list_track">
-						<div class="meterial_list_scroll"></div>
-					</div> -->
 				</div>
-				
 				<div class="row carve_footer_pagination">
 					<nav class="pull-right">
 					  	<ul class="pager fr" id="js_pager">
@@ -187,68 +104,33 @@
 
 			<div id="tab_2" class="js_tab">
 				<ul class="subtitle_wrap" id="js_subtitle_wrap">
-					
 					<li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Special" data-temid="subtitle_01"></span>
-						<span class="subtitle_text">Special</span>
-					</li>
-					<!-- <li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Name" data-temid="subtitle_02"></span>
-						<span class="subtitle_text">Name</span>
-					</li> -->
-					<!-- <li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Line" data-temid="subtitle_03"></span>
-						<span class="subtitle_text">Line</span>
+						<span class="subtitle_list subtitle_list_01"  data-temid="subtitle_01"></span>
+						<span class="subtitle_text">subtitle_01</span>
 					</li>
 					<li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Year" data-temid="subtitle_04"></span>
-						<span class="subtitle_text">Year</span>
+						<span class="subtitle_list subtitle_list_02" data-temid="subtitle_02"></span>
+						<span class="subtitle_text">subtitle_02</span>
+					</li>
+
+					<li class="subtitle">
+						<span class="subtitle_list subtitle_list_04" data-temid="subtitle_04"></span>
+						<span class="subtitle_text">subtitle_04</span>
 					</li>
 					<li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Light" data-temid="subtitle_05"></span>
-						<span class="subtitle_text">Light</span>
+						<span class="subtitle_list subtitle_list_05" data-temid="subtitle_05"></span>
+						<span class="subtitle_text">subtitle_05</span>
 					</li>
 					<li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Website" data-temid="subtitle_06"></span>
-						<span class="subtitle_text">Website</span>
+						<span class="subtitle_list subtitle_list_09" data-temid="subtitle_09"></span>
+						<span class="subtitle_text">subtitle_09</span>
 					</li>
 					<li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Lower" data-temid="subtitle_07"></span>
-						<span class="subtitle_text">Lower Third</span>
+						<span class="subtitle_list subtitle_list_11" data-temid="subtitle_11"></span>
+						<span class="subtitle_text">台标</span>
 					</li>
-					<li class="subtitle">
-						<span class="subtitle_list" data-subtitle="Subtitle" data-temid="subtitle_08"></span>
-						<span class="subtitle_text">Subtitle</span>
-					</li>
-					<li class="subtitle">
-						<span class="subtitle_list" data-subtitle="End" data-temid="subtitle_09"></span>
-						<span class="subtitle_text">End</span>
-					</li> -->
 				</ul>
-				<!-- <h4>
-					<span class="subtitle_title">字体模板</span>
-					<button type="button" class="btn btn-primary pull-right btn-xs" id="js_subtitle_new_btn" style="margin-top: 8px;">添加字幕</button>
-				</h4>
-				<div class="row subtitle_wrap">
-					<div class="header">
-						<span>名字</span>
-						<span>时长</span>
-						<span>编辑</span>
-						<span>删除</span>
-					</div>
-					<ul class="tab_subtitle" id="js_tab_subtitle">
-					</ul>
-					<div class="subtitle_list_track">
-						<div class="subtitle_list_scroll"></div>
-					</div>
-					<div class="row subtitle_footer_pagination">
-						<nav class="pull-right">
-						  	<ul class="pager fr" id="js_pager_subtitle">
-						  	</ul>
-						</nav>
-					</div>
-				</div> -->
-			</div>	
+			</div>
 
 			<div id="tab_3" class="js_tab">
 				<ul class="effect_wrap" id="js_effect_wrap">
@@ -270,23 +152,42 @@
 					</li>
 				</ul>
 			</div>
-			<!-- <div id="tab_4" class="js_tab">
+			<div id="tab_4" class="js_tab">
 				<ul class="images_wrap" id="js_images_wrap">
-					<li>
-						<span class="images_list" draggable="true" data-http="http://pic39.nipic.com/20140312/18085061_092729513131_2.jpg"></span>
-						<span class="images_text">测试图片一</span>
-					</li>
-			
 				</ul>
 			</div>
 			<div id="tab_5" class="js_tab">
 				<ul class="audio_wrap" id="js_audio_wrap">
-					<li>
+					<!-- <li>
 						<span class="audio_list" draggable="true" data-http="http://mp3.9ku.com/m4a/637791.m4a"></span>
 						<span class="audio_text">测试音频一</span>
-					</li>
+					</li> -->
 				</ul>
-			</div> -->
+			</div>
+			<div id="tab_6" class="js_tab">
+				<div class="row carve_body_mymeterialBox">
+
+					<!-- 缩略图 -->
+					<div class="mymeterial_thumbnail_box" >
+						<div class="col-md-3 col-sm-3 col-lg-3 mymeterial_plus" draggable="false" id="js_mymeterial_plus">
+							<a class="thumbnail" href="javascript:;">
+								<i class="glyphicon glyphicon-plus"></i>
+							</a>
+						</div>
+					</div>
+					<!-- 缩略图滚动条 -->
+					<div class="mymeterial_thumbnail_track">
+						<div class="mymeterial_thumbnail_scroll"></div>
+					</div>
+				</div>
+
+				<div class="row carve_footer_pagination">
+					<nav class="pull-right">
+					  	<ul class="pager fr" id="js_my_pager">
+					  	</ul>
+					</nav>
+				</div>
+			</div>
 		</div>
 		<!-- 素材模板选择结束 -->
 
@@ -299,18 +200,17 @@
 					<span id="js_player_trimInOutTime" title="出入点时长">00:00:00:00</span>
 				</div>
 				<ul class="player_bar">
-		        	<li><a id="js_newProject" class="icojam_document_new" title="新建工程(ctrl+n)"></a></li>
-		        	<li><a id="js_openProject" class="icojam_folder_2_open" title="编辑工程(ctrl+o)"></a></li>
 		        	<li><a id="js_saveProject" class="icojam_base_check" title="保存工程(ctrl+s)"></a></li>
-		        	<li><a id="js_exportProject" class="fa fa-folder" title="合成输出(ctrl+b)"></a></li>
+		        	<li><a id="js_exportProject" class="icojam_folder_2_open" title="合成输出(ctrl+b)"></a></li>
 		        	<!-- <li><a id="js_expand" class="icon_more" title="打开编辑工具栏"></a></li> -->
 		      	</ul>
 			</div>
 			<div class="player_box row">
-				<div class="row  player" >	
+				<div class="row  player" >
 				 	<div  id="ocx">
-				        <video id="stub"></video>
-				    </div>
+						<video id="stub"></video>
+					</div>
+
 				</div>
 				<div class="player_time_ruler_box">
 					<div class="player_time_ruler"></div>
@@ -329,8 +229,8 @@
 				      	  	<li><a href="javascript:;" class="icon-12" title="设置片段出点(o)" id="js_setTrimOut"></a></li>
 				      	  	<li><a href="javascript:;" class="icon-15" title="转到出点(shift+o)" id="js_moveTrimOut"></a></li>
 				      	  	<!-- <li><a href="javascript:;" class="icon-10" title="抽帧"></a></li> -->
-				      	  	<li><a href="javascript:;" class="icon-zoom" title="2d变换" id="js_zoom"></a></li>
-				      	  	<!-- <li><a href="javascript:;" class="icon-cut" title="裁剪" id="js_cut"></a></li> -->
+				      	  	<!-- <li><a href="javascript:;" class="icon-zoom" title="2d变换" id="js_zoom"></a></li> -->
+				      	  	<!-- <li><a href="javascript:;" class="icon-tlogo" title="裁剪" id="js_tlogo"></a></li> -->
 				      	  	<!-- <li><a href="javascript:;" class="icon-facial" title="视频分析" id="js_finding"></a></li> -->
 				      	</ul>
 				      	<!-- <div class="player_toolbar_sound">
@@ -346,21 +246,10 @@
 		<div class="col-md-2 carve_edit" id="js_carve_edit" style="display: none;">
 			<div class="row carve_edit_header">
 	          	<ul class="list clearfix">
-	            	<li class="active"><a id="tab_edit_subtitle">字幕编辑</a></li>
-	            	<li><a id="tab_edit_effect">特技编辑</a></li>
+	            	<li class="active"><a id="tab_edit_effect">特技编辑</a></li>
 	          	</ul>
 			</div>
 			<div class="row carve_edit_body">
-				<div class="edit_subtitle">
-					<div class="subtitle_h_form_wrap">
-						<form class="subtitle_h_form form-horizontal" id="js_subtitle_h_form">  
-						</form>
-					</div>
-					<!-- 缩略图滚动条 -->
-					<div class="subtitle_edit_track">
-						<div class="subtitle_edit_scroll"></div>
-					</div>
-				</div>
 				<div class="edit_effect">
 					<div class="effect_h_form_wrap">
 						<form class="effect_h_form form-horizontal" id="js_effect_h_form">
@@ -379,14 +268,14 @@
 	<div class="row toolbar_wrap">
 		<span class="toolbar_icon toolbar_icon_group" title="联动(shift+1)" id="js_toolbar_icon_group"></span>
 		<span class="toolbar_icon toolbar_icon_ungroup" title="独立(shift+2)" id="js_toolbar_icon_ungroup"></span>
-		<!-- <span class="toolbar_icon toolbar_icon_insert"></span>
-		<span class="toolbar_icon toolbar_icon_cover"></span> -->
+		<span class="toolbar_icon toolbar_icon_zsp" title="文章转视频" id="js_toolbar_icon_zsp"></span>
+		<!-- <span class="toolbar_icon toolbar_icon_cover"></span> -->
 		<span class="toolbar_icon toolbar_icon_volume_num" ></span>
 		<!-- <span class="toolbar_icon toolbar_icon_volume_track">
-			
+
 		</span> -->
 		<span class="toolbar_icon toolbar_icon_track"><input type="range" id="js_toolbar_icon_volume_track" min="0" max="400" value="100" /></span>
-		<span class="toolbar_icon toolbar_icon_volume" id="js_toolbar_icon_volume"></span>		
+		<span class="toolbar_icon toolbar_icon_volume" id="js_toolbar_icon_volume"></span>
 	</div>
 	<!-- 时间轴开始 -->
 	<div class="row time_ruler_container">
@@ -408,54 +297,65 @@
 		</div>
 		<div class="time_ruler_voiceBox fl" id="js_time_ruler_voiceBox">
 			<canvas class="time_ruler_voice" id="js_voCanvas"></canvas>
-		</div>	
+		</div>
+	</div>
+</div>
+<!-- 字幕编辑框开始 -->
+<div id="js_subtitile_edit_wrap" class="subtitile_edit_wrap">
+	<div class="subtitle_header">
+		<span class="subtitle_header_title">字幕编辑</span>
+		<!-- <span class="subtitle_header_tabs1 active">A</span> -->
+		<!-- <span class="subtitle_header_tabs2"></span> -->
+		<button class="subtitle_header_btn" id="js_subtitle_header_btn">确定</button>
+	</div>
+	<div class="subtitle_content">
+		<div class="conetent_tabs1">
+			<form class="subtitle_h_form">
+			</form>
+		</div>
+		<!-- <div class="conetent_tabs2">
+			<form class="subtitle_h_form">
+				<div class="form-group">
+					<label class="col-md-2 control-label" for="fontleft">左边距</label>
+					<div class="col-md-3">
+						<input type="range" class="form-control subtitle_left">
+					</div>
+					<label class="col-md-2 control-label" for="fonttop">上边距</label>
+					<div class="col-md-3">
+						<input type="range" class="form-control subtitle_top">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label" for="fontleftval"></label>
+					<div class="col-md-3">
+						<input type="text" class="form-control subtitle_left_val">
+					</div>
+					<label class="col-md-2 control-label" for="fonttopval"></label>
+					<div class="col-md-3">
+						<input type="text" class="form-control subtitle_top_val">
+					</div>
+				</div>
+			</form>
+		</div> -->
 	</div>
 </div>
 
-<div id="js_pageCover" class="pageCover">
+<div id="js_pageCover_subtitle"></div>
+<div id="js_pageCover" class="pageCover"></div>
+<div class="zsp_pagecover">
+	<div class="zsp_cover"></div>
+	<h1 class="zsp_title">视频分析中...</h1>
 </div>
 </body>
 <script src="js/jquery.min.js"></script>
-<script src="js/jquery.date_input.pack.js"></script><!-- 日期选择器插件 -->
-<script src="js/jquery.minicolors.js"></script><!-- 颜色取色插件 -->
+<script src="js/jquery.date_input.pack.js"></script>
 <script src="js/simplewebrtc.bundle.js"></script>
-
+<script src="js/spectrum.js"></script>
 <script src="js/player.js"></script>
+<script src="js/server.js"></script>
 
-<script src="js/server.js"></script><!-- 服务 -->
-<script src="js/app.js"></script><!-- 首选项 -->
+<script src="js/app.js"></script><
 <script src="js/time-ruler.js"></script>
-<!-- <script src="js/time-ruler.min.js"></script> -->
-<!-- <script>
-$(function(){
-	var count = 0;
-    var outTime=0.5;
-    window.setInterval(go, 1000);
-    function go() {
-        count++;
-        if (count == outTime*60) {
-           	alert("您因长时间未进行操作导致页面过期");
-           	window.location
-        }
-    }
-  	var x ;
-    var y ;
-    document.onmousemove = function (event) {
-        var x1 = event.clientX;
-        var y1 = event.clientY;
-        if (x != x1 || y != y1) {
-            count = 0;
-        }
-        x = x1;
-        y = y1;
-    };
-    document.onkeydown = function () {
-        count = 0;
-    };
-});
-</script> -->
-
-</html>
 
 
 
